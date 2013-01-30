@@ -123,15 +123,15 @@ blockquote {
 }
 
 ul, ol, dl {
-  margin: 15px
+  margin-bottom: 15px;
 }
 
 ul li {
   list-style: inside;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 ol li {
   list-style: decimal inside;
-  padding-left: 20px;
+  padding-left: 10px;
 }
