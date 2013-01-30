@@ -3,8 +3,6 @@ layout: default
 title: Gentoo 中文社区
 ---
 
-[fork me](https://github.com/Gentoo-zh/gentoo-zh.github.com)
-
 #### 欢迎来到 Gentoo 中文社区
 
 - 这是一个一穷二白的社区
