@@ -1,7 +1,7 @@
 body {
   box-sizing: border-box;
   color:#373737;
-  background: #ddd;
+  background: #eee;
   font-size: 1em;
   font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
   line-height: 1.5em;
@@ -146,7 +146,7 @@ footer a:hover {
 .forkme a {
   font-size: 1.3em;
   text-align: center;
-  background-color: #aaa;
+  background-color: #bbb;
   margin: 4px 20px;
   z-index: 100
   visibility: visible;
