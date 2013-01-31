@@ -16,6 +16,7 @@ title: Gentoo 中文社区
 
 - 社区建设QQ群：160294591
 - 学习交流QQ群：43047398
+- irc on freenode：[#gentoo-cn](http://webchat.freenode.net/?channels=gentoo-cn)
 
 更多交流方式正在完善中！
 
