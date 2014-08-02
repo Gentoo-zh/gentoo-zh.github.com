@@ -39,3 +39,4 @@ title: Gentoo 中文社区
 4. 当然，也不是完全没有，只是需要换一个次元（[Install Gentoo](http://knowyourmeme.com/memes/install-gentoo) 是一个来自 4chan 的典故）
 
     ![Install Gentoo](http://ww3.sinaimg.cn/mw1024/48ab9a77jw1eio2kcol0qj218g0xcn7x.jpg)
+    ![Install Gentoo](http://1-media-cdn.foolz.us/ffuuka/board/a/image/1337/56/1337563526531.gif)
