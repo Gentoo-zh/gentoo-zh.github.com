@@ -33,9 +33,9 @@ title: Gentoo 中文社区
 5. 其他
 
 #### 我能得到什么？
-
 1. 别人的感谢
 2. 自己水平的提高
 3. 没有物质或金钱上的奖励，没有妹子
+4. 当然，也不是完全没有，只是需要换一个次元（[Install Gentoo](http://knowyourmeme.com/memes/install-gentoo) 是一个来自 4chan 的典故）
 
-
+    ![Install Gentoo](http://ww3.sinaimg.cn/mw1024/48ab9a77jw1eio2kcol0qj218g0xcn7x.jpg)
