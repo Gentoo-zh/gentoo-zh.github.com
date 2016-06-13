@@ -1,0 +1,17 @@
+# Site settings
+title: Gentoo 中文社区
+email: service@gentoo.org.cn
+description: Gentoo 中文社区
+baseurl: ""
+url: "http://www.gentoo.org.cn"
+github_username:  gentoo-zh
+icp: "沪 ICP 备 13001671 号 - 1"
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+gems:
+    - jekyll-paginate
+
+exclude: [hooks]

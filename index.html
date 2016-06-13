@@ -1,0 +1,27 @@
+---
+layout: default
+---
+
+<div class="home">
+  <h1>新闻</h1>
+
+  <div class="posts">
+
+    {% for post in site.posts %}
+    <header class="posts-header">
+      <a class="posts-link" href="{{ post.url | prepend: site.baseurl }}">
+        <h1>{{ post.title }}</h1>
+      </a>
+      <p class="meta">{{ post.date | date: "%b %-d, %Y" }}{% if post.author %} • {{ post.author }}{% endif %}{% if post.meta %} • {{ post.meta }}{% endif %}</p>
+    </header>
+
+    <article class="posts-content">
+      {{ post.content }}
+    </article>
+    {% endfor %}
+
+  </div>
+
+  <p class="rss-subscribe">通过 <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a> 订阅</p>
+
+</div>

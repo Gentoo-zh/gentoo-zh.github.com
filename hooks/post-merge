@@ -1,0 +1,16 @@
+#! /bin/sh
+#
+# git hook to run a command after `git pull`, change file name to git-merge,
+# and run `chmod +x post-merge` to make it executable then put it into
+# `.git/hooks/`
+#
+# Copyright (C) 2016 Register <registerdedicated(at)gmail.com>
+#
+# Distributed under terms of the GPLv3 license.
+#
+
+[[ -d ~/.gem ]] && export PATH=$PATH:`ruby -rubygems -e "puts Gem.user_dir"`/bin
+source=$HOME/git/gentoo-zh-jekyll
+site=$HOME/www/gentoo.org.cn
+
+jekyll build --source $source --destination $site
