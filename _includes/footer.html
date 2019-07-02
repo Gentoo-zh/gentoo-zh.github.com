@@ -8,7 +8,7 @@
       <ul>
         <li>{{ site.title }}</li>
         <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-        <li><a href="http://www.miibeian.gov.cn/">{{ site.icp }}</a></li>
+        {% if site.icp %}<li><a href="http://www.miibeian.gov.cn/">{{ site.icp }}</a></li>{% endif %}
       </ul>
     </div>
 
