@@ -7,7 +7,7 @@
     <div class="footer-col-1 column">
       <ul>
         <li>{{ site.title }}</li>
-        <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+        {% if site.email %}<li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>{% endif %}
         {% if site.icp %}<li><a href="http://www.miibeian.gov.cn/">{{ site.icp }}</a></li>{% endif %}
       </ul>
     </div>
