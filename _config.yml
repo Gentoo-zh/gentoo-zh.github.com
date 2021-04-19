@@ -1,6 +1,6 @@
 # Site settings
 title: Gentoo 中文社区
-email: service@gentoo.org.cn
+#email: service@gentoo.org.cn
 description: Gentoo 中文社区
 baseurl: ""
 url: "https://www.gentoo.org.cn"
