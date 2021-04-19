@@ -4,7 +4,7 @@ title: 关于
 permalink: /about/
 ---
 
-## 欢迎来到 Gentoo 中文社区
+## 欢迎来到 Gentoo 中文
 
 
 * 这是一个一穷二白的社区
@@ -14,9 +14,8 @@ permalink: /about/
 * 不求大师的水平
 * 只需分享、参与的热情
 
-快来加入我们吧！Gentoo 中文社区论坛，请关注新浪微博：Gentoo 中文社区
+快来加入我们吧！Gentoo 中文
 
-* 社区建设QQ群：160294591
 * 学习交流QQ群：43047398
 * IRC on Freenode：#gentoo-cn
 
