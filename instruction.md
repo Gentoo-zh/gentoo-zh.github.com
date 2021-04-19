@@ -18,3 +18,5 @@
 其他的结构化数据可以放在``_data``目录中，参照[这篇文章](http://jekyllrb.com/docs/datafiles/)上的使用说明。
 
 目前需要逐步添加内容，以进一步确定模板的结构如何安排。
+
+如想对本网站进行增减，请到此处发起 PR <https://github.com/Gentoo-zh/gentoo-zh.github.com>
