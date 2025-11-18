@@ -2,19 +2,60 @@
 title: "文件组织说明"
 ---
 
-项目根目录下01~04的几个md文件分别对应设置好的各个栏目，通过文件头部的`---`标记中的字段调取相应的配置信息。
+## 项目结构
 
-- `01download.md` - 下载
-- `02overlay.md` - 中文Overlay
-- `03mirrorlist.md` - 镜像列表
-- `04about.md` - 关于
+本网站使用 [Hugo](https://gohugo.io/) 静态网站生成器和 [Blowfish](https://blowfish.page/) 主题构建。
 
-`_layout`目录有两种模板，`page`和`post`，`page`预留给不含时间的下载说明等栏目使用，`post`给新闻这种包含时间的栏目使用。
+### 内容组织
 
-`index.html`中的`site.posts`变量会循环遍历`_posts`目录中的所有文件生成相应的文章条目，可以用来放新闻。
+`content/` 目录下的各个子目录对应网站的不同栏目：
 
-其他的结构化数据可以放在`_data`目录中，参照[这篇文章](http://jekyllrb.com/docs/datafiles/)上的使用说明。
+- `content/download/` - 下载页面
+- `content/overlay/` - 中文 Overlay 说明
+- `content/mirrorlist/` - 镜像列表
+- `content/about/` - 关于页面
+- `content/instruction/` - 本说明页面
+- `content/posts/` - 新闻文章目录
 
-目前需要逐步添加内容，以进一步确定模板的结构如何安排。
+每个栏目包含简体中文（`_index.zh-cn.md`）和繁体中文（`_index.zh-tw.md`）版本。
 
-如想对本网站进行增减，请到此处发起 PR <https://github.com/Gentoo-zh/gentoo-zh.github.com>
+### 配置文件
+
+主要配置文件位于 `config/_default/` 目录：
+
+- `hugo.toml` - Hugo 主配置
+- `languages.zh-cn.toml` / `languages.zh-tw.toml` - 语言配置
+- `menus.zh-cn.toml` / `menus.zh-tw.toml` - 导航菜单配置
+- `params.toml` - 主题参数配置
+
+### 多语言支持
+
+网站支持简体中文和繁体中文双语：
+- 简体中文翻译：`i18n/zh-CN.yaml`
+- 繁体中文翻译：`i18n/zh-TW.yaml`
+
+### 主题和资源
+
+- `themes/blowfish/` - Blowfish 主题（通过 git submodule 管理）
+- `static/` - 静态资源（图片、CNAME 等）
+- `assets/` - 需要处理的资源文件
+
+### 发布新文章
+
+在 `content/posts/` 目录下创建新的文章目录，包含：
+- `index.zh-cn.md` - 简体中文版本
+- `index.zh-tw.md` - 繁体中文版本
+
+文章头部需包含 frontmatter 配置：
+```yaml
+---
+title: "文章标题"
+date: 2025-11-18
+categories: ["分类"]
+---
+```
+
+### 参与贡献
+
+如想对本网站进行改进，请到此处发起 Pull Request：  
+<https://github.com/Zakkaus/gentoo-zh.github.com>
