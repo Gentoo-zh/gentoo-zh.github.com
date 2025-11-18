@@ -26,7 +26,7 @@ Logo = "img/genchu.png"
   showScrollToTop = true
 
 [homepage]
-  layout = "background"
+  layout = "page"
   showRecent = true
   showRecentItems = 10
   showMoreLink = true
