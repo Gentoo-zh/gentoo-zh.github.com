@@ -1,0 +1,50 @@
+# -- Theme Options --
+colorScheme = "blowfish"
+defaultAppearance = "light"
+autoSwitchAppearance = true
+
+enableSearch = true
+enableCodeCopy = true
+
+mainSections = ["posts"]
+
+defaultBackgroundImage = "/img/background.svg"
+
+highlightCurrentMenuArea = true
+smartTOC = true
+
+Logo = "img/genchu.png"
+
+[header]
+  layout = "fixed"
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  layout = "background"
+  showRecent = true
+  showRecentItems = 10
+  showMoreLink = false
+  cardView = false
+  groupByYear = true
+  layoutBackgroundBlur = true
+
+[article]
+  showDate = true
+  showDateUpdated = false
+  showAuthor = false
+  showBreadcrumbs = true
+  showReadingTime = true
+  showTableOfContents = true
+  showTaxonomies = false
+
+[list]
+  showBreadcrumbs = false
+  showSummary = true
+  groupByYear = true
+  cardView = false
