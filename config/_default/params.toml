@@ -26,7 +26,7 @@ Logo = "img/genchu.png"
   showScrollToTop = true
 
 [homepage]
-  layout = "page"
+  layout = "background"
   showRecent = true
   showRecentItems = 10
   showMoreLink = true
@@ -43,6 +43,8 @@ Logo = "img/genchu.png"
   showReadingTime = true
   showTableOfContents = true
   showTaxonomies = false
+  showRelatedContent = true
+  relatedContentLimit = 6
 
 [list]
   showBreadcrumbs = false
