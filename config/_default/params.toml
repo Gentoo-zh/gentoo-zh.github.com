@@ -1,0 +1,69 @@
+# -- Theme Options --
+colorScheme = "blowfish"
+defaultAppearance = "light"
+autoSwitchAppearance = true
+
+enableSearch = true
+enableCodeCopy = true
+
+mainSections = ["posts"]
+robots = "index,follow"
+
+# SEO 優化
+keywords = ["Gentoo", "Linux", "開源", "中文社區", "Gentoo 中文", "Portage", "Gentoo 安裝", "Linux 發行版"]
+
+# 社交媒體分享圖片
+defaultSocialImage = "/img/genchu.webp"
+# defaultFeaturedImage = "/img/genchu.webp"  # 禁用默認封面圖片
+
+defaultBackgroundImage = "img/background-light.webp"
+
+highlightCurrentMenuArea = true
+smartTOC = true
+
+Logo = "img/genchu.webp"
+
+[header]
+  layout = "fixed"
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  layout = "background"
+  showRecent = true
+  showRecentItems = 10
+  showMoreLink = true
+  showMoreLinkDest = "/posts"
+  cardView = false
+  groupByYear = true
+  layoutBackgroundBlur = true
+
+[article]
+  showDate = true
+  showDateUpdated = false
+  showAuthor = false
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = true
+  showReadingTime = true
+  showTableOfContents = true
+  showTaxonomies = false
+  showRelatedContent = true
+  relatedContentLimit = 6
+
+[list]
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = false
+  showBreadcrumbs = false
+  showSummary = true
+  groupByYear = true
+  cardView = false

@@ -1,0 +1,30 @@
+[[main]]
+  name = "下載"
+  pageRef = "/download"
+  weight = 10
+
+[[main]]
+  name = "Overlay"
+  pageRef = "/overlay"
+  weight = 20
+
+[[main]]
+  name = "鏡像列表"
+  pageRef = "/mirrorlist"
+  weight = 30
+
+[[main]]
+  name = "類別"
+  pageRef = "/categories"
+  weight = 40
+
+[[main]]
+  name = "關於"
+  pageRef = "/about"
+  weight = 50
+
+[[main]]
+  identifier = "github"
+  name = "GitHub"
+  url = "https://github.com/gentoo-zh"
+  weight = 60

@@ -1,0 +1,11 @@
+{{/* Cloudflare stats integration */}}
+{{ with resources.Get "js/cloudflare-stats.js" }}
+  {{ $fingerprint := $.Params.fingerprintAlgorithm | default "sha512" }}
+  {{ $script := . | resources.Minify | resources.Fingerprint $fingerprint }}
+  <script defer src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}"></script>
+{{ end }}
+
+{{/* Enhanced SEO Meta Tags */}}
+<meta name="robots" content="index,follow">
+<meta name="googlebot" content="index,follow">
+

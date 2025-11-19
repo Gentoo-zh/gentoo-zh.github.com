@@ -1,0 +1,23 @@
+languageCode = "zh-TW"
+languageName = "繁體中文"
+weight = 2
+title = "Gentoo 中文社群"
+
+[params]
+  displayName = "繁體中文"
+  isoCode = "zh-TW"
+  rtl = false
+  dateFormat = "2006-01-02"
+  logo = "img/genchu.webp"
+  description = "Gentoo 中文社群官方網站 - 提供 Gentoo Linux 中文文件、教學、Overlay 軟體源、鏡像列表等資源，致力於推廣 Gentoo Linux 在中文使用者中的應用"
+  keywords = ["Gentoo", "Linux", "Gentoo 中文", "Portage", "原始碼發行版", "Gentoo 安裝", "Gentoo 教學", "gentoo-zh", "Overlay"]
+  ogImage = "/img/genchu.webp"
+
+[params.author]
+  name = "Gentoo 中文社群"
+  image = "img/genchu.webp"
+  links = [
+    { github = "https://github.com/gentoo-zh" },
+    { telegram = "https://t.me/gentoo_zh" },
+    { rss = "/index.xml" }
+  ]

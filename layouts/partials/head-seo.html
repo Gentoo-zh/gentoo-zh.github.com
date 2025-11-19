@@ -1,0 +1,90 @@
+{{ define "head" }}
+{{ partial "head.html" . }}
+
+<!-- Google Analytics -->
+{{ if .Site.Params.googleAnalytics }}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ .Site.Params.googleAnalytics }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ .Site.Params.googleAnalytics }}');
+</script>
+{{ end }}
+
+<!-- Enhanced SEO Meta Tags -->
+<meta name="robots" content="index,follow">
+<meta name="googlebot" content="index,follow">
+<meta name="author" content="{{ .Site.Params.author.name }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ with .Params.ogImage }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{ else }}{{ with $.Site.Params.defaultSocialImage }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{ end }}{{ end }}
+<meta property="og:locale" content="{{ .Language.LanguageCode }}">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ .Permalink }}">
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+{{ with .Params.ogImage }}
+<meta name="twitter:image" content="{{ . | absURL }}">
+{{ else }}{{ with $.Site.Params.defaultSocialImage }}
+<meta name="twitter:image" content="{{ . | absURL }}">
+{{ end }}{{ end }}
+
+<!-- Structured Data (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{ .Site.Title }}",
+  "url": "{{ .Site.BaseURL }}",
+  "logo": "{{ .Site.Params.Logo | absURL }}",
+  "description": "{{ .Site.Params.description }}",
+  "sameAs": [
+    "https://github.com/gentoo-zh",
+    "https://t.me/gentoo_zh"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Community Support",
+    "url": "https://t.me/gentoo_zh"
+  }
+}
+</script>
+
+{{ if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ .Title }}",
+  "description": "{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}",
+  "url": "{{ .Permalink }}",
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02T15:04:05Z07:00" }}",{{ end }}
+  "author": {
+    "@type": "Organization",
+    "name": "{{ .Site.Title }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ .Site.Title }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ .Site.Params.Logo | absURL }}"
+    }
+  }
+}
+</script>
+{{ end }}
+
+{{ end }}
