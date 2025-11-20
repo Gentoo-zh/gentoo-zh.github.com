@@ -89,25 +89,21 @@ authors: ["zakkaus"]
 
 下载最新版本：
 ```bash
-# 方法 1：从官方临时站点下载（官方释出前）
+# 方法 1：作者站点下载
 https://chadmed.au/pub/gentoo/
 
-# 方法 2：（官方正式释出后）
-# 前往 https://www.gentoo.org/downloads/ 下载 ARM64 Asahi 版本
 ```
 
 > **提示**：官方正在整合 Asahi 支持到标准 Live USB。目前使用 chadmed 维护的版本。
 
-> **镜像版本兼容性警告**：
-> - **推荐使用**：`install-arm64-asahi-20250603.iso`（2025年6月版本，已测试稳定）
-> - **可能无法启动**：`install-arm64-asahi-20251022.iso`（2025年10月版本）在某些设备（如 M2 MacBook）上可能无法正常启动
-> - **建议**：如果 latest 版本无法启动，请尝试使用 20250603 版本
-> - 可用镜像列表：
->   ```
->   install-arm64-asahi-20250603.iso    (稳定，推荐)
->   install-arm64-asahi-20251022.iso    (较新，可能不稳定)
->   install-arm64-asahi-latest.iso      (指向最新版本)
->   ```
+> **镜像版本兼容性信息（更新日期：2025年11月21日）**：
+> - **社区构建版本**：由 [Zakkaus](https://github.com/zakkaus) 基于 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 构建的镜像，已成功在 M2 MacBook 上测试
+>   - 下载链接：[Google Drive](https://drive.google.com/drive/folders/1ZYGkc8uXqRFJ4jeaSbm5odeNb2qvh6CS)
+>   - 若有兴趣自行构建，可参考 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 项目
+> - **官方版本**：
+>   - **推荐使用**：`install-arm64-asahi-20250603.iso`（2025年6月版本，已测试稳定）
+>   - **可能无法启动**：`install-arm64-asahi-20251022.iso`（2025年10月版本）在某些设备（如 M2 MacBook）上可能无法正常启动
+>   - **建议**：如果 latest 版本无法启动，请尝试使用 20250603 版本或社区构建版本
 
 ### 0.2 制作启动 USB
 

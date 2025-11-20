@@ -22,6 +22,12 @@ Gentoo 支援多種 CPU 架構：
 - **arm** - 32 位元 ARM 架構
 - 其他架構請參考官方下載頁
 
+>  **Apple Silicon Mac (M1/M2/M3/M4) 使用者注意**：
+>
+> 本頁面列出的標準映像**暫不支援 Apple Silicon Mac**。如果您使用 M 系列 MacBook，請訪問：
+>
+>  **[Apple Silicon Mac 安裝指南 - 下載 Asahi Live USB](/posts/2025-10-02-gentoo-m-series-mac/#01-%e4%b8%8b%e8%bd%bd%e5%ae%98%e6%96%b9-gentoo-asahi-live-usb)**
+
 ## 中國內陸鏡像源
 
 以下鏡像源提供 Gentoo 安裝媒介的快速下載（推薦中國內陸使用者使用）：

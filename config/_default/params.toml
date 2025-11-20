@@ -16,7 +16,7 @@ keywords = ["Gentoo", "Linux", "開源", "中文社區", "Gentoo 中文", "Porta
 defaultSocialImage = "/img/genchu.webp"
 # defaultFeaturedImage = "/img/genchu.webp"  # 禁用默認封面圖片
 
-defaultBackgroundImage = "img/background-light.webp"
+defaultBackgroundImage = "img/background.svg"
 
 highlightCurrentMenuArea = true
 smartTOC = true

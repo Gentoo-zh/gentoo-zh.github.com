@@ -45,5 +45,3 @@ title: "关于"
 ## 版权声明
 
 Logo 来自: [https://wiki.gentoo.org/wiki/Project:Artwork/Artwork#Genchu](https://wiki.gentoo.org/wiki/Project:Artwork/Artwork#Genchu)
-
-本站背景图片来自 Pixiv 艺术家作品：[https://www.pixiv.net/artworks/115453639](https://www.pixiv.net/artworks/115453639)
