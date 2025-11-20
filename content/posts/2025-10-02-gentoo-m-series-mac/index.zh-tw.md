@@ -14,10 +14,10 @@ authors: ["zakkaus"]
 **重要更新**：Asahi Linux 專案團隊（尤其是 [chadmed](https://github.com/chadmed/gentoo-asahi-releng)）的卓越工作使得現在有了[官方 Gentoo Asahi 安裝指南](https://wiki.gentoo.org/wiki/Project:Asahi/Guide)，安裝流程已大幅簡化。
 
 **本指南特色**：
-- ✅ 基於官方最新流程（2025.10）
-- ✅ 使用官方 Gentoo Asahi Live USB（無需 Fedora 中轉）
-- ✅ 清楚標記可選與必選步驟
-- ✅ 簡化版適合所有人（包含加密選項）
+- 基於官方最新流程（2025.10）
+- 使用官方 Gentoo Asahi Live USB（無需 Fedora 中轉）
+- 清楚標記可選與必選步驟
+- 簡化版適合所有人（包含加密選項）
 
 已驗證至 2025 年 11 月 20 日。
 
@@ -38,10 +38,10 @@ authors: ["zakkaus"]
 7. 重開機完成安裝
 
 **可選步驟**：
-- 🔐 LUKS 加密（建議但非必須）
-- 🎨 自訂內核配置（預設 dist-kernel 即可）
-- 🎵 音訊設定（PipeWire，依需求）
-- 🖥️ 桌面環境選擇
+- LUKS 加密（建議但非必須）
+- 自訂內核配置（預設 dist-kernel 即可）
+- 音訊設定（PipeWire，依需求）
+- 桌面環境選擇
 
 整個流程會在你的 Mac 上建立雙啟動環境：macOS + Gentoo Linux ARM64。
 
@@ -60,20 +60,20 @@ authors: ["zakkaus"]
 
 ### 重要警告
 
-⚠️ **本指南包含進階操作**：
+**本指南包含進階操作**：
 - 會調整你的分割表
 - 需要與 macOS 共存
 - 涉及加密磁碟操作
 - Apple Silicon 對 Linux 的支援仍在積極開發中
 
-✅ **已知可運作的功能**：
+**已知可運作的功能**：
 - CPU、記憶體、儲存裝置
 - Wi-Fi（透過 Asahi Linux 韌體）
 - 鍵盤、觸控板、電池管理
 - 顯示輸出（內建螢幕與外接顯示器）
 - USB-C / Thunderbolt
 
-⚠️ **已知限制**：
+**已知限制**：
 - Touch ID 無法使用
 - macOS 虛擬化功能受限
 - 部分新硬體功能可能未完全支援
@@ -96,9 +96,9 @@ https://chadmed.au/pub/gentoo/
 # 前往 https://www.gentoo.org/downloads/ 下載 ARM64 Asahi 版本
 ```
 
-> 💡 **提示**：官方正在整合 Asahi 支援到標準 Live USB。目前使用 chadmed 維護的版本。
+> **提示**：官方正在整合 Asahi 支援到標準 Live USB。目前使用 chadmed 維護的版本。
 
-> ⚠️ **映像版本相容性警告**：
+> **映像版本相容性警告**：
 > - **推薦使用**：`install-arm64-asahi-20250603.iso`（2025年6月版本，已測試穩定）
 > - **可能無法啟動**：`install-arm64-asahi-20251022.iso`（2025年10月版本）在某些裝置（如 M2 MacBook）上可能無法正常啟動
 > - **建議**：如果 latest 版本無法啟動，請嘗試使用 20250603 版本
@@ -139,7 +139,7 @@ diskutil eject /dev/disk4
 curl https://alx.sh | sh
 ```
 
-> ⚠️ **安全提示**：建議先前往 <https://alx.sh> 檢視腳本內容，確認安全後再執行。
+> **安全提示**：建議先前往 <https://alx.sh> 檢視腳本內容，確認安全後再執行。
 
 ### 1.2 跟隨安裝程式步驟
 
@@ -150,14 +150,14 @@ curl https://alx.sh | sh
 2. **選擇分割空間**：決定分配給 Linux 的空間（建議至少 80 GB）
    - 可使用百分比（如 `50%`）或絕對大小（如 `120GB`）
    
-   > 💡 **提示**：建議保留 macOS 分割，以便日後更新韌體。
+   > **提示**：建議保留 macOS 分割，以便日後更新韌體。
 
 3. **選擇作業系統**：選擇 **UEFI environment only (m1n1 + U-Boot + ESP)**
    ```
    » OS: <選擇 UEFI only 選項>
    ```
    
-   > ✅ **官方建議**：選擇 UEFI only 即可，不需要安裝完整發行版。
+   > **官方建議**：選擇 UEFI only 即可，不需要安裝完整發行版。
 
 4. **設定名稱**：輸入 `Gentoo` 作為作業系統名稱
    ```
@@ -179,7 +179,7 @@ curl https://alx.sh | sh
    - 輸入 macOS 使用者密碼（FileVault 使用者）
 6. 依照螢幕指示完成設定
 
-> ⚠️ **故障排除**：若遇到啟動迴圈或要求重新安裝 macOS，請按住電源鍵完全關機，然後從步驟 1 重新開始。可選擇 macOS 開機，執行 `curl https://alx.sh | sh` 並選擇 `p` 選項重試。
+> **故障排除**：若遇到啟動迴圈或要求重新安裝 macOS，請按住電源鍵完全關機，然後從步驟 1 重新開始。可選擇 macOS 開機，執行 `curl https://alx.sh | sh` 並選擇 `p` 選項重試。
 
 ---
 
@@ -194,7 +194,7 @@ curl https://alx.sh | sh
    - 等待 2 秒自動啟動序列
    - 若有多個系統，可能需要中斷並手動選擇
 
-> 💡 **提示**：若需手動指定 USB 啟動，在 U-Boot 提示符下執行：
+> **提示**：若需手動指定 USB 啟動，在 U-Boot 提示符下執行：
 > ```
 > setenv boot_targets "usb"
 > setenv bootmeths "efi"
@@ -216,7 +216,7 @@ net-setup
 ping -c 3 www.gentoo.org
 ```
 
-> 💡 **提示**：Apple Silicon 的 Wi-Fi 已包含在內核中，應可正常運作。若不穩定，嘗試連接 2.4 GHz 網路。
+> **提示**：Apple Silicon 的 Wi-Fi 已包含在內核中，應可正常運作。若不穩定，嘗試連接 2.4 GHz 網路。
 
 **（可選）SSH 遠端操作**：
 ```bash
@@ -231,7 +231,7 @@ ip a | grep inet          # 取得 IP 位址
 
 ### 3.1 識別磁碟與分割
 
-> ⚠️ **重要警告**：**不要修改現有的 APFS 容器、EFI 分割或 Recovery 分割！** 只能在 Asahi 安裝程式預留的空間中操作。
+> **重要警告**：**不要修改現有的 APFS 容器、EFI 分割或 Recovery 分割！** 只能在 Asahi 安裝程式預留的空間中操作。
 
 查看分割結構：
 ```bash
@@ -264,7 +264,7 @@ livecd ~ # blkid --label "EFI - GENTO"
 ```
 
 
-> 💡 **建議**：使用 `cfdisk` 進行分割，它理解 Apple 分割類型並會保護系統分割。
+> **建議**：使用 `cfdisk` 進行分割，它理解 Apple 分割類型並會保護系統分割。
 
 ### 3.2 建立根分割
 
@@ -314,7 +314,7 @@ mkfs.btrfs /dev/nvme0n1p6
 mount /dev/nvme0n1p6 /mnt/gentoo
 ```
 
-**方法 B：加密分割（🔐 可選，建議）**
+**方法 B：加密分割（可選，建議）**
 
 ```bash
 # 建立 LUKS2 加密分割
@@ -332,7 +332,7 @@ mkfs.btrfs --label root /dev/mapper/gentoo-root
 mount /dev/mapper/gentoo-root /mnt/gentoo
 ```
 
-> 💡 **為什麼用這些參數？**
+> **為什麼用這些參數？**
 > - `argon2id`：抗 ASIC/GPU 暴力破解
 > - `aes-xts`：M1 有 AES 指令集，硬體加速
 > - `luks2`：更好的安全工具
@@ -348,7 +348,7 @@ mount /dev/nvme0n1p4 /mnt/gentoo/boot
 
 ## 4. Stage3 與 chroot {#step-4-stage3}
 
-> 💡 **從這裡開始遵循 [AMD64 Handbook](https://wiki.gentoo.org/wiki/Handbook:AMD64)** 直到內核安裝章節。
+> **從這裡開始遵循 [AMD64 Handbook](https://wiki.gentoo.org/wiki/Handbook:AMD64)** 直到內核安裝章節。
 
 ### 4.1 下載並展開 Stage3
 
@@ -381,7 +381,7 @@ chronyd -q
 date
 ```
 
-> 💡 **為什麼需要同步時間？**
+> **為什麼需要同步時間？**
 > - 編譯套件時需要正確的時間戳記
 > - SSL/TLS 憑證驗證依賴準確的系統時間
 > - 如果時間不正確，可能導致 emerge 失敗或憑證錯誤
@@ -494,9 +494,9 @@ passwd root
 
 ## 5. 安裝 Asahi 支援套件（核心步驟）{#step-5-asahi}
 
-> 🚀 **官方簡化流程**：這一章節取代 Handbook 的「安裝內核」章節。
+> **官方簡化流程**：這一章節取代 Handbook 的「安裝內核」章節。
 
-### 5.1 方法 A：自動化安裝（✅ 推薦）
+### 5.1 方法 A：自動化安裝（推薦）
 
 **步驟 1：安裝 git**
 
@@ -518,14 +518,14 @@ cd asahi-gentoosupport
 ```
 
 此腳本會自動完成：
-- ✅ 啟用 Asahi overlay
-- ✅ 安裝 GRUB bootloader
-- ✅ 設定 VIDEO_CARDS="asahi"
-- ✅ 安裝 asahi-meta（包含內核、韌體、m1n1、U-Boot）
-- ✅ 執行 `asahi-fwupdate` 和 `update-m1n1`
-- ✅ 更新系統
+- 啟用 Asahi overlay
+- 安裝 GRUB bootloader
+- 設定 VIDEO_CARDS="asahi"
+- 安裝 asahi-meta（包含內核、韌體、m1n1、U-Boot）
+- 執行 `asahi-fwupdate` 和 `update-m1n1`
+- 更新系統
 
-> ⚠️ **如果遇到 USE flag 衝突**：
+> **如果遇到 USE flag 衝突**：
 > 腳本執行過程中可能會提示 USE flag 需要變更。解決方法：
 > ```bash
 > # 當腳本提示 USE flag 衝突時，按 Ctrl+C 中斷腳本
@@ -583,11 +583,11 @@ EOF
 emerge --sync
 ```
 
-> 💡 **鏡像源說明**：
+> **鏡像源說明**：
 > - 使用 GitHub 鏡像（如上）通常已經足夠快速
 > - 更多鏡像源選項參考：[鏡像列表](/mirrorlist/)
 
-**步驟 2：配置 package.mask（⚠️ 重要！）**
+**步驟 2：配置 package.mask（重要！）**
 
 防止 Gentoo 官方的 dist-kernel 覆蓋 Asahi 版本：
 
@@ -613,7 +613,7 @@ EOF
 # VIDEO_CARDS 設定
 echo 'VIDEO_CARDS="asahi"' >> /etc/portage/make.conf
 
-# GRUB 平台設定（⚠️ 必須！）
+# GRUB 平台設定（必須！）
 echo 'GRUB_PLATFORMS="efi-64"' >> /etc/portage/make.conf
 ```
 
@@ -624,7 +624,7 @@ mkdir -p /etc/portage/package.license
 echo 'sys-kernel/linux-firmware linux-fw-redistributable no-source-code' > /etc/portage/package.license/firmware
 ```
 
-**步驟 5：安裝 rust-bin（⚠️ 必須先安裝！）**
+**步驟 5：安裝 rust-bin（必須先安裝！）**
 
 ```bash
 emerge -q1 dev-lang/rust-bin
@@ -637,7 +637,7 @@ emerge -q1 dev-lang/rust-bin
 emerge -q sys-apps/asahi-meta virtual/dist-kernel:asahi sys-kernel/linux-firmware
 ```
 
-> 💡 如果 `etc-update` 出現配置文件衝突，選擇 `-3` 進行自動合併。
+> 如果 `etc-update` 出現配置文件衝突，選擇 `-3` 進行自動合併。
 
 套件說明：
 - `rust-bin`：編譯 Asahi 內核組件需要（必須先安裝）
@@ -652,7 +652,7 @@ asahi-fwupdate
 update-m1n1
 ```
 
-> ⚠️ **重要**：每次更新內核、U-Boot 或 m1n1 時都必須執行 `update-m1n1`！
+> **重要**：每次更新內核、U-Boot 或 m1n1 時都必須執行 `update-m1n1`！
 
 **步驟 8：安裝並配置 GRUB**
 
@@ -660,14 +660,14 @@ update-m1n1
 # 安裝 GRUB
 emerge -q grub:2
 
-# 安裝 GRUB 到 ESP（⚠️ 注意 --removable 標誌很重要！）
+# 安裝 GRUB 到 ESP（注意 --removable 標誌很重要！）
 grub-install --boot-directory=/boot/ --efi-directory=/boot/ --removable
 
 # 生成 GRUB 配置
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-> ⚠️ **關鍵要點**：
+> **關鍵要點**：
 > - `--removable` 標誌是必須的，確保系統能從 ESP 啟動
 > - `--boot-directory` 和 `--efi-directory` 都必須指向 `/boot/`
 > - 必須在 make.conf 中設定 `GRUB_PLATFORMS="efi-64"`
@@ -702,9 +702,9 @@ UUID=<your-root-uuid>  /      ext4   defaults  0 1
 UUID=<your-boot-uuid>  /boot  vfat   defaults  0 2
 ```
 
-### 5.4 配置加密支援（🔐 僅加密用戶）
+### 5.4 配置加密支援（僅加密用戶）
 
-> ⚠️ **注意**：如果你在步驟 3.2 中選擇了加密分割，才需要執行此步驟。
+> **注意**：如果你在步驟 3.2 中選擇了加密分割，才需要執行此步驟。
 
 **步驟 1：啟用 systemd cryptsetup 支援**
 
@@ -742,7 +742,7 @@ nano -w /etc/default/grub
 GRUB_CMDLINE_LINUX="rd.luks.uuid=3f5a6527-7334-4363-9e2d-e0e8c7c04488 rd.luks.allow-discards root=UUID=f3db74a5-dc70-48dd-a9a3-797a0daf5f5d rootfstype=btrfs"
 ```
 
-> 📝 **參數說明**：
+> **參數說明**：
 > - `rd.luks.uuid=<UUID>`：LUKS 加密分割的 UUID（使用 `blkid /dev/nvme0n1p6` 取得）
 > - `rd.luks.allow-discards`：允許 SSD TRIM 指令穿透加密層（提升 SSD 效能）
 > - `root=UUID=<UUID>`：解密後的 btrfs 檔案系統 UUID（使用 `blkid /dev/mapper/gentoo-root` 取得）
@@ -774,7 +774,7 @@ install_items+=" /sbin/cryptsetup /bin/grep "
 filesystems+=" btrfs "
 ```
 
-> 📝 **配置說明**：
+> **配置說明**：
 > - `crypt` 和 `dm` 模組提供 LUKS 解密支援
 > - `systemd` 模組用於 systemd 啟動環境
 > - `btrfs` 模組支援 btrfs 檔案系統（如果使用 ext4 改為 `ext4`）
@@ -790,7 +790,7 @@ nano -w /etc/crypttab
 gentoo-root UUID=<LUKS-UUID> none luks,discard
 ```
 
-> 💡 這樣配置後，系統會自動識別並提示解鎖加密分割。
+> 這樣配置後，系統會自動識別並提示解鎖加密分割。
 
 **步驟 7：重新產生 initramfs**
 
@@ -799,7 +799,7 @@ gentoo-root UUID=<LUKS-UUID> none luks,discard
 dracut --kver $(make -C /usr/src/linux -s kernelrelease) --force
 ```
 
-> ⚠️ **重要**：每次更新內核後，也需要重新執行此命令產生新的 initramfs！
+> **重要**：每次更新內核後，也需要重新執行此命令產生新的 initramfs！
 
 **步驟 8：更新 GRUB 配置**
 
@@ -849,7 +849,7 @@ reboot
 3. （若加密）輸入 LUKS 密碼
 4. 系統應成功啟動到登入提示
 
-> 🎉 **恭喜！基本系統已安裝完成！**
+> **恭喜！基本系統已安裝完成！**
 
 ---
 
@@ -865,9 +865,9 @@ nmcli device wifi connect <SSID> password <密碼>
 nmtui
 ```
 
-### 7.2 安裝桌面環境（🖥️ 可選）
+### 7.2 安裝桌面環境（可選）
 
-> 💡 **重要提示**：安裝桌面環境前，建議切換到對應的系統 profile，這會自動設定許多必要的 USE flags。
+> **重要提示**：安裝桌面環境前，建議切換到對應的系統 profile，這會自動設定許多必要的 USE flags。
 
 #### 步驟 1：查看並選擇系統 Profile
 
@@ -901,7 +901,7 @@ eselect profile set 7    # desktop/plasma/systemd
 eselect profile set 3    # desktop (不含特定桌面)
 ```
 
-> 📝 **Profile 說明**：
+> **Profile 說明**：
 > - `desktop/gnome/systemd`：自動啟用 GNOME 相關 USE flags（gtk、gnome、wayland 等）
 > - `desktop/plasma/systemd`：自動啟用 KDE 相關 USE flags（qt5、kde、plasma 等）
 > - `desktop`：基礎桌面 USE flags（X、dbus、networkmanager 等）
@@ -917,7 +917,7 @@ emerge -avuDN @world
 
 #### 步驟 3：安裝桌面環境
 
-**選項 A：KDE Plasma（✅ 推薦）**
+**選項 A：KDE Plasma（推薦）**
 
 ```bash
 # 安裝 KDE Plasma 桌面
@@ -998,14 +998,14 @@ eselect fontconfig enable 11-lcdfilter-default.conf
 emerge --ask app-i18n/fcitx-chinese-addons
 ```
 
-> ⚠️ **注意**：`app-i18n/fcitx-rime` 在當前版本實測無法正常使用，建議使用 `app-i18n/fcitx-chinese-addons` 作為替代方案。
+> **注意**：`app-i18n/fcitx-rime` 在當前版本實測無法正常使用，建議使用 `app-i18n/fcitx-chinese-addons` 作為替代方案。
 
-> 💡 **提示**：
+> **提示**：
 > - 首次安裝桌面環境預計需要 **2-4 小時**（取決於 CPU 效能）
 > - 建議使用 `--jobs 3` 或更少，避免記憶體不足
 > - 可以在 `/etc/portage/make.conf` 設定 `EMERGE_DEFAULT_OPTS="--jobs 3 --load-average 8"`
 
-### 7.3 音訊配置（🎵 可選）
+### 7.3 音訊配置（可選）
 
 Asahi 音訊透過 PipeWire 提供。安裝並啟用相關服務：
 
@@ -1041,7 +1041,7 @@ dispatch-conf
 
 ### 8.2 更新內核後必做
 
-> ⚠️ **極度重要**：每次內核更新後必須執行！
+> **極度重要**：每次內核更新後必須執行！
 
 ```bash
 # 更新 m1n1 Stage 2（包含 devicetree）
@@ -1053,7 +1053,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 **為什麼？** m1n1 Stage 2 包含 devicetree blobs，內核需要它來識別硬體。不更新可能導致無法啟動或功能缺失。
 
-> 💡 **自動化**：`sys-apps/asahi-scripts` 提供 installkernel hook 自動執行這些步驟。
+> **自動化**：`sys-apps/asahi-scripts` 提供 installkernel hook 自動執行這些步驟。
 
 ### 8.3 更新韌體
 
@@ -1081,7 +1081,7 @@ macOS 系統更新時會包含韌體更新。**建議保留 macOS 分割**以便
 2. 選擇 `p` 選項重試 Recovery 流程
 3. 確保在 chroot 中執行了 `update-m1n1`
 
-### 問題：🔐 加密分割無法解鎖
+### 問題：加密分割無法解鎖
 
 **原因**：dracut 配置錯誤或 UUID 不對。
 
@@ -1113,7 +1113,7 @@ emerge --ask sys-apps/asahi-meta
 
 ---
 
-## 10. 進階技巧（🎨 可選）{#advanced}
+## 10. 進階技巧（可選）{#advanced}
 
 ### 10.1 瀏海（Notch）配置
 
@@ -1144,7 +1144,7 @@ update-m1n1  # 必須！
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-> ⚠️ **記得保留可用內核作為備援**！
+> **記得保留可用內核作為備援**！
 
 ### 10.3 多內核切換
 
@@ -1194,13 +1194,13 @@ update-m1n1  # 切換後必須執行！
 
 ## 結語
 
-🎉 **祝你在 Apple Silicon 上享受 Gentoo！**
+**祝你在 Apple Silicon 上享受 Gentoo！**
 
 這份指南基於官方 [Project:Asahi/Guide](https://wiki.gentoo.org/wiki/Project:Asahi/Guide) 並簡化流程，標記了可選步驟，讓更多人能輕鬆嘗試。
 
 **記住三個關鍵點**：
-1. ✅ 使用官方 Gentoo Asahi Live USB（無需 Fedora 中轉）
-2. ✅ asahi-gentoosupport 腳本可自動化大部分流程
-3. ✅ 每次內核更新後必須執行 `update-m1n1`
+1. 使用官方 Gentoo Asahi Live USB（無需 Fedora 中轉）
+2. asahi-gentoosupport 腳本可自動化大部分流程
+3. 每次內核更新後必須執行 `update-m1n1`
 
 有任何問題歡迎到社群提問！

@@ -35,11 +35,22 @@ gentoo-zh overlay 的源代码托管在 GitHub 上：
 > 根据 [Gentoo 官方公告](https://www.gentoo.org/support/news-items/2025-10-07-cache-enabled-mirrors-removal.html)，Gentoo 已停止为第三方仓库提供缓存镜像支持。从 2025-10-30 起，所有第三方仓库（包括 gentoo-zh）的镜像配置将从官方仓库列表中移除。
 >
 > **这意味着什么？**
-> - `eselect repository` 和 `layman` 等工具无法再通过官方镜像列表自动添加 gentoo-zh overlay
-> - 用户需要手动配置仓库同步地址
+> - `eselect repository` 和 `layman` 等工具仍可正常使用
+> - 官方将不再提供快取镜像，改为直接从上游源（GitHub）同步
 > - 官方仓库（::gentoo、::guru、::kde、::science）不受影响，仍可使用镜像
 >
-> 请使用以下手动配置方法添加 gentoo-zh overlay。
+> **如果您之前已添加 gentoo-zh overlay，请更新同步 URI：**
+>
+> ```bash
+> # 查看已安装的仓库
+> eselect repository list -i
+>
+> # 移除旧配置
+> eselect repository remove gentoo-zh
+>
+> # 重新启用（将自动使用正确的上游源）
+> eselect repository enable gentoo-zh
+> ```
 
 ### 手动配置
 
