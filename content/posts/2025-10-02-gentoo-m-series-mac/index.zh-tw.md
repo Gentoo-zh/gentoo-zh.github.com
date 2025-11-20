@@ -894,7 +894,7 @@ Available profile symlink targets:
 # GNOME 桌面
 eselect profile set 5    # desktop/gnome/systemd
 
-# KDE Plasma 桌面（推荐）
+# KDE Plasma 桌面（推薦）
 eselect profile set 7    # desktop/plasma/systemd
 
 # 通用桌面環境（Xfce 等）
