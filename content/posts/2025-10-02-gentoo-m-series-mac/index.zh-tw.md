@@ -19,7 +19,7 @@ authors: ["zakkaus"]
 - ✅ 清楚標記可選與必選步驟
 - ✅ 簡化版適合所有人（包含加密選項）
 
-已驗證至 2025 年 10 月。
+已驗證至 2025 年 11 月 20 日。
 
 
 > **目標平台**：Apple Silicon Mac（M1/M2/M3/M4）ARM64 架構。本指南使用 Asahi Linux 引導程式進行初始設置，然後轉換為完整的 Gentoo 環境。
@@ -418,19 +418,36 @@ nano -w /etc/portage/make.conf
 
 加入或修改以下內容：
 ```conf
+# vim: set language=bash;
+CHOST="aarch64-unknown-linux-gnu"
+
 # Apple Silicon 最佳化編譯參數
 COMMON_FLAGS="-march=armv8.5-a+fp16+simd+crypto+i8mm -mtune=native -O2 -pipe"
 CFLAGS="${COMMON_FLAGS}"
 CXXFLAGS="${COMMON_FLAGS}"
 FCFLAGS="${COMMON_FLAGS}"
 FFLAGS="${COMMON_FLAGS}"
-MAKEOPTS="-j8"  # 依你的核心數調整（M1 Pro/Max 可用 -j10 或更高）
+RUSTFLAGS="-C target-cpu=native"
+
+# 保持建置輸出為英文（回報錯誤時請保留此設定）
 LC_MESSAGES=C
 
-# Asahi 專用設定
-VIDEO_CARDS="asahi"
-EMERGE_DEFAULT_OPTS="--jobs 3"
+# 根據硬體調整（例如 M2 Max 有更多核心）
+MAKEOPTS="-j4"
+
+# Gentoo 鏡像源（推薦使用 R2 鏡像，速度較快）
 GENTOO_MIRRORS="https://gentoo.rgst.io/gentoo"
+
+# Emerge 預設選項（最多同時編譯 3 個套件）
+EMERGE_DEFAULT_OPTS="--jobs 3"
+
+# Asahi GPU 驅動
+VIDEO_CARDS="asahi"
+
+# 中文本地化支援（可選）
+L10N="zh-CN zh-TW zh en"
+
+# 檔案末尾保留換行符號！重要！
 ```
 
 **同步 Portage**：
@@ -481,7 +498,17 @@ passwd root
 
 ### 5.1 方法 A：自動化安裝（✅ 推薦）
 
-**使用 asahi-gentoosupport 腳本**（官方提供）：
+**步驟 1：安裝 git**
+
+```bash
+# 首次同步 Portage 樹
+emerge --sync
+
+# 安裝 git（下載腳本需要）
+emerge --ask dev-vcs/git
+```
+
+**步驟 2：使用 asahi-gentoosupport 腳本**（官方提供）：
 
 ```bash
 cd /tmp
@@ -520,15 +547,45 @@ cd asahi-gentoosupport
 
 ### 5.2 方法 B：手動安裝（進階使用者）
 
-**步驟 1：啟用 Asahi overlay**
+**步驟 1：安裝 git 並配置 Asahi overlay**
 
 ```bash
-emerge --sync 
-emerge --ask --verbose --oneshot portage 
-emerge --ask app-eselect/eselect-repository
-eselect repository enable asahi
-emaint sync -r asahi
+# 首次同步 Portage 樹
+emerge --sync
+
+# 安裝 git（用於 git 同步方式）
+emerge --ask dev-vcs/git
+
+# 刪除舊的 Portage 資料庫並切換到 git 同步
+rm -rf /var/db/repos/gentoo
+sudo tee /etc/portage/repos.conf/gentoo.conf << 'EOF'
+[DEFAULT]
+main-repo = gentoo
+
+[gentoo]
+location = /var/db/repos/gentoo
+sync-type = git
+sync-uri = https://github.com/gentoo-mirror/gentoo.git
+auto-sync = yes
+sync-depth = 1
+EOF
+
+# 配置 Asahi overlay 使用 git 同步
+sudo tee /etc/portage/repos.conf/asahi.conf << 'EOF'
+[asahi]
+location = /var/db/repos/asahi
+sync-type = git
+sync-uri = https://github.com/chadmed/asahi-overlay.git
+auto-sync = yes
+EOF
+
+# 同步所有倉庫
+emerge --sync
 ```
+
+> 💡 **鏡像源說明**：
+> - 使用 GitHub 鏡像（如上）通常已經足夠快速
+> - 更多鏡像源選項參考：[鏡像列表](/mirrorlist/)
 
 **步驟 2：配置 package.mask（⚠️ 重要！）**
 
@@ -934,6 +991,15 @@ eselect fontconfig enable 10-sub-pixel-rgb.conf
 eselect fontconfig enable 11-lcdfilter-default.conf
 ```
 
+**中文輸入法配置**：
+
+```bash
+# 安裝 Fcitx5 中文輸入法
+emerge --ask app-i18n/fcitx-chinese-addons
+```
+
+> ⚠️ **注意**：`app-i18n/fcitx-rime` 在當前版本實測無法正常使用，建議使用 `app-i18n/fcitx-chinese-addons` 作為替代方案。
+
 > 💡 **提示**：
 > - 首次安裝桌面環境預計需要 **2-4 小時**（取決於 CPU 效能）
 > - 建議使用 `--jobs 3` 或更少，避免記憶體不足
@@ -941,12 +1007,15 @@ eselect fontconfig enable 11-lcdfilter-default.conf
 
 ### 7.3 音訊配置（🎵 可選）
 
-Asahi 音訊透過 PipeWire 提供。**systemd 系統自動配置**，無需額外設定。
+Asahi 音訊透過 PipeWire 提供。安裝並啟用相關服務：
 
-驗證音訊：
 ```bash
-emerge --ask media-sound/pavucontrol
-systemctl --user status pipewire
+# 安裝 Asahi 音訊支援
+emerge --ask media-libs/asahi-audio
+
+# 啟用 PipeWire 服務
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user enable --now wireplumber.service
 ```
 ---
 
@@ -1040,15 +1109,6 @@ dmesg | grep -i firmware
 
 # 確保安裝了 asahi-meta
 emerge --ask sys-apps/asahi-meta
-```
-
-### 問題：音訊無聲音
-
-**原因**：PipeWire 未啟動。
-
-**解決方法**：
-```bash
-systemctl --user restart pipewire pipewire-pulse
 ```
 
 ---
