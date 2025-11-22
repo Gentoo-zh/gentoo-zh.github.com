@@ -2,6 +2,9 @@
 title: "清風（張樂）"
 tags: ['社群創始人']
 externalUrl: "https://github.com/zhcj"
+links:
+  - name: "blog"
+    url: "https://phpcj.org/"
 weight: 1
 showDate: false
 showAuthor: false
@@ -12,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-Gentoo 中文社区聯合創始人，主站服务器架设及管理
+gentooer

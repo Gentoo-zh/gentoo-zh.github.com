@@ -15,5 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-Gentoo 中文社区联合创始人，主站服务器架设及管理
-
+#DeleteGithub

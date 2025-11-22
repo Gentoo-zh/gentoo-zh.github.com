@@ -2,6 +2,9 @@
 title: "xz-dev"
 tags: ['Overlay 貢獻者']
 externalUrl: "https://github.com/xz-dev"
+links:
+  - name: "blog"
+    url: "https://xzos.net"
 weight: 9956
 showDate: false
 showAuthor: false

@@ -2,6 +2,9 @@
 title: "douglarek"
 tags: ['Overlay 貢獻者']
 externalUrl: "https://github.com/douglarek"
+links:
+  - name: "blog"
+    url: "https://lingchao.xin"
 weight: 9780
 showDate: false
 showAuthor: false
@@ -11,6 +14,5 @@ showLikes: false
 showViews: false
 layoutBackgroundHeaderSpace: false
 ---
-
 
 220 次提交
