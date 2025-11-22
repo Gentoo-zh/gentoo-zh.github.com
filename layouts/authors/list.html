@@ -1,0 +1,112 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* Header */}}
+  <header class="mt-5">
+    {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title | emojify }}</h1>
+    <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+      {{ .Description }}
+    </div>
+  </header>
+
+  {{/* Content */}}
+  {{ if .Content }}
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      <div class="min-w-0 min-h-0 max-w-prose">
+        {{ .Content }}
+      </div>
+    </section>
+  {{ end }}
+
+  {{/* Authors Grid */}}
+  <section class="w-full grid gap-4 mt-8 sm:grid-cols-2 md:grid-cols-3">
+    {{ range $.Site.Data.authors }}
+      {{ $authorData := . }}
+      {{ $github := "" }}
+      {{ range .social }}
+        {{ if .github }}
+          {{ $github = .github }}
+        {{ end }}
+      {{ end }}
+
+      {{ if $github }}
+        {{ $username := replaceRE "https://github.com/" "" $github }}
+        {{ $avatarURL := printf "https://github.com/%s.png?size=200" $username }}
+
+        <article class="relative min-h-full rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-2xl bg-neutral-50 dark:bg-neutral-800">
+          <div class="px-6 py-8">
+            {{/* Avatar */}}
+            <div class="flex justify-center mb-4">
+              <img
+                src="{{ $avatarURL }}"
+                alt="{{ $authorData.name }}"
+                class="w-24 h-24 rounded-full"
+                loading="lazy">
+            </div>
+
+            {{/* Name */}}
+            <header class="text-center mb-2">
+              <h2 class="text-xl font-bold text-neutral-800 dark:text-neutral">
+                {{ $authorData.name }}
+              </h2>
+            </header>
+
+            {{/* Bio */}}
+            {{ if $authorData.bio }}
+              <div class="text-sm text-neutral-600 dark:text-neutral-400 text-center mb-4 px-2">
+                {{ $authorData.bio }}
+              </div>
+            {{ end }}
+
+            {{/* Social Links */}}
+            <div class="flex justify-center gap-3 pt-2">
+              {{ range $authorData.social }}
+                {{ if .blog }}
+                  <a href="{{ .blog }}" target="_blank" rel="noopener noreferrer"
+                     class="text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                     title="博客">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                      <path d="M12 6.5c-3.03 0-5.5 2.47-5.5 5.5s2.47 5.5 5.5 5.5 5.5-2.47 5.5-5.5-2.47-5.5-5.5-5.5zm0 9c-1.93 0-3.5-1.57-3.5-3.5S10.07 8.5 12 8.5s3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                    </svg>
+                  </a>
+                {{ end }}
+                {{ if .github }}
+                  <a href="{{ .github }}" target="_blank" rel="noopener noreferrer"
+                     class="text-neutral-700 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                     title="GitHub">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                    </svg>
+                  </a>
+                {{ end }}
+                {{ if .telegram }}
+                  <a href="{{ .telegram }}" target="_blank" rel="noopener noreferrer"
+                     class="text-neutral-700 dark:text-neutral-300 hover:text-[#0088cc] transition-colors"
+                     title="Telegram">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                    </svg>
+                  </a>
+                {{ end }}
+                {{ if .weibo }}
+                  <a href="{{ .weibo }}" target="_blank" rel="noopener noreferrer"
+                     class="text-neutral-700 dark:text-neutral-300 hover:text-[#e6162d] transition-colors"
+                     title="微博">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9.68 14.89c-.24.34-.76.45-1.15.24-.4-.21-.51-.68-.28-1.05.24-.36.76-.47 1.14-.25.39.21.51.69.29 1.06zm3.05-2.15c-.1.15-.29.21-.45.14-.16-.07-.2-.25-.11-.4.09-.14.28-.2.44-.13.15.06.2.25.12.39zm4.98-2.47c-.24-.06-.4-.29-.36-.52.04-.23.28-.37.52-.32.59.12 1.02.52 1.09 1.02.07.5-.2.96-.71 1.17-.23.09-.48-.01-.57-.24-.09-.23.01-.48.24-.57.18-.08.28-.25.26-.44-.03-.19-.16-.34-.35-.38-.04-.01-.08-.02-.12-.03zm-5.7 6.2c-2.37.23-4.42-.84-4.57-2.39-.15-1.55 1.64-3.03 4.01-3.29 2.37-.27 4.42.84 4.57 2.4.15 1.54-1.64 3.02-4.01 3.28zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                    </svg>
+                  </a>
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+        </article>
+      {{ end }}
+    {{ end }}
+  </section>
+{{ end }}

@@ -14,17 +14,36 @@
   weight = 30
 
 [[main]]
+  name = "更多"
+  identifier = "more"
+  weight = 40
+
+[[main]]
   name = "類別"
   pageRef = "/categories"
-  weight = 40
+  parent = "more"
+  weight = 41
+
+[[main]]
+  name = "作者"
+  pageRef = "/authors"
+  parent = "more"
+  weight = 42
+
+[[main]]
+  name = "貢獻指南"
+  pageRef = "/contributing"
+  parent = "more"
+  weight = 43
 
 [[main]]
   name = "關於"
   pageRef = "/about"
-  weight = 50
+  parent = "more"
+  weight = 44
 
 [[main]]
   identifier = "github"
-  name = "GitHub"
-  url = "https://github.com/gentoo-zh"
-  weight = 60
+  pre = "github"
+  url = "https://github.com/gentoo-zh/gentoo-zh.github.com"
+  weight = 50

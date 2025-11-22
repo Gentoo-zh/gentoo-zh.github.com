@@ -1,7 +1,8 @@
 {
   "name": "Zakkaus",
-  "bio": "Gentoo 中文社区贡献者",
+  "bio": "Gentoo 中文社区现任维护者，网站改版与内容维护，Apple Silicon Mac 安装指南作者",
   "social": [
+    { "blog": "https://zakk.au" },
     { "github": "https://github.com/zakkaus" },
     { "telegram": "https://t.me/ethcnm" }
   ]
