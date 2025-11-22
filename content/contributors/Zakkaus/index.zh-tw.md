@@ -19,4 +19,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-Gentoo 中文社群現網站改版與內容維護
+38 次提交
