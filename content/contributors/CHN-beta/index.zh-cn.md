@@ -5,7 +5,7 @@ externalUrl: "https://github.com/CHN-beta"
 links:
   - name: "blog"
     url: "https://chn.moe"
-weight: 9914
+weight: 9910
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-86 次提交
+90 次提交

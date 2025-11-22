@@ -5,7 +5,7 @@ externalUrl: "https://github.com/zhcj"
 links:
   - name: "blog"
     url: "https://phpcj.org/"
-weight: 1
+weight: 9966
 showDate: false
 showAuthor: false
 showReadingTime: false
