@@ -1,3 +1,7 @@
+{{/* Dark mode compatibility - inform browsers and extensions that site has native dark mode */}}
+<meta name="color-scheme" content="light dark">
+<style>:root { color-scheme: light dark; }</style>
+
 {{/* Cloudflare stats integration */}}
 {{ with resources.Get "js/cloudflare-stats.js" }}
   {{ $fingerprint := $.Params.fingerprintAlgorithm | default "sha512" }}
@@ -6,6 +10,11 @@
 {{ end }}
 
 {{/* Enhanced SEO Meta Tags */}}
-<meta name="robots" content="index,follow">
-<meta name="googlebot" content="index,follow">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta name="bingbot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+
+{{/* Preconnect to external domains for performance */}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 
