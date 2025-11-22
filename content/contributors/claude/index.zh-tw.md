@@ -1,5 +1,5 @@
 ---
-title: "claude"
+title: "Claude"
 tags: ['Overlay 貢獻者']
 externalUrl: "https://github.com/claude"
 weight: 9957

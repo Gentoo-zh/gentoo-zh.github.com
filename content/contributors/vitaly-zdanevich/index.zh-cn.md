@@ -1,5 +1,5 @@
 ---
-title: "vitaly-zdanevich"
+title: "Vitaly Zdanevich"
 date: 2025-11-22
 draft: false
 tags: ["Overlay 贡献者"]
