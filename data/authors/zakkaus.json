@@ -1,9 +1,19 @@
 {
-  "name": "Zakkaus",
-  "bio": "Gentoo 中文社区现任维护者，网站改版与内容维护，Apple Silicon Mac 安装指南作者",
+  "name": "Zakk",
+  "bio": "Gentoo 中文社区现网站改版与内容维护",
   "social": [
-    { "blog": "https://zakk.au" },
-    { "github": "https://github.com/zakkaus" },
-    { "telegram": "https://t.me/ethcnm" }
-  ]
+    {
+      "github": "https://github.com/zakkaus"
+    },
+    {
+      "globe": "https://zakk.au"
+    },
+    {
+      "instagram": "https://www.instagram.com/zakk.au/"
+    },
+    {
+      "telegram": "https://t.me/ethcnm"
+    }
+  ],
+  "image": "/contributors/zakkaus/feature.webp"
 }

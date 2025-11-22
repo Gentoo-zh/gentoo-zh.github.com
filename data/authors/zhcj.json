@@ -2,7 +2,9 @@
   "name": "清风（张乐）",
   "bio": "Gentoo 中文社区联合创始人，主站服务器架设及管理",
   "social": [
-    { "weibo": "https://weibo.com/zhcj" },
-    { "github": "https://github.com/zhcj" }
-  ]
+    {
+      "github": "https://github.com/zhcj"
+    }
+  ],
+  "image": "/contributors/zhcj/feature.webp"
 }

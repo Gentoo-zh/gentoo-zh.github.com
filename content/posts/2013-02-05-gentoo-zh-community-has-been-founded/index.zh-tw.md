@@ -2,6 +2,7 @@
 title: "Gentoo 中文社群成立"
 date: 2013-02-05
 categories: ["announcement", "community"]
+authors: ["zhcj"]
 ---
 
 ## Gentoo中文社群的源起

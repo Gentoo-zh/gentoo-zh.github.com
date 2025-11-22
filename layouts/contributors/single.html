@@ -1,0 +1,87 @@
+{{ define "main" }}
+{{ $featured := "" }}
+{{ $featuredURL := "" }}
+{{ $images := .Resources.ByType "image" }}
+{{ range slice "*feature*" "*cover*" "*thumbnail*" "*avatar*" }}
+  {{ if and (not $featured) $images }}
+    {{ $match := $images.GetMatch . }}
+    {{ if $match }}{{ $featured = $match }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ with $featured }}
+  {{ $featuredURL = (.Fill "240x240 Smart").RelPermalink }}
+{{ end }}
+
+{{/* Background Image */}}
+{{ with site.Params.defaultBackgroundImage }}
+  {{ $bgImage := resources.Get . }}
+  {{ if $bgImage }}
+    <div class="fixed inset-x-0 top-0 -z-10">
+      <img
+        class="nozoom h-[1000px] w-full object-cover"
+        src="{{ $bgImage.RelPermalink }}"
+        role="presentation">
+      <div class="from-neutral absolute inset-0 h-[1000px] bg-gradient-to-t to-transparent mix-blend-normal dark:from-neutral-800"></div>
+      <div class="from-neutral absolute inset-0 h-[1000px] bg-gradient-to-t to-neutral-100 opacity-60 mix-blend-normal dark:from-neutral-800 dark:to-neutral-800"></div>
+    </div>
+  {{ end }}
+{{ end }}
+
+<article class="max-w-prose mx-auto">
+  {{/* Back Link */}}
+  <div class="mb-8">
+    <a href="{{ relLangURL "/contributors/" }}" class="text-sm text-neutral-500 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+      ← {{ i18n "common.back" | default "返回列表" }}
+    </a>
+  </div>
+
+  {{/* Profile Content */}}
+  <div class="prose dark:prose-invert max-w-full">
+    <div class="flex flex-col items-center space-y-8 not-prose py-12">
+      {{/* Avatar */}}
+      {{ if $featuredURL }}
+        <img src="{{ $featuredURL }}" alt="{{ .Title }}" class="w-32 h-32 rounded-full object-cover shadow-md" />
+      {{ else }}
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-md">
+          <span class="text-4xl font-bold text-white">{{ substr .Title 0 1 | upper }}</span>
+        </div>
+      {{ end }}
+
+      {{/* Name */}}
+      <h1 class="text-2xl font-bold text-neutral-900 dark:text-white m-0">
+        {{ .Title }}
+      </h1>
+
+      {{/* Bio */}}
+      {{ with .Content }}
+        <p class="text-center text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-md m-0">
+          {{ . | plainify }}
+        </p>
+      {{ end }}
+
+      {{/* Social Links */}}
+      {{ if or .Params.externalUrl .Params.links }}
+        <div class="flex gap-4 pt-2">
+          {{ with .Params.externalUrl }}
+            <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="w-12 h-12 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all">
+              {{ partial "icon.html" "github" }}
+            </a>
+          {{ end }}
+          {{ range .Params.links }}
+            {{ $icon := "link" }}
+            {{ if in .url "github.com" }}{{ $icon = "github" }}
+            {{ else if in .url "twitter.com" }}{{ $icon = "twitter" }}
+            {{ else if in .url "instagram.com" }}{{ $icon = "instagram" }}
+            {{ else if in .url "t.me" }}{{ $icon = "telegram" }}
+            {{ else if eq .name "blog" }}{{ $icon = "globe" }}
+            {{ end }}
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="w-12 h-12 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all">
+              {{ partial "icon.html" $icon }}
+            </a>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</article>
+{{ end }}

@@ -2,6 +2,7 @@
 title: "建設中的 Gentoo 中文社群"
 date: 2014-08-25
 categories: ["announcement", "community"]
+authors: ["zhcj"]
 ---
 
 Gentoo 是一個基於 Linux 或 FreeBSD 的自由作業系統，它幾乎能為任何應用程式或需求自動地作出優化和定製。

@@ -1,9 +1,17 @@
 ---
-title: "作者"
+title: "貢獻者列表"
+date: 2025-01-22
+draft: false
 description: "Gentoo 中文社群的貢獻者"
-layout: "authors"
+slug: "authors"
+showDate: false
+showAuthor: false
+showReadingTime: false
+showEdit: false
+layoutBackgroundHeaderSpace: false
+cardViewScreenWidth: false
 ---
 
-**注意**：由於網站剛剛從 Jekyll 遷移至 Hugo，貢獻者資訊有待補充完善。
+這裡是 Gentoo 中文社群所有貢獻者的列表。
 
-這裡是 Gentoo 中文社群的所有貢獻者。
+**說明**：本頁面展示 [gentoo-zh Overlay](https://github.com/microcai/gentoo-zh) 中提交次數超過 30 次的貢獻者，以及網站內容貢獻者。如需修改或刪除您的資訊，請聯繫 [admin@zakk.au](mailto:admin@zakk.au)。

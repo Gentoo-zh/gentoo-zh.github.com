@@ -1,0 +1,132 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* Background Image */}}
+  {{ with site.Params.defaultBackgroundImage }}
+    {{ $bgImage := resources.Get . }}
+    {{ if $bgImage }}
+      <div class="fixed inset-x-0 top-0 -z-10">
+        <img
+          class="nozoom h-[1000px] w-full object-cover"
+          src="{{ $bgImage.RelPermalink }}"
+          role="presentation">
+        <div class="from-neutral absolute inset-0 h-[1000px] bg-gradient-to-t to-transparent mix-blend-normal dark:from-neutral-800"></div>
+        <div class="from-neutral absolute inset-0 h-[1000px] bg-gradient-to-t to-neutral-100 opacity-60 mix-blend-normal dark:from-neutral-800 dark:to-neutral-800"></div>
+      </div>
+    {{ end }}
+  {{ end }}
+
+  {{/* Header */}}
+  <header>
+    {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+      {{ partial "article-meta/list.html" (dict "context" . "scope" "single") }}
+    </div>
+  </header>
+
+  {{/* Description (markdown content) */}}
+  <section class="mt-0 mb-32 prose flex max-w-full flex-col dark:prose-invert">
+    <div class="min-w-0 min-h-0 max-w-prose">
+      {{ .Content }}
+    </div>
+  </section>
+
+  {{/* Authors Grid by Tags */}}
+  {{ if gt (len .Pages) 0 }}
+    <div class="flex flex-col gap-20">
+    {{ $maintainers := slice }}
+    {{ $founders := slice }}
+    {{ $contributors := slice }}
+    {{ $website := slice }}
+    {{ $webAdmin := slice }}
+
+    {{/* Group pages by tags */}}
+    {{ range .Pages }}
+      {{ if or (in .Params.tags "現任主要維護者") (in .Params.tags "现任主要维护者") }}
+        {{ $maintainers = $maintainers | append . }}
+      {{ else if or (in .Params.tags "社群創始人") (in .Params.tags "社群创始人") }}
+        {{ $founders = $founders | append . }}
+      {{ else if or (in .Params.tags "網站內容貢獻者") (in .Params.tags "网站内容贡献者") }}
+        {{ $website = $website | append . }}
+      {{ else if or (in .Params.tags "網站維護者") (in .Params.tags "网站维护者") }}
+        {{ $webAdmin = $webAdmin | append . }}
+      {{ else }}
+        {{ $contributors = $contributors | append . }}
+      {{ end }}
+    {{ end }}
+
+    {{/* 社群創始人 - 權重最高 */}}
+    {{ if gt (len $founders) 0 }}
+      <section>
+          <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mt-20 mb-20">{{ if eq site.Language.Lang "zh-tw" }}社群創始人{{ else }}社群创始人{{ end }}</h2>
+        <div class="grid gap-y-64 gap-x-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+          {{ range $founders }}
+            {{ partial "contributors/author-card.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{/* 網站維護者 */}}
+    {{ if gt (len $webAdmin) 0 }}
+      <section>
+          <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mt-20 mb-20">{{ if eq site.Language.Lang "zh-tw" }}網站維護者{{ else }}网站维护者{{ end }}</h2>
+        <div class="grid gap-y-64 gap-x-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+          {{ range $webAdmin }}
+            {{ partial "contributors/author-card.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{/* 網站內容貢獻者 */}}
+    {{ if gt (len $website) 0 }}
+      <section>
+          <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mt-20 mb-20">{{ if eq site.Language.Lang "zh-tw" }}網站內容貢獻者{{ else }}网站内容贡献者{{ end }}</h2>
+        <div class="grid gap-y-64 gap-x-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+          {{ range $website }}
+            {{ partial "contributors/author-card.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{/* Overlay 現任主要維護者 */}}
+    {{ if gt (len $maintainers) 0 }}
+      <section>
+          <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200 mt-20 mb-20">{{ if eq site.Language.Lang "zh-tw" }}Gentoo zh Overlay 現任主要維護者{{ else }}Gentoo zh Overlay 现任主要维护者{{ end }}</h2>
+        <div class="grid gap-y-64 gap-x-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+          {{ range $maintainers }}
+            {{ partial "contributors/author-card.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{/* Overlay 貢獻者 - 按貢獻次數排序 */}}
+    {{ if gt (len $contributors) 0 }}
+      <section>
+        <div class="space-y-3 mt-20 mb-20">
+          <h2 class="text-3xl font-bold text-neutral-800 dark:text-neutral-200">{{ if eq site.Language.Lang "zh-tw" }}Gentoo zh Overlay 貢獻者{{ else }}Gentoo zh Overlay 贡献者{{ end }}</h2>
+          <p class="text-base text-neutral-600 dark:text-neutral-400">{{ if eq site.Language.Lang "zh-tw" }}提交超過 10 次{{ else }}提交超过 10 次{{ end }}</p>
+        </div>
+        <div class="grid gap-y-64 gap-x-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+          {{ range sort $contributors "Params.weight" }}
+            {{ partial "contributors/author-card.html" . }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    </div>
+  {{ else }}
+    <section class="mt-10 prose dark:prose-invert">
+      <p class="py-8 border-t">
+        <em>{{ i18n "list.no_articles" | emojify }}</em>
+      </p>
+    </section>
+  {{ end }}
+{{ end }}

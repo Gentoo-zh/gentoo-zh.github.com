@@ -1,0 +1,83 @@
+{{ $featured := "" }}
+{{ $featuredURL := "" }}
+{{ $images := .Resources.ByType "image" }}
+{{ range slice "*feature*" "*cover*" "*thumbnail*" "*avatar*" }}
+  {{ if and (not $featured) $images }}
+    {{ $match := $images.GetMatch . }}
+    {{ if $match }}{{ $featured = $match }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ with $featured }}
+  {{ $featuredURL = (.Fill "200x200 Smart").RelPermalink }}
+{{ end }}
+
+<article class="flex flex-col items-center text-center space-y-3 mb-12 md:mb-16">
+  {{/* Avatar */}}
+  <a href="{{ .RelPermalink }}" class="block">
+    {{ if $featuredURL }}
+      <img 
+        src="{{ $featuredURL }}" 
+        alt="{{ .Title }}" 
+        loading="lazy"
+        class="w-24 h-24 rounded-full object-cover ring-4 ring-neutral-200 dark:ring-neutral-700 hover:ring-primary-500 dark:hover:ring-primary-400 transition-all"
+      />
+    {{ else }}
+      <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center ring-4 ring-neutral-200 dark:ring-neutral-700 hover:ring-primary-500 dark:hover:ring-primary-400 transition-all">
+        <span class="text-3xl font-bold text-white">{{ substr .Title 0 1 | upper }}</span>
+      </div>
+    {{ end }}
+  </a>
+
+  {{/* Name and Social Links grouped together */}}
+  <div class="flex flex-col items-center gap-1.5">
+    {{/* Name */}}
+    <a 
+      href="{{ .RelPermalink }}" 
+      class="text-lg font-bold text-neutral-900 dark:text-neutral-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+    >
+      {{ .Title }}
+    </a>
+
+    {{/* Social Links */}}
+    {{ if or .Params.externalUrl .Params.links }}
+      <div class="flex items-center justify-center gap-2">
+        {{ with .Params.externalUrl }}
+          <a 
+            href="{{ . }}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="w-5 h-5 text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            aria-label="GitHub"
+          >
+            {{ partial "icon.html" "github" }}
+          </a>
+        {{ end }}
+        {{ range .Params.links }}
+          {{ $icon := "link" }}
+          {{ if in .url "github.com" }}{{ $icon = "github" }}
+          {{ else if in .url "twitter.com" }}{{ $icon = "twitter" }}
+          {{ else if in .url "instagram.com" }}{{ $icon = "instagram" }}
+          {{ else if in .url "t.me" }}{{ $icon = "telegram" }}
+          {{ else if eq .name "blog" }}{{ $icon = "globe" }}
+          {{ end }}
+          <a 
+            href="{{ .url }}" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="w-5 h-5 text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+            aria-label="{{ .name }}"
+          >
+            {{ partial "icon.html" $icon }}
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+
+  {{/* Bio */}}
+  {{ with .Content }}
+    <p class="text-sm text-neutral-600 dark:text-neutral-400 max-w-xs px-2">
+      {{ . | plainify }}
+    </p>
+  {{ end }}
+</article>

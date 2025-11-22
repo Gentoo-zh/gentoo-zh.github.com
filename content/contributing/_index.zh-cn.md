@@ -21,7 +21,7 @@ description: "如何为 Gentoo 中文社区网站做出贡献"
 - `content/overlay/` - gentoo-zh Overlay 说明
 - `content/mirrorlist/` - 镜像列表（Portage 树和 Distfiles 配置）
 - `content/about/` - 关于页面（项目历史和定位）
-- `content/authors/` - 作者页面（贡献者信息）
+- `content/contributors/` - 贡献者页面（社区成员信息）
 - `content/posts/` - 新闻文章和教程目录
 - `content/categories/` - 文章分类定义
 
