@@ -14,7 +14,7 @@ title: "關於"
 快來加入我們吧！Gentoo 中文
 
 * 學習交流QQ群：43047398
-* IRC on Freenode：#gentoo-cn
+* IRC on Libera Chat：[#gentoo-zh](ircs://irc.libera.chat:6697/#gentoo-zh)
 * Telegram 頻道：[@gentoocn](https://t.me/gentoocn)
 * Telegram 群組：[@gentoo_zh](https://t.me/gentoo_zh)
 
