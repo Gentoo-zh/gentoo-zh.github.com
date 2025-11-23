@@ -97,8 +97,10 @@ https://chadmed.au/pub/gentoo/
 > **提示**：官方正在整合 Asahi 支援到標準 Live USB。目前使用 chadmed 維護的版本。
 
 > **映像版本相容性資訊（更新日期：2025年11月21日）**：
-> - **社群構建版本**：由 [Zakkaus](https://github.com/zakkaus) 基於 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 構建的映像，已成功在 M2 MacBook 上測試
->   - 下載連結：[Google Drive](https://drive.google.com/drive/folders/1ZYGkc8uXqRFJ4jeaSbm5odeNb2qvh6CS)
+> - **社群構建版本**：由 [Zakkaus](https://github.com/zakkaus) 基於 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 構建的映像
+>   - **特色**：systemd + KDE Plasma 桌面環境，預裝中文支援和 Fcitx5 輸入法，音訊和 Wi-Fi 開箱即用
+>   - **下載連結**：[Google Drive](https://drive.google.com/drive/folders/1ZYGkc8uXqRFJ4jeaSbm5odeNb2qvh6CS)
+>   - **適用場景**：推薦新手使用，已成功在 M2 MacBook 上測試
 >   - 若有興趣自行構建，可參考 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 專案
 > - **官方版本**：
 >   - **推薦使用**：`install-arm64-asahi-20250603.iso`（2025年6月版本，已測試穩定）

@@ -18,6 +18,18 @@ title: "關於"
 * Telegram 頻道：[@gentoocn](https://t.me/gentoocn)
 * Telegram 群組：[@gentoo_zh](https://t.me/gentoo_zh)
 
+> **群組規則提示：**  
+> 我們尊重宗教、性別、政治傾向，但請不要在群組裡表達和討論相關話題。
+
+### Gentoo-zh OT 群（Off-Topic 閒聊群）
+
+* 主群: [@gentoo_zh](https://t.me/gentoo_zh)
+* Telegram: [@gentoo_zh_offtopic](https://t.me/gentoo_zh_offtopic)
+* IRC on Libera Chat: [#gentoo-zh-offtopic](ircs://irc.libera.chat:6697/#gentoo-zh-offtopic)
+* Matrix: [#gentoo_zh_offtopic:shabi.id](https://matrix.to/#/#gentoo_zh_offtopic:shabi.id)
+* 頻道: [@gentoocn](https://t.me/gentoocn)
+* OPs: [@gentoo_zh_ops](https://t.me/gentoo_zh_ops)
+
 更多交流方式正在完善中！
 
 ## 本社群網站目標

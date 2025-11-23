@@ -4,6 +4,17 @@ title: "下載"
 
 Gentoo Linux 提供多種安裝媒介供使用者下載。本頁面列出官方下載源和中國內陸推薦的快速下載源。
 
+**新手入坑推薦使用每週構建的 KDE 桌面環境的 Live ISO：** <https://iso.gig-os.org/>  
+（來自 [Gig-OS](https://github.com/Gig-OS) 專案）
+
+**Live ISO 登入憑證：**
+- 帳號：`live`
+- 密碼：`live`
+- Root 密碼：`live`
+
+**系統支援：**
+- 支援中文顯示和中文輸入法(fcixt5),flclash等
+
 ## 官方下載頁面
 
 **Gentoo 官方下載頁：** <https://www.gentoo.org/downloads/>
@@ -11,7 +22,7 @@ Gentoo Linux 提供多種安裝媒介供使用者下載。本頁面列出官方�
 官方提供了以下安裝媒介：
 - **Minimal Installation CD**：最小化安裝光碟，適合有經驗的使用者
 - **LiveGUI**：帶圖形介面的 Live 系統，適合新使用者
-- **Stage Archives**：Stage3 壓縮包，用於手動安裝
+- **Stage Archives**：Stage3 壓縮包，Stage3 是一個預先編譯好的最小化 Linux 使用者空間環境，它內含了完整的編譯工具鏈（GCC）與 Portage 套件管理器，作為使用者從原始碼構建個性化 Gentoo 系統的標準起點。
 
 ## 架構選擇
 
