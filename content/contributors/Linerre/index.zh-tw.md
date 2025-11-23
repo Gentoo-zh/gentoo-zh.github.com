@@ -5,7 +5,7 @@ externalUrl: "https://github.com/Linerre"
 links:
   - name: "blog"
     url: "https://linerre.github.io"
-weight: 9697
+weight: 9695
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-303 次提交
+305 次提交

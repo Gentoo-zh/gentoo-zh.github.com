@@ -1,11 +1,13 @@
 ---
-title: "Noel Errenil"
+title: "YamaD"
 tags: ['Overlay 貢獻者']
-externalUrl: "https://github.com/Linerre"
+externalUrl: "https://github.com/yamader"
 links:
   - name: "blog"
-    url: "https://linerre.github.io"
-weight: 9695
+    url: "https://yamad.me"
+  - name: "twitter"
+    url: "https://twitter.com/_yamader"
+weight: 9990
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +17,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-305 次提交
+10 次提交

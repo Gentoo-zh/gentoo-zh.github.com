@@ -1,11 +1,11 @@
 ---
-title: "jinqiang zhang"
-tags: ['現任主要維護者']
-externalUrl: "https://github.com/peeweep"
+title: "Yixun Lan"
+tags: ['Overlay 貢獻者']
+externalUrl: "https://github.com/dlan17"
 links:
   - name: "blog"
-    url: "https://posts.jinqiang.online/"
-weight: 8663
+    url: "http://dev.gentoo.org/~dlan"
+weight: 9990
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-1337 次提交
+10 次提交

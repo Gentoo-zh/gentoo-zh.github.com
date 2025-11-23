@@ -98,7 +98,7 @@ https://chadmed.au/pub/gentoo/
 
 > **映像版本相容性資訊（更新日期：2025年11月21日）**：
 > - **社群構建版本**：由 [Zakkaus](https://github.com/zakkaus) 基於 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 構建的映像
->   - **特色**：systemd + KDE Plasma 桌面環境，預裝中文支援和 Fcitx5 輸入法，音訊和 Wi-Fi 開箱即用
+>   - **特色**：systemd + KDE Plasma 桌面環境，預裝中文支援和 Fcitx5 輸入法，音訊和 Wi-Fi,flclash,firefox-bin 開箱即用
 >   - **下載連結**：[Google Drive](https://drive.google.com/drive/folders/1ZYGkc8uXqRFJ4jeaSbm5odeNb2qvh6CS)
 >   - **適用場景**：推薦新手使用，已成功在 M2 MacBook 上測試
 >   - 若有興趣自行構建，可參考 [gentoo-asahi-releng](https://github.com/chadmed/gentoo-asahi-releng) 專案
