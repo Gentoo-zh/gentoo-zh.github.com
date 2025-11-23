@@ -22,7 +22,7 @@ Gentoo Linux 提供多種安裝媒介供使用者下載。本頁面列出官方�
 官方提供了以下安裝媒介：
 - **Minimal Installation CD**：最小化安裝光碟，適合有經驗的使用者
 - **LiveGUI**：帶圖形介面的 Live 系統，適合新使用者
-- **Stage Archives**：Stage3 壓縮包，Stage3 是一個預先編譯好的最小化 Linux 使用者空間環境，它內含了完整的編譯工具鏈（GCC）與 Portage 套件管理器，作為使用者從原始碼構建個性化 Gentoo 系統的標準起點。
+- **Stage Archives**：Stage3 壓縮包，Stage3 是一個預先編譯好的最小化 Linux 使用者空間環境，它內含了完整的編譯工具鏈（GCC）與 Portage 套件管理器，作為使用者從原始碼構建個性化 Gentoo 系統的標準起點
 
 ## 架構選擇
 

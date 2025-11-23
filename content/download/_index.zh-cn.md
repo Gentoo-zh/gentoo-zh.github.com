@@ -22,7 +22,7 @@ Gentoo Linux 提供多种安装介质供用户下载。本页面列出官方下�
 官方提供了以下安装介质：
 - **Minimal Installation CD**：最小化安装光盘，适合有经验的用户
 - **LiveGUI**：带图形界面的 Live 系统，适合新用户
-- **Stage Archives**：Stage3 压缩包，Stage3 是一个预先编译好的最小化 Linux 使用者空间环境，它内含了完整的编译工具链（GCC）与 Portage 套件管理器，作为使用者从原始码构建个性化 Gentoo 系统的标准起点。
+- **Stage Archives**：Stage3 压缩包，Stage3 是一个预先编译好的最小化 Linux 使用者空间环境，它内含了完整的编译工具链（GCC）与 Portage 套件管理器，作为使用者从原始码构建个性化 Gentoo 系统的标准起点
 ## 架构选择
 
 Gentoo 支持多种 CPU 架构：
