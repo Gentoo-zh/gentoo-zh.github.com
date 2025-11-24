@@ -70,6 +70,40 @@ auto-sync = yes
 emerge --sync gentoo-zh
 ```
 
+## 鏡像加速
+
+### gentoo-zh distfiles 鏡像
+
+提供 gentoo-zh overlay distfiles 快取，加速軟體套件下載。
+
+**源地址**：<https://distfiles.gentoocn.org/>
+
+**鏡像站點**：
+- 重慶大學：<https://mirror.cqu.edu.cn/gentoo-zh>
+- 南京大學：<https://mirror.nju.edu.cn/gentoo-zh>
+
+**使用幫助**：<https://t.me/gentoocn/56>
+
+### gentoo-zh.git 鏡像
+
+提供 gentoo-zh overlay 的 Git 倉庫鏡像，加速 overlay 同步。
+
+**源地址**：<https://github.com/microcai/gentoo-zh.git>
+
+**鏡像站點**：
+- 重慶大學：<https://mirrors.cqu.edu.cn/git/gentoo-zh.git>
+- 南京大學：<https://mirror.nju.edu.cn/git/gentoo-zh.git>
+
+**配置範例**（使用鏡像加速同步）：
+
+```ini
+[gentoo-zh]
+location = /var/db/repos/gentoo-zh
+sync-type = git
+sync-uri = https://mirrors.cqu.edu.cn/git/gentoo-zh.git
+auto-sync = yes
+```
+
 ## 使用 overlay 中的軟體套件
 
 配置完成後，就可以像使用官方源一樣安裝 overlay 中的軟體套件了：
