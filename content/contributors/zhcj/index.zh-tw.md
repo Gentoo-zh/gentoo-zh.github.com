@@ -1,5 +1,5 @@
 ---
-title: "清風（張樂）"
+title: "清風"
 tags: ['社群創始人']
 externalUrl: "https://github.com/zhcj"
 links:
