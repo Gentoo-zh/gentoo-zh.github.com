@@ -22,16 +22,50 @@ import os
 import re
 import sys
 import argparse
+import yaml
 from pathlib import Path
+from datetime import datetime, timezone
 
-# 配置
-REPO = "microcai/gentoo-zh"
+# 默認配置
 CONTENT_DIR = "content/contributors"
-AVATAR_SIZES = {
-    "card": 200,      # 列表頁卡片頭像
-    "single": 240     # 個人頁頭像
-}
-MIN_COMMITS_DEFAULT = 10
+CONFIG_FILE = Path(__file__).parent / "contributors-config.yaml"
+
+
+def load_config():
+    """從配置文件加載設置"""
+    default_config = {
+        'repository': 'microcai/gentoo-zh',
+        'min_commits': 10,
+        'blocklist': [],
+        'avatar_sizes': {
+            'card': 200,
+            'single': 240
+        }
+    }
+    
+    if not CONFIG_FILE.exists():
+        print(f"警告: 配置文件 {CONFIG_FILE} 不存在，使用默認配置")
+        return default_config
+    
+    try:
+        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+            # 合併默認配置
+            for key, value in default_config.items():
+                if key not in config:
+                    config[key] = value
+            return config
+    except Exception as e:
+        print(f"警告: 讀取配置文件失敗: {e}，使用默認配置")
+        return default_config
+
+
+# 加載配置
+config = load_config()
+REPO = config['repository']
+AVATAR_SIZES = config['avatar_sizes']
+MIN_COMMITS_DEFAULT = config['min_commits']
+BLOCKLIST = set(config['blocklist'])
 
 
 def run_command(cmd, check=True):
@@ -76,6 +110,43 @@ def fetch_user_info(login):
         'gh', 'api', f'/users/{login}'
     ])
     return json.loads(result.stdout)
+
+
+def update_index_timestamp(dry_run=False):
+    """更新索引頁面的時間戳"""
+    now_utc = datetime.now(timezone.utc)
+    
+    # 格式化時間字符串
+    timestamp_cn = now_utc.strftime("%Y年%m月%d日 %H:%M UTC")
+    timestamp_tw = now_utc.strftime("%Y年%m月%d日 %H:%M UTC")
+    
+    updated = False
+    
+    for lang, timestamp in [('zh-cn', timestamp_cn), ('zh-tw', timestamp_tw)]:
+        file_path = Path(CONTENT_DIR) / f"_index.{lang}.md"
+        
+        if not file_path.exists():
+            print(f"  警告: {file_path} 不存在")
+            continue
+        
+        content = file_path.read_text(encoding='utf-8')
+        
+        # 更新時間戳行（支持簡體和繁體）
+        new_content = re.sub(
+            r'最[後后]更新[時时][間间].*',
+            f'最{"後" if lang == "zh-tw" else "后"}更新{"時" if lang == "zh-tw" else "时"}{"間" if lang == "zh-tw" else "间"} {timestamp}（每週一自動更新）',
+            content
+        )
+        
+        if new_content != content:
+            if not dry_run:
+                file_path.write_text(new_content, encoding='utf-8')
+                print(f"  已更新 {file_path.name} 的時間戳")
+            else:
+                print(f"  [DRY-RUN] 會更新 {file_path.name} 的時間戳為: {timestamp}")
+            updated = True
+    
+    return updated
 
 
 def download_and_convert_avatar(login, avatar_url, dry_run=False):
@@ -255,8 +326,15 @@ def main():
     # 獲取貢獻者列表
     contributors = fetch_contributors()
     
-    # 過濾貢獻者
-    filtered = [c for c in contributors if c['contributions'] >= args.min_commits]
+    # 過濾貢獻者 (提交次數 + 屏蔽名單)
+    filtered = [
+        c for c in contributors 
+        if c['contributions'] >= args.min_commits and c['login'] not in BLOCKLIST
+    ]
+    excluded_by_blocklist = [c['login'] for c in contributors if c['login'] in BLOCKLIST]
+    
+    if excluded_by_blocklist:
+        print(f"已屏蔽用戶: {', '.join(excluded_by_blocklist)}")
     print(f"過濾後剩餘 {len(filtered)} 位貢獻者 (>= {args.min_commits} 次提交)\n")
     
     # 處理每位貢獻者
@@ -309,6 +387,10 @@ def main():
             print(f"  錯誤: {e}")
             skipped_count += 1
             continue
+    
+    # 更新索引頁面時間戳
+    print(f"\n正在更新索引頁面時間戳...")
+    update_index_timestamp(args.dry_run)
     
     print(f"\n{'=' * 50}")
     print(f"完成!")
