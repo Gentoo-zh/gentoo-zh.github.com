@@ -493,17 +493,47 @@ swapon /dev/nvme0n1p2                   # 启用 Swap 分区
 <details>
 <summary><b>进阶设置：Btrfs 子卷示例（点击展开）</b></summary>
 
+**1. 格式化**
+
+```bash
+mkfs.fat -F 32 /dev/nvme0n1p1  # 格式化 ESP
+mkswap /dev/nvme0n1p2          # 格式化 Swap
+mkfs.btrfs -L gentoo /dev/nvme0n1p3 # 格式化 Root (Btrfs)
+```
+
+**2. 创建子卷**
+
 ```bash
 mount /dev/nvme0n1p3 /mnt/gentoo
 btrfs subvolume create /mnt/gentoo/@
 btrfs subvolume create /mnt/gentoo/@home
 umount /mnt/gentoo
+```
 
+**3. 挂载子卷**
+
+```bash
 mount -o compress=zstd,subvol=@ /dev/nvme0n1p3 /mnt/gentoo
-mkdir -p /mnt/gentoo/{boot,efi,home}
+mkdir -p /mnt/gentoo/{efi,home}
 mount -o subvol=@home /dev/nvme0n1p3 /mnt/gentoo/home
-mount /dev/nvme0n1p2 /mnt/gentoo/boot
-mount /dev/nvme0n1p1 /mnt/gentoo/efi
+mount /dev/nvme0n1p1 /mnt/gentoo/efi    # 注意：ESP 必须是 FAT32 格式
+swapon /dev/nvme0n1p2
+```
+
+**4. 验证挂载**
+
+```bash
+lsblk
+```
+
+输出示例：
+```text
+NAME             MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+nvme0n1          259:1    0 931.5G  0 disk  
+├─nvme0n1p1      259:7    0     1G  0 part  /mnt/gentoo/efi
+├─nvme0n1p2      259:8    0     4G  0 part  [SWAP]
+└─nvme0n1p3      259:9    0 926.5G  0 part  /mnt/gentoo/home
+                                            /mnt/gentoo
 ```
 
 > **Btrfs 快照建议**：
@@ -514,18 +544,49 @@ mount /dev/nvme0n1p1 /mnt/gentoo/efi
 <details>
 <summary><b>进阶设置：加密分区（LUKS）（点击展开）</b></summary>
 
+**1. 建立加密容器**
+
 ```bash
-# 建立 LUKS2 加密分区
 cryptsetup luksFormat --type luks2 --pbkdf argon2id --hash sha512 --key-size 512 /dev/nvme0n1p3
+```
 
-# 打开加密分区
+**2. 打开加密容器**
+
+```bash
 cryptsetup luksOpen /dev/nvme0n1p3 gentoo-root
+```
 
-# 格式化
-mkfs.btrfs --label root /dev/mapper/gentoo-root
+**3. 格式化**
 
-# 挂载
+```bash
+mkfs.fat -F 32 /dev/nvme0n1p1       # 格式化 ESP
+mkswap /dev/nvme0n1p2               # 格式化 Swap
+mkfs.btrfs --label root /dev/mapper/gentoo-root # 格式化 Root (Btrfs)
+```
+
+**4. 挂载**
+
+```bash
 mount /dev/mapper/gentoo-root /mnt/gentoo
+mkdir -p /mnt/gentoo/efi
+mount /dev/nvme0n1p1 /mnt/gentoo/efi
+swapon /dev/nvme0n1p2
+```
+
+**5. 验证挂载**
+
+```bash
+lsblk
+```
+
+输出示例：
+```text
+NAME             MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+nvme0n1          259:1    0 931.5G  0 disk  
+├─nvme0n1p1      259:7    0     1G  0 part  /mnt/gentoo/efi
+├─nvme0n1p2      259:8    0     4G  0 part  [SWAP]
+└─nvme0n1p3      259:9    0 926.5G  0 part  
+  └─gentoo-root  253:0    0 926.5G  0 crypt /mnt/gentoo
 ```
 
 </details>
@@ -929,12 +990,71 @@ vim /etc/fstab
 ```
 
 ```fstab
-UUID=<ESP-UUID>   /efi   vfat    defaults,noatime  0 2
-UUID=<BOOT-UUID>  /boot  ext4    defaults,noatime  0 2
-UUID=<ROOT-UUID>  /      ext4    defaults,noatime  0 1
-UUID=<HOME-UUID>  /home  ext4    defaults,noatime  0 2
-UUID=<SWAP-UUID>  none   swap    sw               0 0
+# <fs>                                     <mountpoint> <type> <opts>            <dump/pass>
+UUID=7E91-5869                             /efi         vfat   defaults,noatime  0 2
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                0 0
+UUID=8c08f447-c79c-4fda-8c08-f447c79ce690  /            xfs    defaults,noatime  0 1
 ```
+
+<details>
+<summary><b>进阶设置：Btrfs fstab 示例（点击展开）</b></summary>
+
+```fstab
+# Root Subvolume
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /            btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@              0 0
+
+# Home Subvolume
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /home        btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@home          0 0
+
+# Swap
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                                                      0 0
+
+# ESP (UEFI)
+UUID=7E91-5869                             /efi         vfat   defaults,noatime,fmask=0022,dmask=0022                  0 2
+```
+
+> **注意**：请务必使用 `blkid` 命令获取你实际的 UUID 并替换上面的示例值。
+
+</details>
+
+<details>
+<summary><b>进阶设置：LUKS 加密分区 fstab 示例（点击展开）</b></summary>
+
+> **关键点**：在 `fstab` 中，必须使用 **解密后映射设备** (Mapped Device) 的 UUID，而不是物理分区 (LUKS Container) 的 UUID。
+
+**1. 查看 UUID 区别**
+
+```bash
+blkid
+```
+
+输出示例（注意区分 `crypto_LUKS` 和 `btrfs`）：
+
+```text
+# 这是物理分区 (LUKS 容器)，不要在 fstab 中使用这个 UUID！
+/dev/nvme0n1p5: UUID="562d0251-..." TYPE="crypto_LUKS" ...
+
+# 这是解密后的映射设备 (文件系统)，fstab 应该用这个 UUID！
+/dev/mapper/cryptroot: UUID="7b44c5eb-..." TYPE="btrfs" ...
+```
+
+**2. fstab 配置示例**
+
+```fstab
+# Root (Btrfs inside LUKS) - 使用 /dev/mapper/cryptroot 的 UUID
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /            btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@              0 0
+
+# Home (Btrfs inside LUKS) - 使用 /dev/mapper/crypthomevar 的 UUID
+UUID=4ad44bb7-9843-470b-9a88-f008367b63a3  /home        btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@home          0 0
+
+# Swap
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                                                      0 0
+
+# ESP (UEFI)
+UUID=7E91-5869                             /efi         vfat   defaults,noatime,fmask=0022,dmask=0022                  0 2
+```
+
+</details>
 
 ---
 
@@ -1055,138 +1175,7 @@ echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel # 允许 wheel 组使用 sudo
 
 ---
 
-<details>
-<summary><b>进阶设置：加密支持（仅加密用户）（点击展开）</b></summary>
 
-> **可参考**：[Dm-crypt](https://wiki.gentoo.org/wiki/Dm-crypt/zh-cn)
-
-> **注意**：如果你在步骤 3.4 中选择了加密分区，才需要执行此步骤。
-
-### 步骤 1：启用 systemd cryptsetup 支持
-
-```bash
-mkdir -p /etc/portage/package.use
-echo "sys-apps/systemd cryptsetup" >> /etc/portage/package.use/fde
-
-# 重新编译 systemd 以启用 cryptsetup 支持
-emerge --ask --oneshot sys-apps/systemd
-```
-
-### 步骤 2：获取 LUKS 分区的 UUID
-
-```bash
-# 获取 LUKS 加密容器的 UUID（不是里面的文件系统 UUID）
-blkid /dev/nvme0n1p3
-```
-
-输出示例：
-```text
-/dev/nvme0n1p3: UUID="a1b2c3d4-e5f6-7890-abcd-ef1234567890" TYPE="crypto_LUKS" ...
-```
-记下这个 **LUKS UUID**（例如：`a1b2c3d4-e5f6-7890-abcd-ef1234567890`）。
-
-### 步骤 3：配置 GRUB 内核参数
-
-```bash
-vim /etc/default/grub
-```
-
-加入或修改以下内容（**替换 UUID 为实际值**）：
-```conf
-# 完整示例（替换 UUID 为你的实际 UUID）
-GRUB_CMDLINE_LINUX="rd.luks.uuid=<LUKS-UUID> rd.luks.allow-discards root=UUID=<ROOT-UUID> rootfstype=btrfs"
-```
-
-**参数说明**：
-- `rd.luks.uuid=<UUID>`：LUKS 加密分区的 UUID（使用 `blkid /dev/nvme0n1p3` 获取）
-- `rd.luks.allow-discards`：允许 SSD TRIM 指令穿透加密层（提升 SSD 性能）
-- `root=UUID=<UUID>`：解密后的 btrfs 文件系统 UUID（使用 `blkid /dev/mapper/gentoo-root` 获取）
-- `rootfstype=btrfs`：根文件系统类型（如果使用 ext4 改为 `ext4`）
-
-### 步骤 3.1（替代方案）：配置内核参数 (systemd-boot 方案)
-
-如果你使用 systemd-boot 而不是 GRUB，请编辑 `/boot/loader/entries/` 下的配置文件（例如 `gentoo.conf`）：
-
-```conf
-title      Gentoo Linux
-version    6.6.13-gentoo
-options    rd.luks.name=<LUKS-UUID>=cryptroot root=/dev/mapper/cryptroot rootfstype=btrfs rd.luks.allow-discards init=/lib/systemd/systemd
-linux      /vmlinuz-6.6.13-gentoo
-initrd     /initramfs-6.6.13-gentoo.img
-```
-
-**参数说明**：
-- `rd.luks.name=<LUKS-UUID>=cryptroot`：指定 LUKS 分区 UUID 并映射为 `cryptroot`。
-- `root=/dev/mapper/cryptroot`：指定解密后的根分区设备。
-- `rootfstype=btrfs`：指定根文件系统类型。
-
-### 步骤 4：安装并配置 dracut
-
-> **可参考**：[Dracut](https://wiki.gentoo.org/wiki/Dracut) 和 [Initramfs](https://wiki.gentoo.org/wiki/Initramfs)
-
-```bash
-# 安装 dracut（如果还没安装）
-emerge --ask sys-kernel/dracut
-```
-
-### 步骤 5：配置 dracut for LUKS 解密
-
-创建 dracut 配置文件：
-```bash
-vim /etc/dracut.conf.d/luks.conf
-```
-
-加入以下内容：
-```conf
-# 不要在这里设置 kernel_cmdline，GRUB 会覆盖它
-kernel_cmdline=""
-# 添加必要的模块支持 LUKS + btrfs
-add_dracutmodules+=" btrfs systemd crypt dm "
-# 添加必要的工具
-install_items+=" /sbin/cryptsetup /bin/grep "
-# 指定文件系统（如果使用其他文件系统请修改）
-filesystems+=" btrfs "
-```
-
-**配置说明**：
-- `crypt` 和 `dm` 模块提供 LUKS 解密支持
-- `systemd` 模块用于 systemd 启动环境
-- `btrfs` 模块支持 btrfs 文件系统（如果使用 ext4 改为 `ext4`）
-
-### 步骤 6：配置 /etc/crypttab（可选但推荐）
-
-```bash
-vim /etc/crypttab
-```
-
-加入以下内容（**替换 UUID 为你的 LUKS UUID**）：
-```conf
-gentoo-root UUID=<LUKS-UUID> none luks,discard
-```
-这样配置后，系统会自动识别并提示解锁加密分区。
-
-### 步骤 7：重新生成 initramfs
-
-```bash
-# 重新生成 initramfs（包含 LUKS 解密模块）
-dracut --kver $(make -C /usr/src/linux -s kernelrelease) --force
-# --kver: 指定内核版本
-# $(make -C /usr/src/linux -s kernelrelease): 自动获取当前内核版本号
-# --force: 强制覆盖已存在的 initramfs 文件
-```
-
-> **重要**：每次更新内核后，也需要重新执行此命令生成新的 initramfs！
-
-### 步骤 8：更新 GRUB 配置
-
-```bash
-grub-mkconfig -o /boot/grub/grub.cfg
-
-# 验证 initramfs 被正确引用
-grep initrd /boot/grub/grub.cfg
-```
-
-</details>
 
 
 ## 10. 安装引导程序 {#step-10-bootloader}
@@ -1261,6 +1250,145 @@ vim /efi/loader/loader.conf
 default gentoo.conf
 timeout 3
 console-mode auto
+```
+
+</details>
+
+<details>
+<summary><b>进阶设置：加密支持（仅加密用户）（点击展开）</b></summary>
+
+> **可参考**：[Dm-crypt](https://wiki.gentoo.org/wiki/Dm-crypt/zh-cn)
+
+> **注意**：如果你在步骤 3.4 中选择了加密分区，才需要执行此步骤。
+
+**步骤 1：启用 systemd cryptsetup 支持**
+
+```bash
+mkdir -p /etc/portage/package.use
+echo "sys-apps/systemd cryptsetup" >> /etc/portage/package.use/fde
+
+# 重新编译 systemd 以启用 cryptsetup 支持
+emerge --ask --oneshot sys-apps/systemd
+```
+
+**步骤 2：获取 LUKS 分区的 UUID**
+
+```bash
+# 获取 LUKS 加密容器的 UUID（不是里面的文件系统 UUID）
+blkid /dev/nvme0n1p3
+```
+
+输出示例：
+```text
+/dev/nvme0n1p3: UUID="a1b2c3d4-e5f6-7890-abcd-ef1234567890" TYPE="crypto_LUKS" ...
+```
+记下这个 **LUKS UUID**（例如：`a1b2c3d4-e5f6-7890-abcd-ef1234567890`）。
+
+**步骤 3：配置 GRUB 内核参数**
+
+```bash
+vim /etc/default/grub
+```
+
+加入或修改以下内容（**替换 UUID 为实际值**）：
+
+```bash
+# 完整示例（替换 UUID 为你的实际 UUID）
+GRUB_CMDLINE_LINUX="rd.luks.uuid=<LUKS-UUID> rd.luks.allow-discards root=UUID=<ROOT-UUID> rootfstype=btrfs"
+```
+
+**参数说明**：
+- `rd.luks.uuid=<UUID>`：LUKS 加密分区的 UUID（使用 `blkid /dev/nvme0n1p3` 获取）
+- `rd.luks.allow-discards`：允许 SSD TRIM 指令穿透加密层（提升 SSD 性能）
+- `root=UUID=<UUID>`：解密后的 btrfs 文件系统 UUID（使用 `blkid /dev/mapper/gentoo-root` 获取）
+- `rootfstype=btrfs`：根文件系统类型（如果使用 ext4 改为 `ext4`）
+
+<details>
+<summary><b>步骤 3.1（替代方案）：配置内核参数 (systemd-boot 方案)（点击展开）</b></summary>
+
+如果你使用 systemd-boot 而不是 GRUB，请编辑 `/boot/loader/entries/` 下的配置文件（例如 `gentoo.conf`）：
+
+```conf
+title      Gentoo Linux
+version    6.6.13-gentoo
+options    rd.luks.name=<LUKS-UUID>=cryptroot root=/dev/mapper/cryptroot rootfstype=btrfs rd.luks.allow-discards init=/lib/systemd/systemd
+linux      /vmlinuz-6.6.13-gentoo
+initrd     /initramfs-6.6.13-gentoo.img
+```
+
+**参数说明**：
+- `rd.luks.name=<LUKS-UUID>=cryptroot`：指定 LUKS 分区 UUID 并映射为 `cryptroot`。
+- `root=/dev/mapper/cryptroot`：指定解密后的根分区设备。
+- `rootfstype=btrfs`：指定根文件系统类型。
+
+</details>
+
+**步骤 4：安装并配置 dracut**
+
+> **可参考**：[Dracut](https://wiki.gentoo.org/wiki/Dracut) 和 [Initramfs](https://wiki.gentoo.org/wiki/Initramfs)
+
+```bash
+# 安装 dracut（如果还没安装）
+emerge --ask sys-kernel/dracut
+```
+
+**步骤 5：配置 dracut for LUKS 解密**
+
+创建 dracut 配置文件：
+
+```bash
+vim /etc/dracut.conf.d/luks.conf
+```
+
+加入以下内容：
+
+```conf
+# 不要在这里设置 kernel_cmdline，GRUB 会覆盖它
+kernel_cmdline=""
+# 添加必要的模块支持 LUKS + btrfs
+add_dracutmodules+=" btrfs systemd crypt dm "
+# 添加必要的工具
+install_items+=" /sbin/cryptsetup /bin/grep "
+# 指定文件系统（如果使用其他文件系统请修改）
+filesystems+=" btrfs "
+```
+
+**配置说明**：
+- `crypt` 和 `dm` 模块提供 LUKS 解密支持
+- `systemd` 模块用于 systemd 启动环境
+- `btrfs` 模块支持 btrfs 文件系统（如果使用 ext4 改为 `ext4`）
+
+### 步骤 6：配置 /etc/crypttab（可选但推荐）
+
+```bash
+vim /etc/crypttab
+```
+
+加入以下内容（**替换 UUID 为你的 LUKS UUID**）：
+```conf
+gentoo-root UUID=<LUKS-UUID> none luks,discard
+```
+这样配置后，系统会自动识别并提示解锁加密分区。
+
+### 步骤 7：重新生成 initramfs
+
+```bash
+# 重新生成 initramfs（包含 LUKS 解密模块）
+dracut --kver $(make -C /usr/src/linux -s kernelrelease) --force
+# --kver: 指定内核版本
+# $(make -C /usr/src/linux -s kernelrelease): 自动获取当前内核版本号
+# --force: 强制覆盖已存在的 initramfs 文件
+```
+
+> **重要**：每次更新内核后，也需要重新执行此命令生成新的 initramfs！
+
+### 步骤 8：更新 GRUB 配置
+
+```bash
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# 验证 initramfs 被正确引用
+grep initrd /boot/grub/grub.cfg
 ```
 
 </details>
