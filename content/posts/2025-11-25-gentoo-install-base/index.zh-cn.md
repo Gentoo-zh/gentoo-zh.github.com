@@ -1,8 +1,8 @@
 ---
 title: "Gentoo Linux 安装指南 (基础篇)"
 date: 2025-11-25
-summary: "Gentoo Linux 基础系统安装教程，涵盖分区、Stage3、内核编译、引导程序配置等。"
-description: "2025 年最新 Gentoo Linux 安装指南 (基础篇)，详细讲解 UEFI 安装流程、内核编译等。适合 Linux 进阶用户和 Gentoo 新手。"
+summary: "Gentoo Linux 基础系统安装教程，涵盖分区、Stage3、内核编译、引导程序配置等。也突出有 LUKS 全盘加密教学。"
+description: "2025 年最新 Gentoo Linux 安装指南 (基础篇)，详细讲解 UEFI 安装流程、内核编译等。适合 Linux 进阶用户和 Gentoo 新手。也突出有 LUKS 全盘加密教学。"
 keywords:
   - Gentoo Linux
   - Linux 安装
@@ -150,7 +150,7 @@ Portage 的命令行工具。常用命令：
 - 配置 Portage 并优化编译参数（make.conf、USE flags、CPU flags）
 - 安装桌面环境（KDE Plasma、GNOME、Hyprland）
 - 配置中文环境（locale、字体、Fcitx5 输入法）
-- 可选进阶配置（加密分区、LTO 优化、内核调优、RAID）
+- 可选进阶配置（LUKS 全盘加密、LTO 优化、内核调优、RAID）
 - 系统维护（SSD TRIM、电源管理、Flatpak、系统更新）
 
 > **请先关闭 Secure Boot**
@@ -271,60 +271,185 @@ ip a | grep inet            # 查看当前 IP 地址
 > **为什么需要这一步？**
 > 我们需要为 Linux 系统划分独立的存储空间。UEFI 系统通常需要一个 ESP 分区 (引导) 和一个根分区 (系统)。合理的规划能让日后的维护更轻松。
 
-检查磁盘：
-```bash
-lsblk -o NAME,SIZE,TYPE
-```
+### 什么是 EFI 系统分区 (ESP)？
 
-启动 `cfdisk` 或 `gdisk`：
+在使用由 UEFI 引导（而不是 BIOS）的操作系统上安装 Gentoo 时，创建 EFI 系统分区 (ESP) 是必要的。ESP 必须是 FAT 变体（有时在 Linux 系统上显示为 vfat）。官方 UEFI 规范表示 UEFI 固件将识别 FAT12、16 或 32 文件系统，但建议使用 FAT32。
+
+> **警告**：如果 ESP 没有使用 FAT 变体进行格式化，那么系统的 UEFI 固件将找不到引导加载程序（或 Linux 内核）并且很可能无法引导系统！
+
+### 建议分区方案（UEFI）
+
+下表提供了一个可用于 Gentoo 试用安装的推荐默认分区表。
+
+| 设备路径 | 挂载点 | 文件系统 | 描述 |
+| :--- | :--- | :--- | :--- |
+| `/dev/nvme0n1p1` | `/efi` | vfat | EFI 系统分区 (ESP) |
+| `/dev/nvme0n1p2` | `swap` | swap | 交换分区 |
+| `/dev/nvme0n1p3` | `/` | xfs | 根分区 |
+
+### cfdisk 实战示例（推荐）
+
+`cfdisk` 是一个图形化的分区工具，操作简单直观。
+
 ```bash
 cfdisk /dev/nvme0n1
 ```
 
-### 建议分区方案（UEFI）
-
-| 分区 | 大小 | 文件系统 | 挂载点 | 备注 |
-| ---- | ---- | -------- | ------ | ---- |
-| ESP | 512 MB | FAT32 | /efi | `type EF00` |
-| Boot | 1 GB | ext4 | /boot | 存放 kernel / initramfs |
-| Root | 80~120 GB | ext4 / XFS / Btrfs | / | 系统与应用 |
-| Home | 余量 | ext4 / XFS / Btrfs | /home | 用户资料 |
-| Swap（可选） | 内存的 1~2 倍 | swap | swap | SSD 可改用 zram |
-
-> 如果你想要最简配置，可以只保留 `/efi` + `/` 两个分区。
-
-> **服务器/RAID 用户**：如果需要配置软件 RAID (mdadm)，请参考 **[Section 17. 服务器与 RAID 配置](/posts/2025-11-25-gentoo-install-advanced/#section-17-server-raid)**。RAID 配置需要在格式化之前完成。
-
-### cfdisk 实战示例
+**操作提示**：
+1.  选择 **GPT** 标签类型。
+2.  **创建 ESP**：新建分区 -> 大小 `1G` -> 类型选择 `EFI System`。
+3.  **创建 Swap**：新建分区 -> 大小 `4G` -> 类型选择 `Linux swap`。
+4.  **创建 Root**：新建分区 -> 剩余空间 -> 类型选择 `Linux filesystem` (默认)。
+5.  选择 **Write** 写入更改，输入 `yes` 确认。
+6.  选择 **Quit** 退出。
 
 ```text
-                               Disk: /dev/nvme0n1
-           Size: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
-          Label: gpt, identifier: 9737D323-129E-4B5F-9049-8080EDD29C02
+                                                                 Disk: /dev/nvme0n1
+                                              Size: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+                                            Label: gpt, identifier: 9737D323-129E-4B5F-9049-8080EDD29C02
 
-    设备                Start       结束      扇区    Size 类型
->>  /dev/nvme0n1p1         34      32767     32734     16M Microsoft reserved   
-    /dev/nvme0n1p2	32768  879779839 879747072  419.5G Microsoft basic data
-    /dev/nvme0n1p3 1416650752 1418747903   2097152	1G EFI System
-    /dev/nvme0n1p4 1418747904 1437622271  18874368	9G Linux swap
-    /dev/nvme0n1p5 1437622272 1953523711 515901440    246G Linux filesystem
-    /dev/nvme0n1p6  879779840 1416650751 536870912    256G Linux filesystem
+    设备                                       Start                   终点                  扇区               Size 类型
+    /dev/nvme0n1p1                                34                  32767                 32734                16M Microsoft reserved
+    /dev/nvme0n1p2                             32768              879779839             879747072             419.5G Microsoft basic data
+    /dev/nvme0n1p3                        1416650752             1418747903               2097152                 1G EFI System
+    /dev/nvme0n1p4                        1418747904             1437622271              18874368                 9G Linux swap
+    /dev/nvme0n1p5                        1437622272             1953523711             515901440               246G Linux filesystem
+>>  /dev/nvme0n1p6                         879779840             1416650751             536870912               256G Linux filesystem
+
+ ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+ │  Partition UUID: F2F1EF58-82EA-46A6-BF49-896AA40C6060                                                                                           │
+ │  Partition type: Linux filesystem (0FC63DAF-8483-4772-8E79-3D69D8477DE4)                                                                        │
+ │ Filesystem UUID: b4b0b42d-20be-4cf8-be81-9775efa6c151                                                                                           │
+ │Filesystem LABEL: crypthomevar                                                                                                                   │
+ │      Filesystem: crypto_LUKS                                                                                                                    │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                   [ 删除 ]  [Resize]  [ 退出 ]  [ 类型 ]  [ 帮助 ]  [ 排序 ]  [ 写入 ]  [ 导出 ]
 
 
-
-
-
-
-
- ┌────────────────────────────────────────────────────────────────────────────┐
- │Partition name: Microsoft reserved partition                                │
- │Partition UUID: 035B96B8-E321-4388-9C55-9FC0700AFF46                        │
- │Partition type: Microsoft reserved (E3C9E316-0B5C-4DB8-817D-F92DF00215AE)   │
- └────────────────────────────────────────────────────────────────────────────┘
- [ 删除 ]  [Resize]  [ 退出 ]  [ 类型 ]  [ 帮助 ]  [ Sort ]  [ 写入 ]  [ Dump ]
+                                                        Quit program without writing changes
 ```
 
-> `cfdisk` 操作提示：使用方向键移动，选择 `New`、`Type`、`Write` 等操作。确认无误后输入 `yes` 写入分区表。
+<details>
+<summary><b>进阶设置：fdisk 命令行分区教程（点击展开）</b></summary>
+
+`fdisk` 是一个功能强大的命令行分区工具。
+
+```bash
+fdisk /dev/nvme0n1
+```
+
+**1. 查看当前分区布局**
+
+使用 `p` 键来显示磁盘当前的分区配置。
+
+```text
+Command (m for help): p
+Disk /dev/nvme0n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: NVMe SSD
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 3E56EE74-0571-462B-A992-9872E3855D75
+
+Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1    2048    2099199    2097152     1G EFI System
+/dev/nvme0n1p2 2099200   10487807    8388608     4G Linux swap
+/dev/nvme0n1p3 10487808 1953523711 1943035904 926.5G Linux root (x86-64)
+```
+
+**2. 创建一个新的磁盘标签**
+
+按下 `g` 键将立即删除所有现有的磁盘分区并创建一个新的 GPT 磁盘标签：
+
+```text
+Command (m for help): g
+Created a new GPT disklabel (GUID: ...).
+```
+
+或者，要保留现有的 GPT 磁盘标签，可以使用 `d` 键逐个删除现有分区。
+
+**3. 创建 EFI 系统分区 (ESP)**
+
+输入 `n` 创建一个新分区，选择分区号 1，起始扇区默认（2048），结束扇区输入 `+1G`：
+
+```text
+Command (m for help): n
+Partition number (1-128, default 1): 1
+First sector (2048-..., default 2048): <Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (...): +1G
+
+Created a new partition 1 of type 'Linux filesystem' and of size 1 GiB.
+Partition #1 contains a vfat signature.
+
+Do you want to remove the signature? [Y]es/[N]o: Y
+The signature will be removed by a write command.
+```
+
+将分区标记为 EFI 系统分区（类型代码 1）：
+
+```text
+Command (m for help): t
+Selected partition 1
+Partition type or alias (type L to list all): 1
+Changed type of partition 'Linux filesystem' to 'EFI System'.
+```
+
+**4. 创建 Swap 分区**
+
+创建 4GB 的 Swap 分区：
+
+```text
+Command (m for help): n
+Partition number (2-128, default 2): 2
+First sector (...): <Enter>
+Last sector (...): +4G
+
+Created a new partition 2 of type 'Linux filesystem' and of size 4 GiB.
+
+Command (m for help): t
+Partition number (1,2, default 2): 2
+Partition type or alias (type L to list all): 19
+Changed type of partition 'Linux filesystem' to 'Linux swap'.
+```
+*(注：Type 19 是 Linux swap)*
+
+**5. 创建根分区**
+
+将剩余空间分配给根分区：
+
+```text
+Command (m for help): n
+Partition number (3-128, default 3): 3
+First sector (...): <Enter>
+Last sector (...): <Enter>
+
+Created a new partition 3 of type 'Linux filesystem' and of size 926.5 GiB.
+```
+
+> **注意**：将根分区的类型设置为 "Linux root (x86-64)" 并不是必须的，如果将其设置为 "Linux filesystem" 类型，系统也能正常运行。只有在使用支持它的 bootloader (即 systemd-boot) 并且不需要 fstab 文件时，才需要这种文件系统类型。
+
+设置分区类型为 "Linux root (x86-64)"（类型代码 23）：
+
+```text
+Command (m for help): t
+Partition number (1-3, default 3): 3
+Partition type or alias (type L to list all): 23
+Changed type of partition 'Linux filesystem' to 'Linux root (x86-64)'.
+```
+
+**6. 写入更改**
+
+检查无误后，输入 `w` 写入更改并退出：
+
+```text
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+</details>
 
 ---
 
@@ -339,11 +464,9 @@ cfdisk /dev/nvme0n1
 ### 3.1 格式化
 
 ```bash
-mkfs.vfat -F32 /dev/nvme0n1p1  # 格式化 ESP 分区为 FAT32
-mkfs.ext4 /dev/nvme0n1p2       # 格式化 Boot 分区为 ext4
-mkfs.ext4 /dev/nvme0n1p3       # 格式化 Root 分区为 ext4
-mkfs.ext4 /dev/nvme0n1p4       # 格式化 Home 分区为 ext4
-mkswap /dev/nvme0n1p5          # 格式化 Swap 分区
+mkfs.fat -F 32 /dev/nvme0n1p1  # 格式化 ESP 分区为 FAT32
+mkswap /dev/nvme0n1p2          # 格式化 Swap 分区
+mkfs.xfs /dev/nvme0n1p3        # 格式化 Root 分区为 XFS
 ```
 
 若使用 Btrfs：
@@ -351,22 +474,20 @@ mkswap /dev/nvme0n1p5          # 格式化 Swap 分区
 mkfs.btrfs -L gentoo /dev/nvme0n1p3
 ```
 
-若使用 XFS：
+若使用 ext4：
 ```bash
-mkfs.xfs /dev/nvme0n1p3
+mkfs.ext4 /dev/nvme0n1p3
 ```
 
 > 其他如 [F2FS](https://wiki.gentoo.org/wiki/F2FS/zh-cn) 或 [ZFS](https://wiki.gentoo.org/wiki/ZFS/zh-cn) 请参考相关 Wiki。
 
-### 3.2 挂载（ext4 示例）
+### 3.2 挂载（XFS 示例）
 
 ```bash
 mount /dev/nvme0n1p3 /mnt/gentoo        # 挂载根分区
-mkdir -p /mnt/gentoo/{boot,efi,home}    # 创建挂载点目录
-mount /dev/nvme0n1p2 /mnt/gentoo/boot   # 挂载 Boot 分区
+mkdir -p /mnt/gentoo/efi                # 创建 ESP 挂载点
 mount /dev/nvme0n1p1 /mnt/gentoo/efi    # 挂载 ESP 分区
-mount /dev/nvme0n1p4 /mnt/gentoo/home   # 挂载 Home 分区
-swapon /dev/nvme0n1p5                   # 启用 Swap 分区
+swapon /dev/nvme0n1p2                   # 启用 Swap 分区
 ```
 
 <details>
@@ -421,13 +542,9 @@ mount /dev/mapper/gentoo-root /mnt/gentoo
 > ```text
 > NAME             MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 >  nvme0n1          259:1    0 931.5G  0 disk  
-> ├─nvme0n1p1      259:7    0    16M  0 part  
-> ├─nvme0n1p2      259:8    0 419.5G  0 part  
-> ├─nvme0n1p3      259:9    0     1G  0 part  /boot
-> ├─nvme0n1p4      259:10   0     9G  0 part  [SWAP]
-> ├─nvme0n1p5      259:11   0   246G  0 part  
-> │ └─cryptroot    253:0    0   246G  0 crypt /snapshots/root
-> │                                           /
+> ├─nvme0n1p1      259:7    0     1G  0 part  /efi
+> ├─nvme0n1p2      259:8    0     4G  0 part  [SWAP]
+> └─nvme0n1p3      259:9    0 926.5G  0 part  /
 > ```
 
 ## 4. 下载 Stage3 并进入 chroot {#step-4-stage3}

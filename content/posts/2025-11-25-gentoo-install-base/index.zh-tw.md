@@ -1,8 +1,8 @@
 ---
 title: "Gentoo Linux 安裝指南 (基礎篇)"
 date: 2025-11-25
-summary: "Gentoo Linux 基礎系統安裝教學，涵蓋分割區、Stage3、核心編譯、引導程式配置等。"
-description: "2025 年最新 Gentoo Linux 安裝指南 (基礎篇)，詳細講解 UEFI 安裝流程、核心編譯等。適合 Linux 進階使用者和 Gentoo 新手。"
+summary: "Gentoo Linux 基礎系統安裝教學，涵蓋分割區、Stage3、核心編譯、引導程式配置等。也突出有 LUKS 全碟加密教學。"
+description: "2025 年最新 Gentoo Linux 安裝指南 (基礎篇)，詳細講解 UEFI 安裝流程、核心編譯等。適合 Linux 進階使用者和 Gentoo 新手。也突出有 LUKS 全碟加密教學。"
 keywords:
   - Gentoo Linux
   - Linux 安裝
@@ -150,7 +150,7 @@ Portage 的命令列工具。常用命令：
 - 配置 Portage 並優化編譯參數（make.conf、USE flags、CPU flags）
 - 安裝桌面環境（KDE Plasma、GNOME、Hyprland）
 - 配置中文環境（locale、字型、Fcitx5 輸入法）
-- 可選進階配置（加密分割區、LTO 優化、核心調優、RAID）
+- 可選進階配置（LUKS 全碟加密、LTO 優化、核心調優、RAID）
 - 系統維護（SSD TRIM、電源管理、Flatpak、系統更新）
 
 
@@ -272,36 +272,180 @@ ip a | grep inet            # 查看當前 IP 位址
 > **為什麼需要這一步？**
 > 我們需要為 Linux 系統劃分獨立的儲存空間。UEFI 系統通常需要一個 ESP 分割區 (引導) 和一個根分割區 (系統)。合理的規劃能讓日後的維護更輕鬆。
 
-檢查磁碟：
-```bash
-lsblk -o NAME,SIZE,TYPE
-```
+### 什麼是 EFI 系統分割區 (ESP)？
 
-啟動 `cfdisk` 或 `gdisk`：
+在使用由 UEFI 引導（而不是 BIOS）的作業系統上安裝 Gentoo 時，建立 EFI 系統分割區 (ESP) 是必要的。ESP 必須是 FAT 變體（有時在 Linux 系統上顯示為 vfat）。官方 UEFI 規範表示 UEFI 韌體將識別 FAT12、16 或 32 檔案系統，但建議使用 FAT32。
+
+> **警告**：如果 ESP 沒有使用 FAT 變體進行格式化，那麼系統的 UEFI 韌體將找不到引導載入程式（或 Linux 核心）並且很可能無法引導系統！
+
+
+### 建議分割區方案（UEFI）
+
+下表提供了一個可用於 Gentoo 試用安裝的推薦預設分割區表。
+
+| 裝置路徑 | 掛載點 | 檔案系統 | 描述 |
+| :--- | :--- | :--- | :--- |
+| `/dev/nvme0n1p1` | `/efi` | vfat | EFI 系統分割區 (ESP) |
+| `/dev/nvme0n1p2` | `swap` | swap | 交換分割區 |
+| `/dev/nvme0n1p3` | `/` | xfs | 根分割區 |
+
+### cfdisk 實戰範例（推薦）
+
+`cfdisk` 是一個圖形化的分割區工具，操作簡單直觀。
+
 ```bash
 cfdisk /dev/nvme0n1
 ```
 
-### 建議分割區方案（UEFI）
-
-| 分割區 | 大小 | 檔案系統 | 掛載點 | 備註 |
-| ---- | ---- | -------- | ------ | ---- |
-| ESP | 512 MB | FAT32 | /efi | `type EF00` |
-| Boot | 1 GB | ext4 | /boot | 存放 kernel / initramfs |
-| Root | 80~120 GB | ext4 / XFS / Btrfs | / | 系統與應用 |
-| Home | 餘量 | ext4 / XFS / Btrfs | /home | 使用者資料 |
-| Swap（可選） | 記憶體的 1~2 倍 | swap | swap | SSD 可改用 zram |
-
-> 如果你想要最簡設定，可以只保留 `/efi` + `/` 兩個分割區。
-
-> **伺服器/RAID 使用者**：如果需要配置軟體 RAID (mdadm)，請參考 **[Section 17. 伺服器與 RAID 配置](/zh-tw/posts/2025-11-25-gentoo-install-advanced/#section-17-server-raid)**。RAID 配置需要在格式化之前完成。
-
-### cfdisk 實戰範例
+**操作提示**：
+1.  選擇 **GPT** 標籤類型。
+2.  **建立 ESP**：新建分割區 -> 大小 `1G` -> 類型選擇 `EFI System`。
+3.  **建立 Swap**：新建分割區 -> 大小 `4G` -> 類型選擇 `Linux swap`。
+4.  **建立 Root**：新建分割區 -> 剩餘空間 -> 類型選擇 `Linux filesystem` (預設)。
+5.  選擇 **Write** 寫入更改，輸入 `yes` 確認。
+6.  選擇 **Quit** 離開。
 
 ```text
-                               Disk: /dev/nvme0n1
-           Size: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
-          Label: gpt, identifier: 9737D323-129E-4B5F-9049-8080EDD29C02
+                                                                 Disk: /dev/nvme0n1
+                                              Size: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+                                            Label: gpt, identifier: 9737D323-129E-4B5F-9049-8080EDD29C02
+
+    所用裝置                                   Start                   結束                  磁區               Size 類型
+    /dev/nvme0n1p1                                34                  32767                 32734                16M Microsoft reserved
+    /dev/nvme0n1p2                             32768              879779839             879747072             419.5G Microsoft basic data
+    /dev/nvme0n1p3                        1416650752             1418747903               2097152                 1G EFI System
+    /dev/nvme0n1p4                        1418747904             1437622271              18874368                 9G Linux swap
+    /dev/nvme0n1p5                        1437622272             1953523711             515901440               246G Linux filesystem
+>>  /dev/nvme0n1p6                         879779840             1416650751             536870912               256G Linux filesystem
+
+ ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+ │  Partition UUID: F2F1EF58-82EA-46A6-BF49-896AA40C6060                                                                                           │
+ │  Partition type: Linux filesystem (0FC63DAF-8483-4772-8E79-3D69D8477DE4)                                                                        │
+ │ Filesystem UUID: b4b0b42d-20be-4cf8-be81-9775efa6c151                                                                                           │
+ │Filesystem LABEL: crypthomevar                                                                                                                   │
+ │      Filesystem: crypto_LUKS                                                                                                                    │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                   [ 刪除 ]  [Resize]  [ 離開 ]  [ 類型 ]  [ 求助 ]  [ Sort ]  [ 寫入 ]  [ Dump ]
+
+
+                                                        Quit program without writing changes
+```
+
+<details>
+<summary><b>進階設定：fdisk 命令列分割區教學（點擊展開）</b></summary>
+
+`fdisk` 是一個功能強大的命令列分割區工具。
+
+```bash
+fdisk /dev/nvme0n1
+```
+
+**1. 查看當前分割區佈局**
+
+使用 `p` 鍵來顯示磁碟當前的分割區配置。
+
+```text
+Command (m for help): p
+Disk /dev/nvme0n1: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: NVMe SSD
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 3E56EE74-0571-462B-A992-9872E3855D75
+
+Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1    2048    2099199    2097152     1G EFI System
+/dev/nvme0n1p2 2099200   10487807    8388608     4G Linux swap
+/dev/nvme0n1p3 10487808 1953523711 1943035904 926.5G Linux root (x86-64)
+```
+
+**2. 建立一個新的磁碟標籤**
+
+按下 `g` 鍵將立即刪除所有現有的磁碟分割區並建立一個新的 GPT 磁碟標籤：
+
+```text
+Command (m for help): g
+Created a new GPT disklabel (GUID: ...).
+```
+
+或者，要保留現有的 GPT 磁碟標籤，可以使用 `d` 鍵逐個刪除現有分割區。
+
+**3. 建立 EFI 系統分割區 (ESP)**
+
+輸入 `n` 建立一個新分割區，選擇分割區號 1，起始磁區預設（2048），結束磁區輸入 `+1G`：
+
+```text
+Command (m for help): n
+Partition number (1-128, default 1): 1
+First sector (2048-..., default 2048): <Enter>
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (...): +1G
+
+Created a new partition 1 of type 'Linux filesystem' and of size 1 GiB.
+Partition #1 contains a vfat signature.
+
+Do you want to remove the signature? [Y]es/[N]o: Y
+The signature will be removed by a write command.
+```
+
+將分割區標記為 EFI 系統分割區（類型代碼 1）：
+
+```text
+Command (m for help): t
+Selected partition 1
+Partition type or alias (type L to list all): 1
+Changed type of partition 'Linux filesystem' to 'EFI System'.
+```
+
+**4. 建立 Swap 分割區**
+
+建立 4GB 的 Swap 分割區：
+
+```text
+Command (m for help): n
+Partition number (2-128, default 2): 2
+First sector (...): <Enter>
+Last sector (...): +4G
+
+Created a new partition 2 of type 'Linux filesystem' and of size 4 GiB.
+
+Command (m for help): t
+Partition number (1,2, default 2): 2
+Partition type or alias (type L to list all): 19
+Changed type of partition 'Linux filesystem' to 'Linux swap'.
+```
+
+**5. 建立根分割區**
+
+將剩餘空間分配給根分割區：
+
+```text
+Command (m for help): n
+Partition number (3-128, default 3): 3
+First sector (...): <Enter>
+Last sector (...): <Enter>
+
+Created a new partition 3 of type 'Linux filesystem' and of size 926.5 GiB.
+```
+
+> **注意**：將根分割區的類型設定為 "Linux root (x86-64)" 並不是必須的，如果將其設定為 "Linux filesystem" 類型，系統也能正常運作。只有在使用支援它的 bootloader (即 systemd-boot) 並且不需要 fstab 檔案時，才需要這種檔案系統類型。
+
+設定分割區類型為 "Linux root (x86-64)"（類型代碼 23）：
+
+```text
+Command (m for help): t
+Partition number (1-3, default 3): 3
+Partition type or alias (type L to list all): 23
+Changed type of partition 'Linux filesystem' to 'Linux root (x86-64)'.
+```
+
+**6. 寫入更改**
+
+檢查無誤後，輸入 `w` 寫入更改並退出：
+
+```text
+Command (m for help): w
+The partition table has been altered.
 
     所用裝置            Start       結束      磁區    Size 類型
 >>  /dev/nvme0n1p1         34      32767     32734     16M Microsoft reserved   
@@ -342,11 +486,9 @@ cfdisk /dev/nvme0n1
 ### 3.1 格式化
 
 ```bash
-mkfs.vfat -F32 /dev/nvme0n1p1  # 格式化 ESP 分割區為 FAT32
-mkfs.ext4 /dev/nvme0n1p2       # 格式化 Boot 分割區為 ext4
-mkfs.ext4 /dev/nvme0n1p3       # 格式化 Root 分割區為 ext4
-mkfs.ext4 /dev/nvme0n1p4       # 格式化 Home 分割區為 ext4
-mkswap /dev/nvme0n1p5          # 格式化 Swap 分割區
+mkfs.fat -F 32 /dev/nvme0n1p1  # 格式化 ESP 分割區為 FAT32
+mkswap /dev/nvme0n1p2          # 格式化 Swap 分割區
+mkfs.xfs /dev/nvme0n1p3        # 格式化 Root 分割區為 XFS
 ```
 
 若使用 Btrfs：
@@ -354,22 +496,20 @@ mkswap /dev/nvme0n1p5          # 格式化 Swap 分割區
 mkfs.btrfs -L gentoo /dev/nvme0n1p3
 ```
 
-若使用 XFS：
+若使用 ext4：
 ```bash
-mkfs.xfs /dev/nvme0n1p3
+mkfs.ext4 /dev/nvme0n1p3
 ```
 
 > 其他如 [F2FS](https://wiki.gentoo.org/wiki/F2FS/zh-cn) 或 [ZFS](https://wiki.gentoo.org/wiki/ZFS/zh-cn) 請參考相關 Wiki。
 
-### 3.2 掛載（ext4 範例）
+### 3.2 掛載（XFS 範例）
 
 ```bash
 mount /dev/nvme0n1p3 /mnt/gentoo        # 掛載根分割區
-mkdir -p /mnt/gentoo/{boot,efi,home}    # 建立掛載點目錄
-mount /dev/nvme0n1p2 /mnt/gentoo/boot   # 掛載 Boot 分割區
+mkdir -p /mnt/gentoo/efi                # 建立 ESP 掛載點
 mount /dev/nvme0n1p1 /mnt/gentoo/efi    # 掛載 ESP 分割區
-mount /dev/nvme0n1p4 /mnt/gentoo/home   # 掛載 Home 分割區
-swapon /dev/nvme0n1p5                   # 啟用 Swap 分割區
+swapon /dev/nvme0n1p2                   # 啟用 Swap 分割區
 ```
 
 <details>
@@ -427,14 +567,11 @@ mount /dev/mapper/root /mnt/gentoo
 > ```text
 > NAME             MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 >  nvme0n1          259:1    0 931.5G  0 disk  
-> ├─nvme0n1p1      259:7    0    16M  0 part  
-> ├─nvme0n1p2      259:8    0 419.5G  0 part  
-> ├─nvme0n1p3      259:9    0     1G  0 part  /boot
-> ├─nvme0n1p4      259:10   0     9G  0 part  [SWAP]
-> ├─nvme0n1p5      259:11   0   246G  0 part  
-> │ └─cryptroot    253:0    0   246G  0 crypt /snapshots/root
-> │                                           /
+> ├─nvme0n1p1      259:7    0     1G  0 part  /efi
+> ├─nvme0n1p2      259:8    0     4G  0 part  [SWAP]
+> └─nvme0n1p3      259:9    0 926.5G  0 part  /
 > ```
+                                      
 
 ## 4. 下載 Stage3 並進入 chroot {#step-4-stage3}
 
