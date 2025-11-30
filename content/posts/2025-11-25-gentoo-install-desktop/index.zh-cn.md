@@ -141,61 +141,52 @@ emerge --ask --newuse --deep @world
 > - 请访问 `about:support` 页面查看 Firefox 的实际硬件加速状态。
 
 <details>
-<summary><b>NVIDIA Chromium 硬件加速配置 (X11/XWayland)（无需 VAAPI，点击展开）</b></summary>
+<summary><b>NVIDIA Chromium 硬件加速配置 (推荐方法)（无需 VAAPI，点击展开）</b></summary>
 
 > **提示**：以下配置适用于 Chromium、Chrome、Edge、Electron 应用（如 VSCode）。
 
+**方法一：使用 Flags 配置文件（推荐）**
+
+这种方法不需要修改 `.desktop` 文件,浏览器能正确识别为默认浏览器。
+
 **1. 环境变量**
-在 `/etc/environment` 或 `~/.bashrc` 中添加：
+创建 `~/.config/environment.d/chromium-nvidia.conf`：
 ```bash
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
-export __VK_LAYER_NV_optimus=NVIDIA_only
-export GBM_BACKEND=nvidia-drm
+# NVIDIA 环境变量
+__GLX_VENDOR_LIBRARY_NAME=nvidia
+__VK_LAYER_NV_optimus=NVIDIA_only
+GBM_BACKEND=nvidia-drm
 ```
 
-**2. 启动参数**
+**2. Chromium/Chrome Flags 配置**
+创建对应的 flags 文件：
 
+- Chrome Stable: `~/.config/chrome-flags.conf`
+- Chrome Unstable: `~/.config/chrome-dev-flags.conf`  
+- Chromium: `~/.config/chromium-flags.conf`
+- Edge Beta: `~/.config/microsoft-edge-beta-flags.conf`
+- Edge Dev: `~/.config/microsoft-edge-dev-flags.conf`
 
-请在启动命令或 `.desktop` 文件中添加以下参数：
+内容如下：
 ```bash
---enable-features=VulkanVideoDecoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan \
---ozone-platform=x11 \
---use-vulkan=native \
---enable-zero-copy \
---enable-gpu-rasterization \
---ignore-gpu-blocklist \
+# Vulkan 视频加速配置
+# NVIDIA + Wayland 硬件加速优化
+
+--enable-features=VulkanVideoDecoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan
+--ozone-platform=x11
+--use-vulkan=native
+--enable-zero-copy
+--enable-gpu-rasterization
+--ignore-gpu-blocklist
 --enable-native-gpu-memory-buffers
 ```
 
-**`.desktop` 文件示例**：
-```ini
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Google Chrome
-GenericName=Web Browser
-Comment=Access the Internet with Vulkan Video Hardware Acceleration
-Exec=/usr/bin/google-chrome-stable %U --enable-features=VulkanVideoDecoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan --ozone-platform=x11 --use-vulkan=native --enable-zero-copy --enable-gpu-rasterization --ignore-gpu-blocklist --enable-native-gpu-memory-buffers
-Icon=google-chrome
-Terminal=false
-Categories=Network;WebBrowser;
-StartupNotify=true
-StartupWMClass=google-chrome
-Actions=new-window;new-private-window;
-Keywords=web;browser;internet;
-X-GNOME-UsesNotifications=true
+**3. 应用配置**
+重新登录。
 
-[Desktop Action new-window]
-Name=New Window
-Exec=/usr/bin/google-chrome-stable --enable-features=VulkanVideoDecoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan --ozone-platform=x11 --use-vulkan=native --enable-zero-copy --enable-gpu-rasterization --ignore-gpu-blocklist --enable-native-gpu-memory-buffers
+> **验证**：访问 `chrome://gpu/` 或 `edge://gpu/`，查看 **Vulkan** 是否显示为 `Enabled`。
 
-[Desktop Action new-private-window]
-Name=New Incognito Window
-Exec=/usr/bin/google-chrome-stable --incognito --enable-features=VulkanVideoDecoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan --ozone-platform=x11 --use-vulkan=native --enable-zero-copy --enable-gpu-rasterization --ignore-gpu-blocklist --enable-native-gpu-memory-buffers
-MimeType=x-scheme-handler/unknown;x-scheme-handler/about;text/html;text/xml;application/xhtml+xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
-```
-
-> **验证**：访问 `chrome://gpu/`，查看 **Vulkan** 是否显示为 `Enabled`。
+![Chromium GPU Vulkan](chromium-gpu-vulkan.webp)
 
 </details>
 
