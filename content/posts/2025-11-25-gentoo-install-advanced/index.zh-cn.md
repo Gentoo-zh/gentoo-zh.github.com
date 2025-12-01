@@ -21,19 +21,28 @@ authors:
   - zakkaus
 ---
 
-> **文章特别说明**
-> 
-> 本文是 **Gentoo Linux 安装指南** 系列的第三部分：**进阶优化**。
-> 
-> **系列导航**：
-> 1. [基础安装](/posts/2025-11-25-gentoo-install-base/)：从零开始安装 Gentoo 基础系统
-> 2. [桌面配置](/posts/2025-11-25-gentoo-install-desktop/)：显卡驱动、桌面环境、输入法等
-> 3. **进阶优化（本文）**：make.conf 优化、LTO、系统维护
->
-> **上一步**：[桌面配置](/posts/2025-11-25-gentoo-install-desktop/)
+<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05)); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+
+### 文章特别说明
+
+本文是 **Gentoo Linux 安装指南** 系列的第三部分：**进阶优化**。
+
+**系列导航**：
+1. [基础安装](/posts/2025-11-25-gentoo-install-base/)：从零开始安装 Gentoo 基础系统
+2. [桌面配置](/posts/2025-11-25-gentoo-install-desktop/)：显卡驱动、桌面环境、输入法等
+3. **进阶优化（本文）**：make.conf 优化、LTO、系统维护
+
+**上一步**：[桌面配置](/posts/2025-11-25-gentoo-install-desktop/)
+
+</div>
+
 ## 13. make.conf 进阶配置指南
 
-> **可参考**：[make.conf](https://wiki.gentoo.org/wiki//etc/portage/make.conf)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[make.conf](https://wiki.gentoo.org/wiki//etc/portage/make.conf)
+
+</div>
 
 `/etc/portage/make.conf` 是 Gentoo 的全局配置文件，控制编译器、优化参数、USE 标志等。
 
@@ -108,7 +117,11 @@ INPUT_DEVICES="libinput"
 CPU_FLAGS_X86="<cpuid2cpuflags 输出>"
 ```
 
-> 详见：[5.3 CPU 指令集优化 (CPU_FLAGS_X86)](/posts/2025-11-25-gentoo-install-base/#step-5-portage)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**详见**：[5.3 CPU 指令集优化 (CPU_FLAGS_X86)](/posts/2025-11-25-gentoo-install-base/#step-5-portage)
+
+</div>
 
 #### 6. Portage 功能
 
@@ -145,7 +158,11 @@ ACCEPT_LICENSE="*"
 
 ### 13.1 日常维护：如何成为合格的系统管理员
 
-> **可参考**：[Upgrading Gentoo](https://wiki.gentoo.org/wiki/Upgrading_Gentoo/zh-cn) 和 [Gentoo Cheat Sheet](https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Upgrading Gentoo](https://wiki.gentoo.org/wiki/Upgrading_Gentoo/zh-cn) · [Gentoo Cheat Sheet](https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet)
+
+</div>
 
 Gentoo 是滚动发行版，维护系统是使用体验的重要组成部分。
 
@@ -172,7 +189,11 @@ etc-update
 ```
 
 **4. 清理无用依赖**
-> **可参考**：[Remove orphaned packages](https://wiki.gentoo.org/wiki/Knowledge_Base:Remove_orphaned_packages)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Remove orphaned packages](https://wiki.gentoo.org/wiki/Knowledge_Base:Remove_orphaned_packages)
+
+</div>
 
 ```bash
 emerge --ask --depclean    # 移除不再需要的孤立依赖
@@ -185,7 +206,11 @@ eclean-dist                         # 清理已下载的旧源码包
 ```
 
 **6. 自动处理 USE 变更**
-> **可参考**：[Autounmask-write](https://wiki.gentoo.org/wiki/Knowledge_Base:Autounmask-write) 和 [Dispatch-conf](https://wiki.gentoo.org/wiki/Dispatch-conf)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Autounmask-write](https://wiki.gentoo.org/wiki/Knowledge_Base:Autounmask-write) · [Dispatch-conf](https://wiki.gentoo.org/wiki/Dispatch-conf)
+
+</div>
 
 当安装或更新软件提示 "The following USE changes are necessary" 时：
 1.  **让 Portage 自动写入配置**：`emerge --ask --autounmask-write <包名>`
@@ -225,7 +250,11 @@ glsa-check -t all  # 测试所有受影响的软件包
 
 ### 13.2 Portage 技巧与目录结构
 
-> **可参考**：[Portage](https://wiki.gentoo.org/wiki/Portage/zh-cn) 和 [/etc/portage](https://wiki.gentoo.org/wiki//etc/portage/zh-cn)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Portage](https://wiki.gentoo.org/wiki/Portage/zh-cn) · [/etc/portage](https://wiki.gentoo.org/wiki//etc/portage)
+
+</div>
 
 **1. 核心目录结构 (`/etc/portage/`)**
 Gentoo 的配置非常灵活，建议使用**目录**而不是单个文件来管理配置：
@@ -257,7 +286,11 @@ Gentoo 的配置非常灵活，建议使用**目录**而不是单个文件来管
 | `--info` | 显示 Portage 环境信息 (调试用) | `emerge --info` |
 
 **3. 快速搜索软件包 (Eix)**
-> **可参考**：[Eix](https://wiki.gentoo.org/wiki/Eix)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Eix](https://wiki.gentoo.org/wiki/Eix)
+
+</div>
 > `emerge --search` 速度较慢，推荐使用 `eix` 进行毫秒级搜索。
 
 1.  **安装与更新索引**：
@@ -280,14 +313,24 @@ Gentoo 的配置非常灵活，建议使用**目录**而不是单个文件来管
 
 ### 14.1 配置 tmpfs (内存编译)
 
-> **可参考**：[Tmpfs](https://wiki.gentoo.org/wiki/Tmpfs)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Tmpfs](https://wiki.gentoo.org/wiki/Tmpfs)
+
+</div>
 
 将编译临时目录挂载到内存，减少 SSD 磨损并加速编译。
 
 <details>
 <summary><b>Tmpfs 配置指南（点击展开）</b></summary>
 
-> **注意**：`size` 大小不要超过你的物理内存大小（建议设为内存的一半），否则可能导致系统不稳定。
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
+
+**注意**
+
+`size` 大小不要超过你的物理内存大小（建议设为内存的一半），否则可能导致系统不稳定。
+
+</div>
 
 编辑 `/etc/fstab`，添加以下行（size 建议设置为内存的一半，例如 16G）：
 ```fstab
@@ -301,7 +344,11 @@ mount /var/tmp/portage
 
 ### 14.2 配置 ccache (编译缓存)
 
-> **可参考**：[Ccache](https://wiki.gentoo.org/wiki/Ccache)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Ccache](https://wiki.gentoo.org/wiki/Ccache)
+
+</div>
 
 缓存编译中间产物，加快重新编译速度。
 ```bash
@@ -338,6 +385,7 @@ Firefox、LibreOffice 等大型软件编译时可能会耗尽 tmpfs 空间。我
    app-office/libreoffice notmpfs.conf
    dev-qt/qtwebengine notmpfs.conf
    ```
+
 </details>
 
 ### 14.4 LTO 与 Clang 优化
@@ -348,30 +396,50 @@ Firefox、LibreOffice 等大型软件编译时可能会耗尽 tmpfs 空间。我
 
 ## 15. LTO 与 Clang 编译优化 (可选)
 
-> **风险提示**：LTO 会显著增加编译时间和内存消耗，且可能导致部分软件编译失败。**强烈不建议全局开启**，仅推荐针对特定软件（如浏览器）开启。
+<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+
+**风险提示**
+
+LTO 会显著增加编译时间和内存消耗，且可能导致部分软件编译失败。**强烈不建议全局开启**，仅推荐针对特定软件（如浏览器）开启。
+
+</div>
 
 ### 15.1 链接时优化 (LTO)
-> **可参考**：[LTO](https://wiki.gentoo.org/wiki/LTO)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[LTO](https://wiki.gentoo.org/wiki/LTO)
+
+</div>
 
 LTO (Link Time Optimization) 将优化推迟到链接阶段，可带来性能提升和体积减小。
 
-<details>
-<summary><b>LTO 优缺点详细分析（点击展开）</b></summary>
+<details style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; border: 1px solid rgba(59, 130, 246, 0.2);">
+<summary style="cursor: pointer; font-weight: bold; color: #1d4ed8;">LTO 优缺点详细分析（点击展开）</summary>
+
+<div style="margin-top: 1rem;">
 
 **优势**：
-- 性能提升（通常两位数）
-- 二进制体积减小
-- 启动时间改善
+*   性能提升（通常两位数）
+*   二进制体积减小
+*   启动时间改善
 
 **劣势**：
-- 编译时间增加 2-3 倍
-- 内存消耗巨大
-- 稳定性风险
-- 故障排查困难
+*   编译时间增加 2-3 倍
+*   内存消耗巨大
+*   稳定性风险
+*   故障排查困难
+
+</div>
 
 </details>
 
-> **新手提示**：如果你的系统是 4 核 CPU 配 4GB 内存，那么花在编译上的时间可能远超优化带来的性能提升。请根据硬件配置权衡利弊。
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**新手提示**
+
+如果你的系统是 4 核 CPU 配 4GB 内存，那么花在编译上的时间可能远超优化带来的性能提升。请根据硬件配置权衡利弊。
+
+</div>
 
 **1. 使用 USE 标志开启 (最推荐)**
 
@@ -405,7 +473,13 @@ app-editors/vim lto.conf
 
 **3. 全局启用 LTO (GCC 系统)**
 
-> **警告**：全局 LTO 会导致大量软件包编译失败，需要频繁维护排除列表，**不建议新手尝试**。
+<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+
+**警告**
+
+全局 LTO 会导致大量软件包编译失败，需要频繁维护排除列表，**不建议新手尝试**。
+
+</div>
 
 编辑 `/etc/portage/make.conf`：
 ```bash
@@ -432,9 +506,21 @@ USE="lto"  # 启用 LTO 支持的 USE 标志
 
 **4. 全局启用 LTO (LLVM/Clang 系统 - 推荐使用 ThinLTO)**
 
-> **默认推荐**：如果使用 Clang，强烈推荐使用 ThinLTO (`-flto=thin`) 而非 Full LTO (`-flto`)。ThinLTO 速度更快，内存占用更少，支持并行化。
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
 
-> **警告**：如果 `clang-common` 未启用 `default-lld` USE 标志，必须在 `LDFLAGS` 中添加 `-fuse-ld=lld`。
+**默认推荐**
+
+如果使用 Clang，强烈推荐使用 ThinLTO (`-flto=thin`) 而非 Full LTO (`-flto`)。ThinLTO 速度更快，内存占用更少，支持并行化。
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+
+**警告**
+
+如果 `clang-common` 未启用 `default-lld` USE 标志，必须在 `LDFLAGS` 中添加 `-fuse-ld=lld`。
+
+</div>
 
 编辑 `/etc/portage/make.conf`：
 ```bash
@@ -464,7 +550,13 @@ USE="lto"  # 启用 LTO 支持的 USE 标志
 | **ThinLTO** | `-flto=thin` | • 速度快<br>• 内存占用少<br>• 支持并行化<br>• 编译速度提升 2-3 倍 | • 仅 Clang/LLVM 支持 | **默认推荐**（Clang 用户） |
 | Full LTO | `-flto` | • 更深度的优化<br>• GCC 和 Clang 均支持 | • 速度慢<br>• 内存占用高<br>• 串行处理 | GCC 用户或需要极致优化时 |
 
-> **新手提示**：如果你使用 Clang，请务必使用 `-flto=thin`。这是目前的最佳实践，能在保证性能的同时大幅减少编译时间。
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**新手提示**
+
+如果你使用 Clang，请务必使用 `-flto=thin`。这是目前的最佳实践，能在保证性能的同时大幅减少编译时间。
+
+</div>
 
 **5. Rust LTO 配置**
 
@@ -599,19 +691,34 @@ virtual/rust low-memory.conf
 ```
 </details>
 
-> **提示**：如果遇到其他 LTO 相关的链接错误，请先尝试禁用该包的 LTO。也可以查看 Gentoo Bugzilla 是否有相关报告。](https://bugs.gentoo.org) 搜索是否已有相关报告（搜索"软件包名 lto"）。如果是新问题，欢迎提交 bug 报告帮助改进 Gentoo。
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**提示**
+
+如果遇到其他 LTO 相关的链接错误，请先尝试禁用该包的 LTO。也可以查看 [Gentoo Bugzilla](https://bugs.gentoo.org) 搜索是否已有相关报告（搜索"软件包名 lto"）。如果是新问题，欢迎提交 bug 报告帮助改进 Gentoo。
+
+</div>
 
 ### 15.2 使用 Clang 编译
-> **可参考**：[Clang](https://wiki.gentoo.org/wiki/Clang)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Clang](https://wiki.gentoo.org/wiki/Clang)
+
+</div>
 
 **前提条件**：安装 Clang 和 LLD
 ```bash
 emerge --ask llvm-core/clang llvm-core/lld
 ```
 
-> **重要提示**：
-> - 部分软件包（如 `sys-libs/glibc`, `app-emulation/wine`）无法使用 Clang 编译，仍需 GCC。
-> - Gentoo 维护了 [bug #408963](https://bugs.gentoo.org/408963) 来跟踪 Clang 编译失败的软件包。
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
+
+**重要提示**
+
+- 部分软件包（如 `sys-libs/glibc`, `app-emulation/wine`）无法使用 Clang 编译，仍需 GCC。
+- Gentoo 维护了 [bug #408963](https://bugs.gentoo.org/408963) 来跟踪 Clang 编译失败的软件包。
+
+</div>
 
 **1. 针对特定软件开启 (推荐)**
 
@@ -634,7 +741,13 @@ app-editors/neovim clang.conf
 
 **3. PGO 支持（配置文件引导优化）**
 
-> **注意**：如果需要 PGO 支持（如 `dev-lang/python[pgo]`），需要安装以下包：
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
+
+**注意**
+
+如果需要 PGO 支持（如 `dev-lang/python[pgo]`），需要安装以下包：
+
+</div>
 
 ```bash
 emerge --ask llvm-core/clang-runtime
@@ -647,9 +760,14 @@ llvm-core/clang-runtime sanitize
 llvm-runtimes/compiler-rt-sanitizers profile orc
 ```
 
-> **警告**：
-> - 如果没有启用 `profile` 和 `orc` USE 标志，带有 `pgo` USE 标志的软件包（如 `dev-lang/python[pgo]`）会编译失败。
-> - 编译日志可能会报错：`ld.lld: error: cannot open /usr/lib/llvm/18/bin/../../../../lib/clang/18/lib/linux/libclang_rt.profile-x86_64.a`
+<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+
+**警告**
+
+- 如果没有启用 `profile` 和 `orc` USE 标志，带有 `pgo` USE 标志的软件包（如 `dev-lang/python[pgo]`）会编译失败。
+- 编译日志可能会报错：`ld.lld: error: cannot open /usr/lib/llvm/18/bin/../../../../lib/clang/18/lib/linux/libclang_rt.profile-x86_64.a`
+
+</div>
 
 **4. 全局开启 (不建议初学者)**
 
@@ -689,7 +807,11 @@ app-emulation/wine gcc.conf
 
 ## 16. 内核编译进阶指南 (可选) {#section-16-kernel-advanced}
 
-> 可参考：[Kernel](https://wiki.gentoo.org/wiki/Kernel)、[Kernel/Configuration](https://wiki.gentoo.org/wiki/Kernel/Configuration)、[Genkernel](https://wiki.gentoo.org/wiki/Genkernel)
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Kernel](https://wiki.gentoo.org/wiki/Kernel)、[Kernel/Configuration](https://wiki.gentoo.org/wiki/Kernel/Configuration)、[Genkernel](https://wiki.gentoo.org/wiki/Genkernel)
+
+</div>
 
 本节面向希望深入掌控内核编译的高级用户，包括使用 LLVM/Clang 编译、启用 LTO 优化、自动化配置等。
 
@@ -752,7 +874,13 @@ zcat /proc/config.gz > .config  # 如果当前内核支持
 make olddefconfig  # 使用默认值更新配置
 ```
 
-> **新手提示**：`localmodconfig` 是最安全的方法，它会确保你的硬件都能正常工作，同时移除不需要的驱动。
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**新手提示**
+
+`localmodconfig` 是最安全的方法，它会确保你的硬件都能正常工作，同时移除不需要的驱动。
+
+</div>
 
 ### 16.4 手动配置内核选项
 
@@ -814,7 +942,13 @@ make menuconfig  # 文本界面（推荐）
 | **Security options** | 安全选项 | SELinux, AppArmor |
 | **Gentoo Linux** | Gentoo 特有选项 | Portage 依赖项自动选择 (推荐) |
 
-> **重要建议**：对于手动编译，建议将**关键驱动**（如文件系统、磁盘控制器、网卡）直接编译进内核（选择 `[*]` 或 `<*>` 即 `=y`），而不是作为模块（`<M>` 即 `=m`）。这样可以避免 initramfs 缺失模块导致无法启动的问题。
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
+
+**重要建议**
+
+对于手动编译，建议将**关键驱动**（如文件系统、磁盘控制器、网卡）直接编译进内核（选择 `[*]` 或 `<*>` 即 `=y`），而不是作为模块（`<M>` 即 `=m`）。这样可以避免 initramfs 缺失模块导致无法启动的问题。
+
+</div>
 
 **必需启用的选项**（根据你的系统）：
 
@@ -860,9 +994,21 @@ make menuconfig  # 文本界面（推荐）
        在启动时显示固件加载信息（便于调试）
    ```
 
-   > **新手提示**：启用 "Select options required by Portage features" 可以自动配置大部分必需选项，非常推荐！
+ <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
-> **提示**：在 menuconfig 中，按 `/` 可以搜索选项，按 `?` 查看帮助。
+**新手提示**
+
+启用 "Select options required by Portage features" 可以自动配置大部分必需选项，非常推荐！
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**提示**
+
+在 menuconfig 中，按 `/` 可以搜索选项，按 `?` 查看帮助。
+
+</div>
 
 ### 16.5 自动启用推荐选项
 
@@ -911,11 +1057,16 @@ General setup
   → Link Time Optimization (LTO) → Clang ThinLTO (NEW)      # 启用 ThinLTO（强烈推荐）
 ```
 
-> **重要警告**：内核编译时**强烈不建议使用 Full LTO**！
-> - Full LTO 会导致编译极其缓慢（可能需要数小时）
-> - 占用大量内存（可能需要 16GB+ RAM）
-> - 容易导致链接错误
-> - **请务必使用 ThinLTO**，它更快、更稳定、内存占用更少
+<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+
+**重要警告：内核编译时强烈不建议使用 Full LTO！**
+
+*   Full LTO 会导致编译极其缓慢（可能需要数小时）
+*   占用大量内存（可能需要 16GB+ RAM）
+*   容易导致链接错误
+*   **请务必使用 ThinLTO**，它更快、更稳定、内存占用更少
+
+</div>
 
 ### 16.7 内核编译选项优化
 
@@ -1007,10 +1158,15 @@ Built-in: 1723
 - **模块 (201)**：作为可加载模块的驱动数量
 - **内核大小 (11M)**：最终内核文件大小（使用 ZSTD 压缩后）
 
-> **优化建议**：
-> - 内核大小 < 15MB：优秀（精简配置）
-> - 内核大小 15-30MB：良好（标准配置）
-> - 内核大小 > 30MB：考虑禁用不需要的功能
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
+
+**优化建议**
+
+*   内核大小 < 15MB：优秀（精简配置）
+*   内核大小 15-30MB：良好（标准配置）
+*   内核大小 > 30MB：考虑禁用不需要的功能
+
+</div>
 
 ### 16.10 常见问题排查
 
@@ -1070,7 +1226,11 @@ error: unknown argument: '-mretpoline-external-thunk'
 
 ## 17. 服务器与 RAID 配置 (可选) {#section-17-server-raid}
 
-> **可参考**：[Gentoo Wiki: Mdadm](https://wiki.gentoo.org/wiki/Mdadm)
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Gentoo Wiki: Mdadm](https://wiki.gentoo.org/wiki/Mdadm)
+
+</div>
 
 本节适用于需要配置软 RAID (mdadm) 的服务器用户。
 
@@ -1131,7 +1291,13 @@ kernel_cmdline="rd.md.uuid=68b53b0a:c6bd2ca0:caed4380:1cd75aeb rd.md.uuid=c8f92d
 dracut --force
 ```
 
-> **提示**：配置完成后，务必检查 `/boot/initramfs-*.img` 是否包含 RAID 模块：
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**提示**
+
+配置完成后，务必检查 `/boot/initramfs-*.img` 是否包含 RAID 模块：
+
+</div>
 > `lsinitrd /boot/initramfs-*.img | grep raid`
 
 </details>
@@ -1140,11 +1306,19 @@ dracut --force
 
 ## 参考资料 {#reference}
 
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem;">
+
 ### 官方文档
 
 - **[Gentoo Handbook: AMD64](https://wiki.gentoo.org/wiki/Handbook:AMD64)** 官方最新指南
 - [Gentoo Wiki](https://wiki.gentoo.org/)
 - [Portage Documentation](https://wiki.gentoo.org/wiki/Portage)
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05)); padding: 1.5rem; border-radius: 0.75rem;">
 
 ### 社区支持
 
@@ -1157,8 +1331,16 @@ dracut --force
 - [Gentoo Forums](https://forums.gentoo.org/)
 - IRC: `#gentoo` @ [Libera.Chat](https://libera.chat/)
 
+</div>
+
+</div>
+
 ## 结语
 
-**祝你在 Gentoo 上享受自由与灵活！**
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0; text-align: center;">
+
+### 祝你在 Gentoo 上享受自由与灵活！
 
 这份指南基于官方 [Handbook:AMD64](https://wiki.gentoo.org/wiki/Handbook:AMD64) 并简化流程，标记了可选步骤，让更多人能轻松尝试。
+
+</div>
