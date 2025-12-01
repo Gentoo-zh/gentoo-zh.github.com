@@ -529,6 +529,11 @@ sync-uri = https://github.com/gentoo-mirror/gentoo.git
 auto-sync = yes
 ```
 
+可用的 Git 鏡像源：
+- **GitHub（國外）**：`https://github.com/gentoo-mirror/gentoo.git`
+- **北京外國語大學**：`https://mirrors.bfsu.edu.cn/git/gentoo-portage.git`
+- **清華大學**：`https://mirrors.tuna.tsinghua.edu.cn/git/gentoo-portage.git`
+
 **3. 新增 Gentoo-zh Overlay**
    在 `/etc/portage/repos.conf/` 目錄下建立 `gentoo-zh.conf` 檔案，内容如下：
    ```ini

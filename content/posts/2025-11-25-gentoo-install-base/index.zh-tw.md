@@ -213,10 +213,10 @@ Portage 的指令行工具。常用指令：
 
 </div>
 
-下載 Minimal ISO（以 BFSU 鏡像站为例）：
+下載 Minimal ISO（以 TWAREN 鏡像站為例）：
 ```bash
-wget https://mirrors.bfsu.edu.cn/gentoo/releases/amd64/autobuilds/20251123T153051Z/install-amd64-minimal-20251123T153051Z.iso
-wget https://mirrors.bfsu.edu.cn/gentoo/releases/amd64/autobuilds/20251123T153051Z/install-amd64-minimal-20251123T153051Z.iso.asc
+wget http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/20251123T153051Z/install-amd64-minimal-20251123T153051Z.iso
+wget http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/20251123T153051Z/install-amd64-minimal-20251123T153051Z.iso.asc
 ```
 
 <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
@@ -747,7 +747,7 @@ Stage3 是一个最小化的 Gentoo 基础系統環境。我们将它解壓到�
 ```bash
 cd /mnt/gentoo
 # 使用 links 瀏覽器访问鏡像站下載 Stage3
-links https://mirrors.bfsu.edu.cn/gentoo/releases/amd64/autobuilds/20251123T153051Z/ #以 BFSU 鏡像站为例
+links http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/20251123T153051Z/ #以 TWAREN 鏡像站為例
 # 解壓 Stage3 壓縮套件
 # x:解壓 p:保留权限 v:顯示过程 f:指定檔案 --numeric-owner:使用數位ID
 tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
@@ -810,8 +810,8 @@ eselect editor set vi        # 将 Vim 設定为預設編輯器 (vi 通常是指
 ```bash
 mirrorselect -i -o >> /etc/portage/make.conf
 # 或手動：
-#以 BFSU 鏡像站为例
-echo 'GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"' >> /etc/portage/make.conf
+#以 TWAREN 鏡像站為例
+echo 'GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"' >> /etc/portage/make.conf
 ```
 
 ### 5.2 make.conf 范例
@@ -851,8 +851,8 @@ LC_MESSAGES=C
 L10N="en en-US zh zh-CN zh-TW"
 LINGUAS="en en_US zh zh_CN zh_TW"
 
-# 鏡像源 (BFSU)
-GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
+# 鏡像源 (TWAREN)
+GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
 
 # 常用 USE 标志 (systemd 使用者推薦)
 USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
@@ -894,8 +894,8 @@ LINGUAS="en en_US zh zh_CN zh_TW"
 MAKEOPTS="-j32"  # 请根据实际硬體调整
 
 # ========== 鏡像源設定 ==========
-# Gentoo 軟體套件下載鏡像（建議选择国内鏡像加速）
-GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
+# Gentoo 軟體套件下載鏡像（建議選擇合適的鏡像加速）
+GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
 
 # ========== Emerge 預設选项 ==========
 # --ask: 执行前询问確認

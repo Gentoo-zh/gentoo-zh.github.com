@@ -666,3 +666,29 @@ sed -i 's/智能服务设备/智慧服務設備/g' "$TARGET_FILE"
 sed -i 's/智能体验设备/智慧體驗設備/g' "$TARGET_FILE"
 sed -i 's/智能价值设备/智慧價值設備/g' "$TARGET_FILE"
 sed -i 's/智能未来设备/智慧未來設備/g' "$TARGET_FILE"
+
+# =============================================================================
+# Mirror Source Corrections for Traditional Chinese (Taiwan)
+# BFSU mirrors should be replaced with TWAREN mirrors for Taiwan users
+# =============================================================================
+
+# Fix ISO download links
+sed -i 's|https://mirrors\.bfsu\.edu\.cn/gentoo/releases/amd64/autobuilds/|http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/|g' "$TARGET_FILE"
+
+# Fix Stage3 download links (in links command)
+sed -i 's|links https://mirrors\.bfsu\.edu\.cn/gentoo/releases/amd64/autobuilds/\(.*\) #以 BFSU 鏡像站|links http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/\1 #以 TWAREN 鏡像站|g' "$TARGET_FILE"
+
+# Fix GENTOO_MIRRORS configuration
+sed -i 's|GENTOO_MIRRORS="https://mirrors\.bfsu\.edu\.cn/gentoo/"|GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"|g' "$TARGET_FILE"
+
+# Fix echo command for GENTOO_MIRRORS
+sed -i "s|echo 'GENTOO_MIRRORS=\"https://mirrors\\.bfsu\\.edu\\.cn/gentoo/\"'|echo 'GENTOO_MIRRORS=\"http://ftp.twaren.net/Linux/Gentoo/\"'|g" "$TARGET_FILE"
+
+# Fix comments mentioning BFSU
+sed -i 's|#以 BFSU 鏡像站为例|#以 TWAREN 鏡像站為例|g' "$TARGET_FILE"
+sed -i 's|# 鏡像源 (BFSU)|# 鏡像源 (TWAREN)|g' "$TARGET_FILE"
+
+echo "Mirror source corrections applied successfully"
+
+# Fix comment about mirror selection (change "domestic" to "appropriate")
+sed -i 's|建議选择国内鏡像加速|建議選擇合適的鏡像加速|g' "$TARGET_FILE"
