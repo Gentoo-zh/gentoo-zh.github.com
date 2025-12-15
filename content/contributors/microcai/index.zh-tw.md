@@ -5,7 +5,7 @@ externalUrl: "https://github.com/microcai"
 links:
   - name: "blog"
     url: "https://microcai.org/"
-weight: 8768
+weight: 8766
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-1232 次提交
+1234 次提交
