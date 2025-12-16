@@ -3,6 +3,7 @@
 # https://blowfish.page/docs/getting-started/
 
 theme = "blowfish"
+# baseURL will be set dynamically by GitHub Actions
 baseURL = "https://www.gentoo.org.cn/"
 defaultContentLanguage = "zh-cn"
 
