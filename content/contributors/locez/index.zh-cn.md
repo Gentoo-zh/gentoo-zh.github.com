@@ -1,11 +1,11 @@
 ---
-title: "Noel Errenil"
+title: "Locez"
 tags: ['Overlay 貢獻者']
-externalUrl: "https://github.com/Linerre"
+externalUrl: "https://github.com/locez"
 links:
   - name: "blog"
-    url: "https://linerre.github.io"
-weight: 9683
+    url: "https://locez.com"
+weight: 9990
 showDate: false
 showAuthor: false
 showReadingTime: false
@@ -15,4 +15,4 @@ showViews: false
 layoutBackgroundHeaderSpace: false
 ---
 
-317 次提交
+10 次提交
