@@ -837,25 +837,40 @@ vim /etc/portage/make.conf
 </div>
 
 ```conf
+# ========== 编译优化参数 ==========
+# -march=native: 针对当前 CPU 架构优化，获得最佳性能
+# -O2: 推荐的优化级别，平衡性能与编译时间
+# -pipe: 使用管道加速编译过程
 COMMON_FLAGS="-march=native -O2 -pipe"
-CFLAGS="${COMMON_FLAGS}"
-CXXFLAGS="${COMMON_FLAGS}"
-FCFLAGS="${COMMON_FLAGS}"
-FFLAGS="${COMMON_FLAGS}"
+CFLAGS="${COMMON_FLAGS}"    # C 编译器选项
+CXXFLAGS="${COMMON_FLAGS}"  # C++ 编译器选项
+FCFLAGS="${COMMON_FLAGS}"   # Fortran 编译器选项
+FFLAGS="${COMMON_FLAGS}"    # Fortran 77 编译器选项
 
-# 请根据 CPU 核心数修改 -j 后面的数字
+# ========== 并行编译设置 ==========
+# -j 后面的数字 = CPU 线程数（运行 nproc 查看）
+# 内存不足时可适当减少（如 -j4）
 MAKEOPTS="-j8"
 
-# 语言设置
+# ========== 语言与本地化 ==========
+# LC_MESSAGES=C: 保持编译输出为英文，便于搜索错误信息
 LC_MESSAGES=C
+# L10N/LINGUAS: 支持的语言（影响软件翻译和文档）
 L10N="en en-US zh zh-CN zh-TW"
 LINGUAS="en en_US zh zh_CN zh_TW"
 
-# 镜像源 (BFSU)
+# ========== 镜像源设置 ==========
+# 国内推荐：BFSU、TUNA、USTC 等
 GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
 
-# 常用 USE 标志 (systemd 用户推荐)
+# ========== USE 标志 ==========
+# systemd: 使用 systemd 作为 init（若用 OpenRC 改为 -systemd）
+# dist-kernel: 使用发行版内核，新手推荐
+# 其他: dbus/policykit 桌面必需，networkmanager 网络管理
 USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
+
+# ========== 许可证设置 ==========
+# "*" 接受所有许可证；"@FREE" 仅接受自由软件
 ACCEPT_LICENSE="*"
 ```
 
@@ -863,64 +878,137 @@ ACCEPT_LICENSE="*"
 <summary><b>详细配置范例（建议阅读并调整）（点击展开）</b></summary>
 
 ```conf
-# vim: set language=bash;  # 告诉 Vim 使用 bash 语法高亮
-CHOST="x86_64-pc-linux-gnu"  # 目标系统架构（不要手动修改）
+# vim: set filetype=bash  # 告诉 Vim 使用 bash 语法高亮
+
+# ========== 系统架构（勿手动修改） ==========
+# 由 Stage3 预设，表示目标系统架构
+CHOST="x86_64-pc-linux-gnu"
 
 # ========== 编译优化参数 ==========
-# -march=native: 针对当前 CPU 优化（推荐，性能最佳）
-# -O2: 优化级别 2（平衡性能与稳定性，推荐）
-# -pipe: 使用管道传递数据，加速编译（不影响最终程序）
+# -march=native    针对当前 CPU 架构优化，获得最佳性能
+#                  注意：编译出的程序可能无法在其他 CPU 上运行
+# -O2              推荐的优化级别，平衡性能与稳定性
+#                  避免使用 -O3，可能导致部分软件编译失败
+# -pipe            使用管道代替临时文件传递数据，加速编译
 COMMON_FLAGS="-march=native -O2 -pipe"
-CFLAGS="${COMMON_FLAGS}"    # C 程序编译选项
-CXXFLAGS="${COMMON_FLAGS}"  # C++ 程序编译选项
-FCFLAGS="${COMMON_FLAGS}"   # Fortran 程序编译选项
-FFLAGS="${COMMON_FLAGS}"    # Fortran 77 程序编译选项
+CFLAGS="${COMMON_FLAGS}"      # C 编译器选项
+CXXFLAGS="${COMMON_FLAGS}"    # C++ 编译器选项
+FCFLAGS="${COMMON_FLAGS}"     # Fortran 编译器选项
+FFLAGS="${COMMON_FLAGS}"      # Fortran 77 编译器选项
 
-# CPU 指令集优化（见下文 5.3，运行 cpuid2cpuflags 自动生成）
-# CPU_FLAGS_X86="aes avx avx2 ..."
+# CPU 指令集优化（运行 cpuid2cpuflags 自动生成，见下文 5.3）
+# CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt sse sse2 ..."
+
+# ========== 并行编译设置 ==========
+# MAKEOPTS: 控制 make 的并行任务数
+#   -j<N>   同时运行的编译任务数，建议 = CPU 线程数（nproc）
+#   -l<N>   系统负载限制，防止系统过载（可选）
+MAKEOPTS="-j8"  # 请根据实际 CPU 线程数调整
+
+# 内存不足时的替代配置（例如 16GB 内存 + 8 核 CPU）：
+# MAKEOPTS="-j4 -l8"  # 减少并行数，限制负载
 
 # ========== 语言与本地化设置 ==========
-# 保持构建输出为英文（便于排错和搜索解决方案）
+# 保持构建输出为英文，便于搜索错误信息和寻求帮助
 LC_MESSAGES=C
 
-# L10N: 本地化支持（影响文档、翻译等）
+# L10N: 本地化语言支持（影响软件翻译、文档等）
 L10N="en en-US zh zh-CN zh-TW"
+
 # LINGUAS: 旧式本地化变量（部分软件仍需要）
 LINGUAS="en en_US zh zh_CN zh_TW"
 
-# ========== 并行编译设置 ==========
-# -j 后面的数字 = CPU 线程数（例如 32 核心 CPU 用 -j32）
-# 推荐值：CPU 线程数（可通过 nproc 命令查看）
-MAKEOPTS="-j32"  # 请根据实际硬件调整
-
 # ========== 镜像源设置 ==========
-# Gentoo 软件包下载镜像（建议选择国内镜像加速）
+# 国内常用镜像（任选其一）：
+#   BFSU:  https://mirrors.bfsu.edu.cn/gentoo/
+#   TUNA:  https://mirrors.tuna.tsinghua.edu.cn/gentoo/
+#   USTC:  https://mirrors.ustc.edu.cn/gentoo/
+#   SJTU:  https://mirrors.sjtug.sjtu.edu.cn/gentoo/
 GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
 
 # ========== Emerge 默认选项 ==========
-# --ask: 执行前询问确认
-# --verbose: 显示详细信息（USE 标志变化等）
-# --with-bdeps=y: 包含构建时依赖
-# --complete-graph=y: 完整依赖图分析
+# --ask              执行前询问确认
+# --verbose          显示详细信息（USE 标志变化等）
+# --with-bdeps=y     包含构建时依赖（更新时也检查）
+# --complete-graph=y 完整依赖图分析（避免依赖问题）
 EMERGE_DEFAULT_OPTS="--ask --verbose --with-bdeps=y --complete-graph=y"
 
-# ========== USE 标志（全局功能开关）==========
-# systemd: 使用 systemd 作为 init 系统（若用 OpenRC 则改为 -systemd）
-# udev: 设备管理支持
-# dbus: 进程间通信（桌面环境必需）
-# policykit: 权限管理（桌面环境必需）
-# networkmanager: 网络管理器（推荐）
-# bluetooth: 蓝牙支持
-# git: Git 版本控制
-# dist-kernel: 使用发行版内核（新手推荐，可用预编译内核）
+# 可选的额外选项：
+# --jobs=N           并行编译多个包（内存充足时可用）
+# --load-average=N   系统负载限制
+# EMERGE_DEFAULT_OPTS="--ask --verbose --jobs=2 --load-average=8"
+
+# ========== USE 标志（全局功能开关） ==========
+# 这些标志影响所有软件包的编译选项
+#
+# 系统基础：
+#   systemd        使用 systemd init（若用 OpenRC 改为 -systemd）
+#   udev           设备管理支持
+#   dbus           进程间通信（桌面环境必需）
+#   policykit      权限管理（桌面环境必需）
+#
+# 网络与硬件：
+#   networkmanager 网络管理器（桌面用户推荐）
+#   bluetooth      蓝牙支持
+#
+# 开发工具：
+#   git            Git 版本控制
+#
+# 内核：
+#   dist-kernel    使用发行版内核（新手推荐）
+#
 USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
 
-# ========== 许可证接受 ==========
-# "*" 表示接受所有许可证（包括非自由软件许可证）
-# 可选择性接受：ACCEPT_LICENSE="@FREE"（仅自由软件）
+# 常用的可选 USE 标志：
+#   pulseaudio / pipewire  音频服务器
+#   wayland / X            显示服务器
+#   vulkan                 Vulkan 图形 API
+#   vaapi / vdpau          硬件视频解码
+#   cups                   打印支持
+#   flatpak                Flatpak 应用支持
+
+# ========== 许可证设置 ==========
+# "*"     接受所有许可证（包括闭源软件）
+# "@FREE" 仅接受自由软件许可证
 ACCEPT_LICENSE="*"
 
-# 文件末尾保留换行符！重要！
+# ========== 视频卡配置（可选） ==========
+# 根据你的显卡选择：
+#   intel      Intel 集成显卡
+#   amdgpu     AMD 显卡（GCN 1.2+）
+#   radeonsi   AMD 显卡（OpenGL）
+#   nvidia     NVIDIA 显卡（闭源驱动）
+#   nouveau    NVIDIA 显卡（开源驱动）
+# VIDEO_CARDS="intel"
+# VIDEO_CARDS="amdgpu radeonsi"
+# VIDEO_CARDS="nvidia"
+
+# ========== 输入设备配置（可选） ==========
+# libinput 是现代桌面的推荐选择
+# INPUT_DEVICES="libinput"
+
+# ========== Portage 功能配置（可选） ==========
+# 启用并行解压、拆分调试信息、测试等
+# FEATURES="parallel-fetch parallel-unpack splitdebug"
+
+# ========== 编译日志配置（推荐） ==========
+# PORTAGE_ELOG_CLASSES: 要记录的日志级别
+#   info     一般信息
+#   warn     警告信息（重要）
+#   error    错误信息（重要）
+#   log      普通日志
+#   qa       质量保证警告
+PORTAGE_ELOG_CLASSES="warn error log"
+
+# PORTAGE_ELOG_SYSTEM: 日志输出方式
+#   save          保存到 /var/log/portage/elog/（推荐）
+#   echo          编译后直接显示
+#   mail          通过邮件发送
+#   syslog        发送到系统日志
+#   custom        自定义处理
+PORTAGE_ELOG_SYSTEM="save"
+
+# 文件末尾保留换行符！
 ```
 
 </details>
@@ -1339,6 +1427,18 @@ echo 'sys-kernel/installkernel dracut' > /etc/portage/package.use/installkernel
 emerge --ask sys-kernel/linux-firmware
 emerge --ask sys-firmware/intel-microcode  # Intel CPU
 ```
+
+<div style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0; border-left: 3px solid rgb(251, 191, 36);">
+
+**关于 package.license 的说明**
+
+你可能注意到前面 make.conf 范例中已经设置了 `ACCEPT_LICENSE="*"`，为什么这里还要单独为 linux-firmware 创建 package.license 文件？
+
+- **make.conf 只是范例**：实际使用中，很多用户会根据自己的需求修改 `ACCEPT_LICENSE`，比如设置为 `@FREE` 只接受自由软件许可证
+- **显式声明更清晰**：单独的 package.license 文件明确记录了哪些软件包需要特殊许可证，便于日后维护和审计
+- **最佳实践**：即使全局设置了 `ACCEPT_LICENSE="*"`，为特定软件包创建 license 文件也是 Gentoo 社区推荐的做法，这样在将来调整全局许可证策略时，不会意外阻止关键软件包的安装
+
+</div>
 
 ---
 

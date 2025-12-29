@@ -21,11 +21,14 @@ description: "如何為 Gentoo 中文社群網站做出貢獻"
 - `content/overlay/` - gentoo-zh Overlay 說明
 - `content/mirrorlist/` - 鏡像列表（Portage 樹和 Distfiles 配置）
 - `content/about/` - 關於頁面（專案歷史和定位）
-- `content/contributors/` - 貢獻者頁面（社群成員資訊）
+- `content/contributors/` - 貢獻者頁面（社群成員資訊，自動更新）
+- `content/authors/` - 作者頁面（文章作者資訊）
+- `content/contributing/` - 貢獻指南（本頁面）
+- `content/changelog/` - 更新記錄（網站內容變更日誌）
 - `content/posts/` - 新聞文章和教學目錄
 - `content/categories/` - 文章分類定義
 
-每個欄目包含簡體中文（`_index.zh-cn.md`）和繁體中文（`_index.zh-tw.md`）版本。
+每個欄目包含簡體中文（`_index.zh-cn.md`）和傳統中文（`_index.zh-tw.md`）版本。
 
 ### 配置檔案
 
@@ -47,9 +50,9 @@ description: "如何為 Gentoo 中文社群網站做出貢獻"
 
 ### 多語言支援
 
-網站支援簡體中文和繁體中文雙語：
+網站支援簡體中文和傳統中文雙語：
 - 簡體中文翻譯：`i18n/zh-CN.yaml`
-- 繁體中文翻譯：`i18n/zh-TW.yaml`
+- 傳統中文翻譯：`i18n/zh-TW.yaml`
 
 ### 主題和資源
 
@@ -69,7 +72,7 @@ mkdir content/posts/YYYY-MM-DD-article-name
 cd content/posts/YYYY-MM-DD-article-name
 ```
 
-建立簡體和繁體中文版本：
+建立簡體和傳統中文版本：
 
 **index.zh-cn.md** (簡體中文)：
 ```yaml
@@ -83,7 +86,7 @@ authors: ["yourname"]
 文章内容...
 ```
 
-**index.zh-tw.md** (繁體中文)：
+**index.zh-tw.md** (傳統中文)：
 ```yaml
 ---
 title: "文章標題"
@@ -125,7 +128,7 @@ authors: ["yourname"]
 - 更新過時的技術資訊
 - 新增新的使用技巧
 - 完善文件說明
-- 補充缺失的繁體中文翻譯
+- 補充缺失的傳統中文翻譯
 
 ### 4. 技術改進
 
@@ -221,7 +224,7 @@ git commit -m "更新 Blowfish 主題"
 
 在 `content/` 下建立新目錄，新增 `_index.zh-cn.md` 和 `_index.zh-tw.md`。
 
-### 繁體中文如何轉換？
+### 傳統中文如何轉換？
 
 可以使用 `opencc` 工具：
 

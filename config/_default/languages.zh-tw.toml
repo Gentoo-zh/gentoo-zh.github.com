@@ -1,10 +1,10 @@
 languageCode = "zh-TW"
-languageName = "繁體中文"
+languageName = "傳統中文"
 weight = 2
 title = "Gentoo 中文社群"
 
 [params]
-  displayName = "繁體中文"
+  displayName = "傳統中文"
   isoCode = "zh-TW"
   rtl = false
   dateFormat = "2006-01-02"

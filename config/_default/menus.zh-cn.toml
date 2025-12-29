@@ -43,6 +43,12 @@
   weight = 44
 
 [[main]]
+  name = "更新记录"
+  pageRef = "/changelog"
+  parent = "more"
+  weight = 45
+
+[[main]]
   identifier = "github"
   pre = "github"
   url = "https://github.com/gentoo-zh/gentoo-zh.github.com"

@@ -1,5 +1,8 @@
+global:
+  language: "傳統中文"
+
 shortcode:
-  recent_articles: "新聞"
+  recent_articles: "文章"
 
 recent:
   show_more: "顯示更多"

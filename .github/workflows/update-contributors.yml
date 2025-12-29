@@ -59,5 +59,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add content/contributors/
-          git commit -m "chore: 自動更新貢獻者信息 [skip ci]"
+          git commit -m "chore: 自動更新貢獻者信息"
           git push

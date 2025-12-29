@@ -49,7 +49,7 @@ hugo
 │       └── markup.toml    # Markdown 配置
 ├── content/
 │   ├── zh-cn/            # 简体中文内容
-│   └── zh-tw/            # 繁体中文内容
+│   └── zh-tw/            # 传统中文内容
 ├── themes/
 │   └── blowfish/         # 主题 (submodule)
 └── .gitignore            # Git 忽略文件
