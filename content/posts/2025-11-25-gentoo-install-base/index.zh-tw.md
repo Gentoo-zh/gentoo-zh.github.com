@@ -92,6 +92,8 @@ Gentoo Linux 是一個基於原始碼的 Linux 發行版，以其**高度可定�
 </div>
 
 <details>
+
+---
 <summary><b>核心概念速覽（點選展開）</b></summary>
 
 在開始安裝前，先了解幾個核心概念：
@@ -1253,112 +1255,306 @@ systemctl enable systemd-resolved
 
 </div>
 
-獲取 UUID：
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+
+**為什麼需要這一步？**
+
+系統需要知道啟動時要掛載哪些分割區。`/etc/fstab` 檔案就像一張「分割區清單」，告訴系統：
+
+- 哪些分割區需要在啟動時自動掛載
+- 每個分割區掛載到哪個目錄
+- 使用什麼檔案系統類型
+
+**推薦使用 UUID**：裝置路徑（如 `/dev/sda1`）可能因硬體變化而改變，但 UUID 是檔案系統的唯一識別碼，永遠不變。
+
+</div>
+
+---
+
+#### 方法 A：使用 genfstab 自動生成（推薦）
+
+<details>
+<summary><b>點選展開查看詳細步驟</b></summary>
+
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
+
+**安裝 genfstab**
+
+`genfstab` 包含在 `sys-fs/genfstab` 套件中（源自 Arch Linux 的 `arch-install-scripts`）。
+
+- **Gig-OS / Arch LiveISO**：已預裝，可直接使用
+- **Gentoo Minimal ISO**：需要先安裝 `emerge --ask sys-fs/genfstab`
+
+</div>
+
+<details>
+<summary><b>genfstab 參數說明</b></summary>
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(59, 130, 246); margin: 1.5rem 0;">
+
+| 參數 | 說明 | 推薦度 |
+|------|------|--------|
+| `-U` | 使用檔案系統 **UUID** 標識 | 推薦 |
+| `-L` | 使用檔案系統 **LABEL** 標識 | 需預設標籤 |
+| `-t PARTUUID` | 使用 GPT 分割區 **PARTUUID** | GPT 專用 |
+| 無參數 | 使用裝置路徑（`/dev/sdX`） | 不推薦 |
+
+**推薦使用 `-U` 參數**，UUID 是檔案系統的唯一識別碼，不會因磁碟順序變化而改變。
+
+</div>
+
+</details>
+
+**標準用法（在 chroot 外執行）：**
+
+```bash
+# 1. 確認所有分割區已正確掛載
+lsblk
+mount | grep /mnt/gentoo
+
+# 2. 生成 fstab（使用 UUID）
+genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
+
+# 3. 檢查生成的檔案
+cat /mnt/gentoo/etc/fstab
+```
+
+<details>
+<summary><b>chroot 環境下的替代方案</b></summary>
+
+如果你已經 chroot 進入了新系統（`/mnt/gentoo` 變成了 `/`），有以下幾種方法：
+
+**方法一：在 chroot 內執行（最簡單）**
+
+```bash
+# 在 chroot 內安裝
+emerge --ask sys-fs/genfstab
+
+# 直接對根目錄生成
+genfstab -U / >> /etc/fstab
+
+# 檢查並清理多餘條目（可能包含 /proc、/sys、/dev 等）
+vim /etc/fstab
+```
+
+**方法二：開啟新終端視窗（LiveGUI）**
+
+如果使用 Gig-OS 等帶圖形介面的 Live 環境，直接開啟新終端視窗（預設在 Live 環境中）：
+
+```bash
+genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
+```
+
+**方法三：使用 TTY 切換（Minimal ISO）**
+
+1. 按 `Ctrl+Alt+F2` 切換到新 TTY（Live 環境）
+2. 安裝並執行：
+   ```bash
+   emerge --ask sys-fs/genfstab
+   genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
+   ```
+3. 按 `Ctrl+Alt+F1` 切回 chroot 環境
+
+</details>
+
+<div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
+
+**genfstab 相容性說明**
+
+[`genfstab`](https://wiki.archlinux.org/title/Genfstab) 工具會自動檢測當前掛載點下的所有檔案系統，[原始碼](https://github.com/glacion/genfstab/blob/master/genfstab)中明確支援：
+
+- **Btrfs 子卷**：自動識別 `subvol=` 參數（不會誤判為 bind mount）
+- **LUKS 加密分割區**：自動使用解密後裝置（`/dev/mapper/xxx`）的 UUID
+- **普通分割區**：ext4、xfs、vfat 等常規檔案系統
+
+**前提條件**：在執行 `genfstab` 之前，必須確保所有分割區已正確掛載（包括 Btrfs 子卷和已解密的 LUKS 分割區）。
+
+</div>
+
+</details>
+
+---
+
+#### 方法 B：手動編輯
+
+<details>
+<summary><b>點選展開手動配置方法</b></summary>
+
+如果不使用 `genfstab`，可以手動編輯 `/etc/fstab`。
+
+**1. 獲取分割區 UUID**
+
 ```bash
 blkid
 ```
 
-**方法 A：自動生成（推薦 LiveGUI 使用者）**
-<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
-
-**注意**
-
-`genfstab` 工具通常包含在 `arch-install-scripts` 套件中。如果你使用的是 Gig-OS 或其他基於 Arch 的 LiveISO，可以直接使用。官方 Minimal ISO 可能需要手動安裝或使用方法 B。
-
-</div>
-
-```bash
-emerge --ask sys-fs/genfstab # 如果沒有該指令
-genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
-```
-檢查生成的檔案：
-```bash
-cat /mnt/gentoo/etc/fstab
+輸出範例：
+```text
+/dev/nvme0n1p1: UUID="7E91-5869" TYPE="vfat" PARTLABEL="EFI"
+/dev/nvme0n1p2: UUID="7fb33b5d-..." TYPE="swap" PARTLABEL="swap"
+/dev/nvme0n1p3: UUID="8c08f447-..." TYPE="xfs" PARTLABEL="root"
 ```
 
-**方法 B：手動編輯**
+**2. 編輯 fstab**
 
-編輯 `/etc/fstab`：
 ```bash
 vim /etc/fstab
 ```
 
+**基礎配置範例（ext4/xfs）：**
+
 ```fstab
-# <fs>                                     <mountpoint> <type> <opts>            <dump/pass>
-UUID=7E91-5869                             /efi         vfat   defaults,noatime  0 2
-UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                0 0
-UUID=8c08f447-c79c-4fda-8c08-f447c79ce690  /            xfs    defaults,noatime  0 1
+# <UUID>                                   <掛載點>     <類型> <選項>            <dump> <fsck>
+UUID=7E91-5869                             /efi         vfat   defaults,noatime  0      2
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                0      0
+UUID=8c08f447-c79c-4fda-8c08-f447c79ce690  /            xfs    defaults,noatime  0      1
 ```
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(59, 130, 246); margin: 1.5rem 0;">
+
+**fstab 欄位說明**
+
+| 欄位 | 說明 |
+|------|------|
+| UUID | 分割區的唯一識別碼（透過 `blkid` 獲取） |
+| 掛載點 | 檔案系統掛載位置（swap 使用 `none`） |
+| 類型 | 檔案系統類型：`vfat`、`ext4`、`xfs`、`btrfs`、`swap` |
+| 選項 | 掛載選項，多個用逗號分隔 |
+| dump | 備份標誌，通常為 `0` |
+| fsck | 啟動時檢查順序：`1`=根分割區，`2`=其他，`0`=不檢查 |
+
+</div>
+
+</details>
+
+---
 
 <details>
-<summary><b>進階設定：Btrfs fstab 範例（點選展開）</b></summary>
+<summary><b>Btrfs 子卷配置</b></summary>
 
-```fstab
-# Root Subvolume
-UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /            btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@              0 0
+**genfstab 自動生成：**
 
-# Home Subvolume
-UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /home        btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@home          0 0
+只要 Btrfs 子卷已正確掛載，`genfstab -U` 會自動識別並生成包含 `subvol=` 的配置。
 
-# Swap
-UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                                                      0 0
+```bash
+# 確認子卷掛載情況
+mount | grep btrfs
+# 輸出範例：/dev/nvme0n1p3 on /mnt/gentoo type btrfs (rw,noatime,compress=zstd:3,subvol=/@)
 
-# ESP (UEFI)
-UUID=7E91-5869                             /efi         vfat   defaults,noatime,fmask=0022,dmask=0022                  0 2
+# 自動生成
+genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
 ```
 
-<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
+**手動配置範例：**
+
+```fstab
+# Root 子卷
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /       btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,subvol=@       0 0
+
+# Home 子卷（同一 UUID，不同子卷）
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /home   btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,subvol=@home   0 0
+
+# Swap（獨立分割區）
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none    swap   sw                                                                            0 0
+
+# EFI 分割區
+UUID=7E91-5869                             /efi    vfat   defaults,noatime,fmask=0022,dmask=0022                                        0 2
+```
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(59, 130, 246); margin: 1.5rem 0;">
+
+**Btrfs 常用掛載選項**
+
+| 選項 | 說明 |
+|------|------|
+| `compress=zstd:3` | zstd 壓縮，級別 3（推薦，平衡效能與壓縮率） |
+| `discard=async` | 非同步 TRIM（SSD 推薦） |
+| `space_cache=v2` | v2 版空間快取（預設啟用，效能更好） |
+| `subvol=@` | 指定掛載的子卷 |
+| `noatime` | 不記錄存取時間（提升效能） |
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
 
 **注意**
 
-請務必使用 `blkid` 指令獲取你實際的 UUID 並替換上面的範例值。
+- 同一 Btrfs 分割區的所有子卷使用**相同的 UUID**
+- 務必使用 `blkid` 獲取你實際的 UUID
 
 </div>
 
 </details>
 
 <details>
-<summary><b>進階設定：LUKS 加密分割區 fstab 範例（點選展開）</b></summary>
+<summary><b>LUKS 加密分割區配置</b></summary>
 
 <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
 
 **關鍵點**
 
-在 `fstab` 中，必須使用 **解密後對映裝置** (Mapped Device) 的 UUID，而不是物理分割區 (LUKS Container) 的 UUID。
+fstab 必須使用**解密後對映裝置**的 UUID（`/dev/mapper/xxx`），而非 LUKS 容器的 UUID。
 
 </div>
 
-**1. 檢視 UUID 區別**
+**genfstab 自動生成：**
+
+`genfstab` 會自動檢測解密後的裝置並使用正確的 UUID：
+
+```bash
+# 確認 LUKS 已解密
+lsblk
+# 應看到類似：nvme0n1p3 → cryptroot → 掛載點
+
+# 自動生成（會使用 /dev/mapper/cryptroot 的 UUID）
+genfstab -U /mnt/gentoo >> /mnt/gentoo/etc/fstab
+```
+
+**手動配置：區分兩種 UUID**
 
 ```bash
 blkid
 ```
 
-輸出範例（注意區分 `crypto_LUKS` 和 `btrfs`）：
-
 ```text
-# 這是物理分割區 (LUKS 容器)，不要在 fstab 中使用這個 UUID！
-/dev/nvme0n1p5: UUID="562d0251-..." TYPE="crypto_LUKS" ...
+# LUKS 容器（TYPE="crypto_LUKS"）- 不要用這個！
+/dev/nvme0n1p3: UUID="562d0251-..." TYPE="crypto_LUKS"
 
-# 這是解密後的對映裝置 (檔案系統)，fstab 應該用這個 UUID！
-/dev/mapper/cryptroot: UUID="7b44c5eb-..." TYPE="btrfs" ...
+# 解密後裝置（TYPE="btrfs"）- 用這個！
+/dev/mapper/cryptroot: UUID="7b44c5eb-..." TYPE="btrfs"
 ```
 
-**2. fstab 配置範例**
+**手動配置範例（Btrfs on LUKS）：**
 
 ```fstab
-# Root (Btrfs inside LUKS) - 使用 /dev/mapper/cryptroot 的 UUID
-UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /            btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@              0 0
+# Root（使用解密後裝置 /dev/mapper/cryptroot 的 UUID）
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /       btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,subvol=@       0 0
 
-# Home (Btrfs inside LUKS) - 使用 /dev/mapper/crypthomevar 的 UUID
-UUID=4ad44bb7-9843-470b-9a88-f008367b63a3  /home        btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,commit=60,subvol=@home          0 0
+# Home（同一加密分割區的不同子卷，UUID 相同）
+UUID=7b44c5eb-caa0-413b-9b7e-a991e1697465  /home   btrfs  defaults,noatime,compress=zstd:3,discard=async,space_cache=v2,subvol=@home   0 0
 
-# Swap
-UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none         swap   sw                                                      0 0
+# Swap（獨立分割區或加密 swap）
+UUID=7fb33b5d-4cff-47ff-ab12-7b461b5d6e13  none    swap   sw                                                                            0 0
 
-# ESP (UEFI)
-UUID=7E91-5869                             /efi         vfat   defaults,noatime,fmask=0022,dmask=0022                  0 2
+# EFI（不加密）
+UUID=7E91-5869                             /efi    vfat   defaults,noatime,fmask=0022,dmask=0022                                        0 2
 ```
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(59, 130, 246); margin: 1.5rem 0;">
+
+**常見問題**
+
+**Q: 為什麼不能用 LUKS 容器的 UUID？**  
+A: LUKS 容器是加密的原始資料，系統無法讀取其中的檔案系統。必須先解密，解密後的 `/dev/mapper/xxx` 才有可識別的檔案系統和 UUID。
+
+**Q: `discard=async` 在 LUKS 上安全嗎？**  
+A: LUKS2 + `discard` 是安全的。若極度在意安全性，可移除此選項（會降低 SSD 效能）。
+
+</div>
+
+</details>
+
+</div>
 
 </details>
 
@@ -1462,9 +1658,11 @@ Stage3 只有最基礎的指令。我們需要補充系統日誌、網路管理�
 
 ### 8.1 系統服務工具
 
-**OpenRC 使用者**（必選）：
+<details>
+<summary><b>OpenRC 使用者配置（點選展開）</b></summary>
 
 **1. 系統日誌**
+
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
 **可參考**：[Syslog-ng](https://wiki.gentoo.org/wiki/Syslog-ng)
@@ -1477,12 +1675,14 @@ rc-update add syslog-ng default
 ```
 
 **2. 定時任務**
+
 ```bash
 emerge --ask sys-process/cronie
 rc-update add cronie default
 ```
 
 **3. 時間同步**
+
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
 **可參考**：[System Time](https://wiki.gentoo.org/wiki/System_time/zh-tw) · [System Time (OpenRC)](https://wiki.gentoo.org/wiki/System_time/zh-tw#OpenRC)
@@ -1494,10 +1694,15 @@ emerge --ask net-misc/chrony
 rc-update add chronyd default
 ```
 
-**systemd 使用者**：
-systemd 已內建日誌與時間同步服務。
+</details>
+
+<details>
+<summary><b>systemd 使用者配置（點選展開）</b></summary>
+
+systemd 已內建日誌與定時任務服務，無需額外安裝。
 
 **時間同步**
+
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
 **可參考**：[System Time](https://wiki.gentoo.org/wiki/System_time/zh-tw) · [System Time (systemd)](https://wiki.gentoo.org/wiki/System_time/zh-tw#systemd)
@@ -1508,9 +1713,12 @@ systemd 已內建日誌與時間同步服務。
 systemctl enable --now systemd-timesyncd
 ```
 
-### 8.3 檔案系統工具
+</details>
+
+### 8.2 檔案系統工具
 
 根據你使用的檔案系統安裝對應工具（必選）：
+
 ```bash
 emerge --ask sys-fs/e2fsprogs  # ext4
 emerge --ask sys-fs/xfsprogs   # XFS
@@ -1580,11 +1788,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
 <details>
-<summary><b>進階設定：systemd-boot (僅限 UEFI)（點選展開）</b></summary>
+<summary><b>進階設定：systemd-boot（僅限 UEFI）</b></summary>
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
 **可參考**：[systemd-boot](https://wiki.gentoo.org/wiki/Systemd/systemd-boot/zh-tw)
+
+**注意**：部分 ARM/RISC-V 裝置的韌體可能不支援完整的 UEFI 規範，無法使用 systemd-boot。
 
 </div>
 

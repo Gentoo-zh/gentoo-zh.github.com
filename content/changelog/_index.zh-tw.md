@@ -16,6 +16,17 @@ layoutBackgroundHeaderSpace: false
 
 ## 2025 年 12 月
 
+### 2025-12-30
+
+**Gentoo Linux 安裝指南（基礎篇）**
+- 6.4 節「配置 fstab」大幅完善：補充「為什麼需要這一步？」說明，加入 genfstab 自動生成（含參數說明、chroot/LiveGUI/TTY 情境）、手動編輯方法，並提供 Btrfs 子卷與 LUKS 加密分割區範例
+- 將 fstab 相關內容以 `<details>` 折疊重排，降低章節長度壓力
+- 8.1 節「系統服務工具」將 OpenRC / systemd 使用者分別折疊，提升可讀性
+- `systemd-boot` 說明改為更保守的表述：強調僅適用於 UEFI，並提示部分 ARM/RISC-V 裝置韌體可能不支援完整 UEFI
+
+**網站基礎設施**
+- GitHub Actions 部署工作流調整 Hugo 版本為 `0.153.2`（與 Blowfish 主題宣告的相容範圍對齊）
+
 ### 2025-12-29
 
 **網站語言與術語更新**
