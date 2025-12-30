@@ -49,7 +49,7 @@ description: "2025 年最新 Apple Silicon Mac (M1/M2) Gentoo Linux 安裝指南
 3. 從 Live USB 啟動
 4. 分割磁盤並掛載檔案系統
 5. 展開 Stage3 並進入 chroot
-6. 安裝 Asahi 支援套件（自動化指令碼）
+6. 安裝 Asahi 支援套件（自動化腳本）
 7. 重新啟動完成安裝
 
 **可選步驟**：
@@ -64,7 +64,7 @@ description: "2025 年最新 Apple Silicon Mac (M1/M2) Gentoo Linux 安裝指南
 
 **官方簡化**
 
-現在可使用 [asahi-gentoosupport 自動化指令碼](https://github.com/chadmed/asahi-gentoosupport) 完成大部分設定！
+現在可使用 [asahi-gentoosupport 自動化腳本](https://github.com/chadmed/asahi-gentoosupport) 完成大部分設定！
 
 </div>
 
@@ -181,7 +181,7 @@ curl https://alx.sh | sh
 
 **安全提示**
 
-建議先前往 <https://alx.sh> 查看指令碼內容，確認安全後再執行。
+建議先前往 <https://alx.sh> 查看腳本內容，確認安全後再執行。
 
 </div>
 
@@ -202,7 +202,7 @@ curl https://alx.sh | sh
 
 </div>
 
-3. **選擇操作系統**：選擇 **UEFI environment only (m1n1 + U-Boot + ESP)**
+3. **選擇作業系統**：選擇 **UEFI environment only (m1n1 + U-Boot + ESP)**
    ```
    » OS: <選擇 UEFI only 選項>
    ```
@@ -215,7 +215,7 @@ curl https://alx.sh | sh
 
 </div>
 
-4. **設定名稱**：輸入 `Gentoo` 作為操作系統名稱
+4. **設定名稱**：輸入 `Gentoo` 作為作業系統名稱
    ```
    » OS name: Gentoo
    ```
@@ -232,7 +232,7 @@ curl https://alx.sh | sh
 4. 等待音量列表出現，選擇 **Gentoo**
 5. 你會看到 macOS Recovery 畫面：
    - 若要求「Select a volume to recover」，選擇你的 macOS 音量並點擊 Next
-   - 輸入 macOS 用戶密碼（FileVault 用戶）
+   - 輸入 macOS 使用者密碼（FileVault 使用者）
 6. 依照螢幕指示完成設定
 
 <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
@@ -409,7 +409,7 @@ cryptsetup luksFormat --type luks2 --pbkdf argon2id --hash sha512 --key-size 512
 
 # 輸入 YES 確認，設定加密密碼
 
-# 打開加密分區
+# 開啟加密分區
 cryptsetup luksOpen /dev/nvme0n1p6 gentoo-root
 
 # 格式化
@@ -579,13 +579,13 @@ eselect locale set en_US.utf8
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
 ```
 
-**建立用戶與設定密碼**：
+**建立使用者與設定密碼**：
 ```bash
-# 建立用戶（替換 <用戶名稱> 為你的用戶名）
-useradd -m -G wheel,audio,video,usb,input <用戶名稱>
+# 建立使用者（替換 <使用者名稱> 為你的使用者名）
+useradd -m -G wheel,audio,video,usb,input <使用者名稱>
 
-# 設定用戶密碼
-passwd <用戶名稱>
+# 設定使用者密碼
+passwd <使用者名稱>
 
 # 設定 root 密碼
 passwd root
@@ -611,11 +611,11 @@ passwd root
 # 首次同步 Portage 樹
 emerge --sync
 
-# 安裝 git（下載指令碼需要）
+# 安裝 git（下載腳本需要）
 emerge --ask dev-vcs/git
 ```
 
-**步驟 2：使用 asahi-gentoosupport 指令碼**（官方提供）：
+**步驟 2：使用 asahi-gentoosupport 腳本**（官方提供）：
 
 ```bash
 cd /tmp
@@ -624,7 +624,7 @@ cd asahi-gentoosupport
 ./install.sh
 ```
 
-此指令碼會自動完成：
+此腳本會自動完成：
 - 啟用 Asahi overlay
 - 安裝 GRUB bootloader
 - 設定 VIDEO_CARDS="asahi"
@@ -636,10 +636,10 @@ cd asahi-gentoosupport
 
 **如果遇到 USE flag 衝突**
 
-指令碼執行過程中可能會提示 USE flag 需要變更。解決方法：
+腳本執行過程中可能會提示 USE flag 需要變更。解決方法：
 
 ```bash
-# 當指令碼提示 USE flag 衝突時，按 Ctrl+C 中斷指令碼
+# 當腳本提示 USE flag 衝突時，按 Ctrl+C 中斷腳本
 # 然後運行：
 emerge --autounmask-write <出現衝突的軟體套件>
 
@@ -647,18 +647,18 @@ emerge --autounmask-write <出現衝突的軟體套件>
 etc-update
 # 在 etc-update 中選擇合適的選項（通常選擇 -3 自動合併）
 
-# 重新運行安裝指令碼
+# 重新運行安裝腳本
 cd /tmp/asahi-gentoosupport
 ./install.sh
 ```
 
 </div>
 
-**指令碼完成後直接跳到步驟 5.3（fstab 設定）！**
+**腳本完成後直接跳到步驟 5.3（fstab 設定）！**
 
 ---
 
-### 5.2 方法 B：手動安裝（進階用戶）
+### 5.2 方法 B：手動安裝（進階使用者）
 
 **步驟 1：安裝 git 並設定 Asahi overlay**
 
@@ -700,7 +700,7 @@ emerge --sync
 
 **鏡像站說明**
 
-**簡體中文用戶推薦**：可以將上面的 `sync-uri` 改為北外源 `https://mirrors.bfsu.edu.cn/git/gentoo-portage.git` 以獲得更快的同步速度
+**簡體中文使用者推薦**：可以將上面的 `sync-uri` 改為北外源 `https://mirrors.bfsu.edu.cn/git/gentoo-portage.git` 以獲得更快的同步速度
 
 更多鏡像站選項參考：[鏡像列表](/mirrorlist/)
 
@@ -838,7 +838,7 @@ UUID=<your-root-uuid>  /      ext4   defaults  0 1
 UUID=<your-boot-uuid>  /boot  vfat   defaults  0 2
 ```
 
-### 5.4 設定加密支援（僅加密用戶）
+### 5.4 設定加密支援（僅加密使用者）
 
 <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
 
@@ -1381,9 +1381,9 @@ update-m1n1  # 切換後必須執行！
 
 <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); padding: 1.5rem; border-radius: 0.75rem;">
 
-### 工具與指令碼
+### 工具與腳本
 
-*   [asahi-gentoosupport](https://github.com/chadmed/asahi-gentoosupport) - 自動化安裝指令碼
+*   [asahi-gentoosupport](https://github.com/chadmed/asahi-gentoosupport) - 自動化安裝腳本
 *   [Gentoo Asahi Releng](https://github.com/chadmed/gentoo-asahi-releng) - Live USB 構建工具
 
 </div>
@@ -1428,7 +1428,7 @@ update-m1n1  # 切換後必須執行！
 
 **記住三個關鍵點**：
 1.  使用官方 Gentoo Asahi Live USB（無需 Fedora 中轉）
-2.  asahi-gentoosupport 指令碼可自動化大部分流程
+2.  asahi-gentoosupport 腳本可自動化大部分流程
 3.  每次核心更新後必須執行 `update-m1n1`
 
 有任何問題歡迎到社區提問！

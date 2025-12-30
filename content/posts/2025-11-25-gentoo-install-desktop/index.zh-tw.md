@@ -201,7 +201,7 @@ emerge --ask --newuse --deep @world
    emerge --ask media-video/libva-utils # 安裝 vainfo 用於驗證
    ```
 
-   **NVIDIA 用戶特別步驟**：
+   **NVIDIA 使用者特別步驟**：
    ```bash
    emerge --ask media-libs/nvidia-vaapi-driver
    ```
@@ -212,7 +212,7 @@ emerge --ask --newuse --deep @world
 `nvidia-vaapi-driver` 在 Wayland 下可能存在不穩定性（如 CUDA/OpenGL 互操作問題）。
 詳情參考：[NVIDIA Forums](https://forums.developer.nvidia.com/t/is-cuda-opengl-interop-supported-on-wayland/267052)、[Reddit](https://www.reddit.com/r/archlinux/comments/1oeiss0/wayland_nvidia_on_arch/)、[GitHub Issue](https://github.com/elFarto/nvidia-vaapi-driver/issues/387)。
 
-**NVIDIA 用戶還需要在核心參數中啟用 DRM KMS**：
+**NVIDIA 使用者還需要在核心參數中啟用 DRM KMS**：
 編輯 `/etc/default/grub`，在 `GRUB_CMDLINE_LINUX_DEFAULT` 中添加 `nvidia_drm.modeset=1`。
 
 ```bash
@@ -221,7 +221,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 </div>
 
-   **Intel/AMD 用戶**：
+   **Intel/AMD 使用者**：
    通常安裝好顯示卡驅動程式後即可直接支援。
 
 3. **驗證**：
@@ -341,9 +341,9 @@ emerge --ask kde-plasma/plasma-meta # 安裝 Plasma 桌面
 emerge --ask kde-apps/kde-apps-meta # (可選) 安裝全套 KDE 應用
 emerge --ask x11-misc/sddm # 安裝 SDDM 顯示管理器
 
-# OpenRC 設定 (SDDM 沒有獨立的 init 指令碼)
+# OpenRC 設定 (SDDM 沒有獨立的 init 腳本)
 # 參考：https://wiki.gentoo.org/wiki/Display_manager#OpenRC
-emerge --ask gui-libs/display-manager-init # 安裝通用顯示管理器 init 指令碼
+emerge --ask gui-libs/display-manager-init # 安裝通用顯示管理器 init 腳本
 
 # 編輯 /etc/conf.d/display-manager
 # 設定 DISPLAYMANAGER="sddm" 和 CHECKVT=7
@@ -478,7 +478,7 @@ Rime 是一款強大的輸入法引擎，支援朙月拼音 (簡體/繁體)、�
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
-**KDE 用戶提示**
+**KDE 使用者提示**
 
 在 KDE Plasma 5.27+ 中，建議直接在“系統設定” -> “鍵盤” -> “虛擬鍵盤”中選擇 Fcitx 5，而不需要手動設定上述環境變量（除了 `XMODIFIERS`）。
 
@@ -512,7 +512,7 @@ GNOME 對 IBus 集成最好，建議優先使用。
 
 *   **切換方案**：按 `F4` 鍵。
 *   **支援方案**：朙月拼音 (簡體/繁體)、注音、地球拼音等。
-*   **用戶設定目錄**：`~/.local/share/fcitx5/rime` (Fcitx5) 或 `~/.config/ibus/rime` (IBus)。
+*   **使用者設定目錄**：`~/.local/share/fcitx5/rime` (Fcitx5) 或 `~/.config/ibus/rime` (IBus)。
 
 </div>
 
@@ -701,13 +701,13 @@ emerge --ask flclash-bin
 2. **啟用軟體中心支援**
    為了讓 GNOME Software 或 KDE Discover 支援 Flatpak，需要啟用相應的 USE flag。
 
-   **GNOME 用戶**：
+   **GNOME 使用者**：
    在 `/etc/portage/package.use/gnome` (或新建文件) 中添加：
    ```conf
    gnome-extra/gnome-software flatpak
    ```
 
-   **KDE 用戶**：
+   **KDE 使用者**：
    在 `/etc/portage/package.use/kde` (或新建文件) 中添加：
    ```conf
    kde-plasma/discover flatpak
@@ -762,14 +762,14 @@ flatpak install com.tencent.WeChat
 
 </div>
 
-- **Systemd 用戶**：
+- **Systemd 使用者**：
   ```bash
   systemctl enable --now fstrim.timer
   ```
-- **OpenRC 用戶**：
+- **OpenRC 使用者**：
   建議每週手動運行一次 `fstrim -av`，或設定 cron 任務。
 
-**2. 電源管理 (筆記型電腦用戶推薦)**
+**2. 電源管理 (筆記型電腦使用者推薦)**
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -780,7 +780,7 @@ flatpak install com.tencent.WeChat
 請在以下方案中**二選一** (不要同時安裝)：
 
 **方案 A：TLP (推薦，極致省電)**
-自動優化電池壽命，適合大多數用戶。
+自動優化電池壽命，適合大多數使用者。
 
 ```bash
 emerge --ask sys-power/tlp
@@ -800,7 +800,7 @@ TLP 預設設定已足夠優秀。如需微調，設定檔位於 `/etc/tlp.conf`
 </div>
 
 **方案 B：power-profiles-daemon (桌面集成)**
-適合 GNOME/KDE 用戶，可在系統選單中直接切換"性能/平衡/省電"模式。
+適合 GNOME/KDE 使用者，可在系統選單中直接切換"性能/平衡/省電"模式。
 
 ```bash
 emerge --ask sys-power/power-profiles-daemon
@@ -821,14 +821,14 @@ Zram 可以創建壓縮的記憶體交換分區，有效防止編譯大型軟體
 
 </div>
 
-**OpenRC 用戶**：
+**OpenRC 使用者**：
 ```bash
 emerge --ask sys-block/zram-init
 rc-update add zram-init default
 ```
 *設定位於 `/etc/conf.d/zram-init`*
 
-**Systemd 用戶**：
+**Systemd 使用者**：
 推薦使用 `zram-generator`：
 ```bash
 emerge --ask sys-apps/zram-generator

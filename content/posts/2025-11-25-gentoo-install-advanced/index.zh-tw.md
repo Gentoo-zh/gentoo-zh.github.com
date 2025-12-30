@@ -75,7 +75,7 @@ FFLAGS="${COMMON_FLAGS}"
 
 **推薦設定**
 
-對於大多數用戶，使用 `-march=native -O2 -pipe` 已經足夠。除非你明確知道自己在做什麼，否則不要使用 `-O3` 或其他激進優化參數。
+對於大多數使用者，使用 `-march=native -O2 -pipe` 已經足夠。除非你明確知道自己在做什麼，否則不要使用 `-O3` 或其他激進優化參數。
 
 </div>
 
@@ -163,7 +163,7 @@ USE="${USE} -doc -test -examples"
 | USE 標誌 | 說明 | 推薦 |
 |---------|------|------|
 | `systemd` | 使用 systemd init 系統 | 新手推薦 |
-| `openrc` | 使用 OpenRC init 系統 | 傳統用戶 |
+| `openrc` | 使用 OpenRC init 系統 | 傳統使用者 |
 | `udev` | 現代設備管理 | 必需 |
 | `dbus` | 行程間通信（桌面必需） | 桌面必需 |
 | `policykit` | 權限管理（桌面必需） | 桌面必需 |
@@ -177,10 +177,10 @@ USE="${USE} -doc -test -examples"
 |---------|------|------|
 | `wayland` | Wayland 顯示協定 | 現代桌面推薦 |
 | `X` | X11 顯示協定 | 兼容性好 |
-| `gtk` | GTK+ 工具包（GNOME/Xfce） | GNOME 用戶 |
-| `qt6` / `qt5` | Qt 工具包（KDE Plasma） | KDE 用戶 |
-| `kde` | KDE 集成 | KDE 用戶 |
-| `gnome` | GNOME 集成 | GNOME 用戶 |
+| `gtk` | GTK+ 工具包（GNOME/Xfce） | GNOME 使用者 |
+| `qt6` / `qt5` | Qt 工具包（KDE Plasma） | KDE 使用者 |
+| `kde` | KDE 集成 | KDE 使用者 |
+| `gnome` | GNOME 集成 | GNOME 使用者 |
 
 </details>
 
@@ -203,7 +203,7 @@ USE="${USE} -doc -test -examples"
 
 | USE 標誌 | 說明 | 推薦 |
 |---------|------|------|
-| `networkmanager` | 圖形化網路管理 | 桌面用戶推薦 |
+| `networkmanager` | 圖形化網路管理 | 桌面使用者推薦 |
 | `bluetooth` | 藍牙支援 | 需要時激活 |
 | `wifi` | 無線網路支援 | 筆記型電腦必需 |
 
@@ -214,7 +214,7 @@ USE="${USE} -doc -test -examples"
 
 | USE 標誌 | 說明 | 推薦 |
 |---------|------|------|
-| `cjk` | 中日韓字體與輸入法支援 | 中文用戶必需 |
+| `cjk` | 中日韓字體與輸入法支援 | 中文使用者必需 |
 | `nls` | 本機化支援（軟體翻譯） | 推薦 |
 | `icu` | Unicode 支援 | 推薦 |
 | `-doc` | 禁用文件安裝 | 節省空間 |
@@ -553,7 +553,7 @@ GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
 # --complete-graph=y 完整的依賴圖分析（解決複雜依賴衝突）
 EMERGE_DEFAULT_OPTS="--ask --verbose --with-bdeps=y --complete-graph=y"
 
-# 高級用戶可選設定（需要充足記憶體）：
+# 高級使用者可選設定（需要充足記憶體）：
 #    --jobs=N           平行編譯多個軟體套件（記憶體充足時建議 2-4）
 #    --load-average=N   系統負載上限（建議與 CPU 核心數相同）
 # EMERGE_DEFAULT_OPTS="--ask --verbose --jobs=2 --load-average=8"
@@ -568,7 +568,7 @@ EMERGE_DEFAULT_OPTS="--ask --verbose --with-bdeps=y --complete-graph=y"
 #   policykit      權限管理（桌面環境必需）
 #
 # 網路與硬體：
-#   networkmanager 圖形化網路管理（桌面用戶推薦）
+#   networkmanager 圖形化網路管理（桌面使用者推薦）
 #   bluetooth      藍牙支援
 #
 # 開發工具：
@@ -585,7 +585,7 @@ USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
 #   顯示：wayland / X（顯示協定，桌面環境需要）
 #   圖形：vulkan, opengl（現代圖形 API）
 #   影片：vaapi, vdpau（硬體影片加速）
-#   打印：cups（打印系統）
+#   列印：cups（列印系統）
 #   容器：flatpak, appimage（第三方應用支援）
 #   禁用：-doc, -test, -examples（節省編譯時間和磁盤空間）
 
@@ -599,7 +599,7 @@ USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
 #   "-* @FREE"         拒絕所有後顯式允許（最嚴格控制）
 #
 # 推薦策略：
-#   - 新手/桌面用戶：使用 "*" 避免許可證問題
+#   - 新手/桌面使用者：使用 "*" 避免許可證問題
 #   - 開源軟體堅持者：使用 "@FREE"，需要閉源軟體時單獨設定
 #   - 詳細說明見下方「13.12 ACCEPT_LICENSE 詳解」
 ACCEPT_LICENSE="*"
@@ -631,7 +631,7 @@ PORTAGE_ELOG_CLASSES="warn error log qa"
 #   echo          編譯後直接顯示在終端機
 #   mail          通過郵件發送（需設定郵件系統）
 #   syslog        發送到系統日誌
-#   custom        自定義處理指令碼
+#   custom        自定義處理腳本
 PORTAGE_ELOG_SYSTEM="save"
 
 # 注意：文件末尾必須保留空行（POSIX 標準要求）
@@ -689,7 +689,7 @@ PORTAGE_ELOG_SYSTEM="save"
 | `@FREE-DOCUMENTS` | 合併 `@FSF-APPROVED-OTHER` + `@MISC-FREE-DOCS` |
 | `@FREE` | **所有自由軟體和文件**（合併 `@FREE-SOFTWARE` + `@FREE-DOCUMENTS`）|
 | `@BINARY-REDISTRIBUTABLE` | 至少允許自由再分發二進位檔案的許可證（包含 `@FREE`）|
-| `@EULA` | 試圖剝奪用戶權利的許可協定（比"保留所有權利"更嚴格）|
+| `@EULA` | 試圖剝奪使用者權利的許可協定（比"保留所有權利"更嚴格）|
 
 #### 查看當前系統設定
 
@@ -726,8 +726,8 @@ ACCEPT_LICENSE="@FREE"
 
 **推薦做法**
 
-- **新手/桌面用戶**：使用 `ACCEPT_LICENSE="*"` 避免許可證問題導致軟體安裝失敗
-- **純自由軟體用戶**：使用 `ACCEPT_LICENSE="@FREE"`，需要閉源軟體時單獨為包設定
+- **新手/桌面使用者**：使用 `ACCEPT_LICENSE="*"` 避免許可證問題導致軟體安裝失敗
+- **純自由軟體使用者**：使用 `ACCEPT_LICENSE="@FREE"`，需要閉源軟體時單獨為包設定
 - 前綴 `-*` 表示先拒絕所有，再顯式允許指定組（更嚴格的控制）
 
 </div>
@@ -759,7 +759,7 @@ sys-firmware/intel-microcode intel-ucode
 
 **重要提示**
 
-ebuild 中的 `LICENSE` 變量僅是開發者和用戶的**參考指南**，不是法律聲明，也不保證 100% 準確。請勿僅依賴 ebuild 的許可證標識，建議深入檢查軟體套件本身及其安裝的所有文件。
+ebuild 中的 `LICENSE` 變量僅是開發者和使用者的**參考指南**，不是法律聲明，也不保證 100% 準確。請勿僅依賴 ebuild 的許可證標識，建議深入檢查軟體套件本身及其安裝的所有文件。
 
 參考：[Gentoo Handbook: ACCEPT_LICENSE](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation#Optional:_Configure_the_ACCEPT_LICENSE_variable)
 
@@ -929,7 +929,7 @@ Firefox、LibreOffice 等大型軟體編譯時可能會耗盡 tmpfs 空間。我
 
 **風險提示**
 
-LTO 會顯著增加編譯時間和記憶體消耗，且可能導致部分軟體編譯失敗。**強烈不建議全局打開**，僅推薦針對特定軟體（如瀏覽器）打開。
+LTO 會顯著增加編譯時間和記憶體消耗，且可能導致部分軟體編譯失敗。**強烈不建議全局開啟**，僅推薦針對特定軟體（如瀏覽器）開啟。
 
 </div>
 
@@ -970,7 +970,7 @@ LTO (Link Time Optimization) 將優化推遲到連結階段，可帶來性能提
 
 </div>
 
-**1. 使用 USE 標誌打開 (最推薦)**
+**1. 使用 USE 標誌開啟 (最推薦)**
 
 對於 Firefox 和 Chromium 等大型軟體，官方 ebuild 通常提供了經過測試的 `lto` 和 `pgo` USE 標誌：
 
@@ -1076,8 +1076,8 @@ USE="lto"  # 激活 LTO 支援的 USE 標誌
 
 | 類型 | 標誌 | 優勢 | 劣勢 | 推薦場景 |
 |------|------|------|------|----------|
-| **ThinLTO** | `-flto=thin` | • 速度快<br>• 記憶體佔用少<br>• 支援平行化<br>• 編譯速度提升 2-3 倍 | • 僅 Clang/LLVM 支援 | **預設推薦**（Clang 用戶） |
-| Full LTO | `-flto` | • 更深度的優化<br>• GCC 和 Clang 均支援 | • 速度慢<br>• 記憶體佔用高<br>• 串行處理 | GCC 用戶或需要極致優化時 |
+| **ThinLTO** | `-flto=thin` | • 速度快<br>• 記憶體佔用少<br>• 支援平行化<br>• 編譯速度提升 2-3 倍 | • 僅 Clang/LLVM 支援 | **預設推薦**（Clang 使用者） |
+| Full LTO | `-flto` | • 更深度的優化<br>• GCC 和 Clang 均支援 | • 速度慢<br>• 記憶體佔用高<br>• 串行處理 | GCC 使用者或需要極致優化時 |
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
@@ -1249,7 +1249,7 @@ emerge --ask llvm-core/clang llvm-core/lld
 
 </div>
 
-**1. 針對特定軟體打開 (推薦)**
+**1. 針對特定軟體開啟 (推薦)**
 
 創建環境設定檔 `/etc/portage/env/clang.conf`：
 ```bash
@@ -1297,9 +1297,9 @@ llvm-runtimes/compiler-rt-sanitizers profile orc
 
 </div>
 
-**4. 全局打開 (不建議初學者)**
+**4. 全局開啟 (不建議初學者)**
 
-全局切換到 Clang 需要系統大部分軟體支援，且需要處理大量兼容性問題，**僅建議高級用戶嘗試**。
+全局切換到 Clang 需要系統大部分軟體支援，且需要處理大量兼容性問題，**僅建議高級使用者嘗試**。
 
 如需全局激活，在 `/etc/portage/make.conf` 中添加：
 ```bash
@@ -1340,7 +1340,7 @@ app-emulation/wine gcc.conf
 
 </div>
 
-本節面向希望深入掌控核心編譯的高級用戶，包括使用 LLVM/Clang 編譯、激活 LTO 優化、自動化設定等。
+本節面向希望深入掌控核心編譯的高級使用者，包括使用 LLVM/Clang 編譯、激活 LTO 優化、自動化設定等。
 
 ### 16.1 準備工作
 
@@ -1459,7 +1459,7 @@ make menuconfig  # 文本介面（推薦）
    - `Device Drivers → Network device support` (網卡驅動)
    - `Device Drivers → Graphics support` (顯示卡驅動程式)
 
-4. **Systemd 用戶必需**：
+4. **Systemd 使用者必需**：
    - `General setup → Control Group support`
    - `General setup → Namespaces support`
 
@@ -1500,7 +1500,7 @@ make menuconfig  # 文本介面（推薦）
 
 ### 16.5 自動激活推薦選項
 
-Gentoo 提供了自動化指令碼來激活常見硬體和功能：
+Gentoo 提供了自動化腳本來激活常見硬體和功能：
 
 ```bash
 cd /usr/src/linux
@@ -1618,7 +1618,7 @@ genkernel --kernel-make-opts="LLVM=1" --install all
 
 ### 16.9 核心統計與分析
 
-編譯完成後，使用以下指令碼查看核心統計資訊：
+編譯完成後，使用以下腳本查看核心統計資訊：
 
 ```bash
 cd /usr/src/linux
@@ -1719,7 +1719,7 @@ error: unknown argument: '-mretpoline-external-thunk'
 
 </div>
 
-本節適用於需要設定軟 RAID (mdadm) 的伺服器用戶。
+本節適用於需要設定軟 RAID (mdadm) 的伺服器使用者。
 
 ### 17.1 核心設定 (手動編譯必選)
 
@@ -2024,7 +2024,7 @@ Vendor Keys:	microsoft
 ### 18.2 進階：手動 OpenSSL 方式（可選）
 
 <details>
-<summary><b>展開查看手動設定方法（適合進階用戶/企業環境）</b></summary>
+<summary><b>展開查看手動設定方法（適合進階使用者/企業環境）</b></summary>
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
@@ -2290,8 +2290,8 @@ mokutil --reset
 **Secure Boot 設定總結**
 
 推薦方式：
-- **新手用戶**：使用 **sbctl**（18.1 節）—— 簡單快速，幾條指令完成
-- **進階用戶**：使用**手動 OpenSSL 方式**（18.2 節）—— 完全自定義控制
+- **新手使用者**：使用 **sbctl**（18.1 節）—— 簡單快速，幾條指令完成
+- **進階使用者**：使用**手動 OpenSSL 方式**（18.2 節）—— 完全自定義控制
 
 完成後，系統將擁有與商業發行版同等的安全啟動保護。
 

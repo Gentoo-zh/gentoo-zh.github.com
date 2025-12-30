@@ -2,7 +2,7 @@
 title: "Gentoo Linux 安裝指南 (基礎篇)"
 date: 2025-11-25
 summary: "Gentoo Linux 基礎系統安裝教程，涵蓋分區、Stage3、核心編譯、引導程式設定等。也突出有 LUKS 全盤加密教學。"
-description: "2025 年最新 Gentoo Linux 安裝指南 (基礎篇)，詳細講解 UEFI 安裝流程、核心編譯等。適合 Linux 進階用戶和 Gentoo 新手。也突出有 LUKS 全盤加密教學。"
+description: "2025 年最新 Gentoo Linux 安裝指南 (基礎篇)，詳細講解 UEFI 安裝流程、核心編譯等。適合 Linux 進階使用者和 Gentoo 新手。也突出有 LUKS 全盤加密教學。"
 keywords:
   - Gentoo Linux
   - Linux 安裝
@@ -76,7 +76,7 @@ Gentoo Linux 是一個基於源碼的 Linux 發行版，以其**高度可定製�
 
 **適合誰？**
 - 想要深入學習 Linux 的技術愛好者
-- 追求系統性能和定製化的用戶
+- 追求系統性能和定製化的使用者
 - 享受 DIY 過程的 Geek
 
 </div>
@@ -85,7 +85,7 @@ Gentoo Linux 是一個基於源碼的 Linux 發行版，以其**高度可定製�
 
 **不適合誰？**
 - 只想快速安裝使用的新手（建議先嚐試 Ubuntu、Fedora 等）
-- 沒有時間折騰系統的用戶
+- 沒有時間折騰系統的使用者
 
 </div>
 
@@ -361,7 +361,7 @@ ip a | grep inet            # 查看當前 IP 地址
 
 ### 什麼是 EFI 系統分區 (ESP)？
 
-在使用由 UEFI 引導（而不是 BIOS）的操作系統上安裝 Gentoo 時，創建 EFI 系統分區 (ESP) 是必要的。ESP 必須是 FAT 變體（有時在 Linux 系統上顯示為 vfat）。官方 UEFI 規範表示 UEFI 韌體將識別 FAT12、16 或 32 檔案系統，但建議使用 FAT32。
+在使用由 UEFI 引導（而不是 BIOS）的作業系統上安裝 Gentoo 時，創建 EFI 系統分區 (ESP) 是必要的。ESP 必須是 FAT 變體（有時在 Linux 系統上顯示為 vfat）。官方 UEFI 規範表示 UEFI 韌體將識別 FAT12、16 或 32 檔案系統，但建議使用 FAT32。
 
 </div>
 
@@ -563,7 +563,7 @@ Syncing disks.
 
 **為什麼需要這一步？**
 
-磁盤分區只是劃分了空間，但還不能儲存資料。建立檔案系統 (如 ext4, Btrfs) 才能讓操作系統管理和訪問這些空間。掛載則是將這些檔案系統連接到 Linux 文件樹的特定位置。
+磁盤分區只是劃分了空間，但還不能儲存資料。建立檔案系統 (如 ext4, Btrfs) 才能讓作業系統管理和訪問這些空間。掛載則是將這些檔案系統連接到 Linux 文件樹的特定位置。
 
 </div>
 
@@ -667,7 +667,7 @@ nvme0n1          259:1    0 931.5G  0 disk
 cryptsetup luksFormat --type luks2 --pbkdf argon2id --hash sha512 --key-size 512 /dev/nvme0n1p3
 ```
 
-**2. 打開加密容器**
+**2. 開啟加密容器**
 
 ```bash
 cryptsetup luksOpen /dev/nvme0n1p3 gentoo-root
@@ -1183,7 +1183,7 @@ echo "gentoo" > /etc/hostname
 
 </div>
 
-適合大多數桌面用戶，同時支援 OpenRC 和 systemd。
+適合大多數桌面使用者，同時支援 OpenRC 和 systemd。
 ```bash
 emerge --ask net-misc/networkmanager
 # OpenRC:
@@ -1627,7 +1627,7 @@ A: LUKS2 + `discard` 是安全的。若極度在意安全性，可移除此選�
 
 **為什麼需要這一步？**
 
-核心是操作系統的核心，負責管理硬體。Gentoo 允許你手動裁剪核心，只保留你需要的驅動，從而獲得極致的性能和精簡的體積。新手也可以選擇預編譯核心快速上手。
+核心是作業系統的核心，負責管理硬體。Gentoo 允許你手動裁剪核心，只保留你需要的驅動，從而獲得極致的性能和精簡的體積。新手也可以選擇預編譯核心快速上手。
 
 </div>
 
@@ -1687,7 +1687,7 @@ emerge --ask sys-firmware/intel-microcode  # Intel CPU
 
 你可能注意到前面 make.conf 範例中已經設定了 `ACCEPT_LICENSE="*"`，為什麼這裡還要單獨為 linux-firmware 創建 package.license 文件？
 
-- **make.conf 只是範例**：實際使用中，很多用戶會根據自己的需求修改 `ACCEPT_LICENSE`，比如設定為 `@FREE` 只接受自由軟體許可證
+- **make.conf 只是範例**：實際使用中，很多使用者會根據自己的需求修改 `ACCEPT_LICENSE`，比如設定為 `@FREE` 只接受自由軟體許可證
 - **顯式聲明更清晰**：單獨的 package.license 文件明確記錄了哪些軟體套件需要特殊許可證，便於日後維護和審計
 - **最佳實踐**：即使全局設定了 `ACCEPT_LICENSE="*"`，為特定軟體套件創建 license 文件也是 Gentoo 社區推薦的做法，這樣在將來調整全局許可證策略時，不會意外阻止關鍵軟體套件的安裝
 
@@ -1714,7 +1714,7 @@ Stage3 只有最基礎的指令。我們需要補充系統日誌、網路管理�
 ### 8.1 系統服務工具
 
 <details>
-<summary><b>OpenRC 用戶設定（點擊展開）</b></summary>
+<summary><b>OpenRC 使用者設定（點擊展開）</b></summary>
 
 **1. 系統日誌**
 
@@ -1752,7 +1752,7 @@ rc-update add chronyd default
 </details>
 
 <details>
-<summary><b>systemd 用戶設定（點擊展開）</b></summary>
+<summary><b>systemd 使用者設定（點擊展開）</b></summary>
 
 systemd 已內置日誌與定時任務服務，無需額外安裝。
 
@@ -1781,7 +1781,7 @@ emerge --ask sys-fs/dosfstools # FAT/vfat (EFI 分區需要)
 emerge --ask sys-fs/btrfs-progs # Btrfs
 ```
 
-## 9. 建立用戶與權限 {#step-9-users}
+## 9. 建立使用者與權限 {#step-9-users}
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -1793,14 +1793,14 @@ emerge --ask sys-fs/btrfs-progs # Btrfs
 
 **為什麼需要這一步？**
 
-Linux 不建議日常使用 root 帳號。我們需要創建一個普通用戶，並賦予其使用 `sudo` 的權限，以提高系統安全性。
+Linux 不建議日常使用 root 帳號。我們需要創建一個普通使用者，並賦予其使用 `sudo` 的權限，以提高系統安全性。
 
 </div>
 
 ```bash
 passwd root # 設定 root 密碼
-useradd -m -G wheel,video,audio,plugdev zakk # 創建用戶並加入常用組
-passwd zakk # 設定用戶密碼
+useradd -m -G wheel,video,audio,plugdev zakk # 創建使用者並加入常用組
+passwd zakk # 設定使用者密碼
 emerge --ask app-admin/sudo
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel # 允許 wheel 組使用 sudo
 ```
@@ -1832,7 +1832,7 @@ grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=Gentoo # �
 # 安裝 os-prober 以支援多系統檢測
 emerge --ask sys-boot/os-prober
 
-# 啟用 os-prober（用於檢測 Windows 等其他操作系統）
+# 啟用 os-prober（用於檢測 Windows 等其他作業系統）
 echo 'GRUB_DISABLE_OS_PROBER=false' >> /etc/default/grub
 
 # 生成 GRUB 設定檔
@@ -1873,7 +1873,7 @@ options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw quiet
 </div>
 
 **2. 更新引導項**：
-每次更新核心後，需要手動更新 `gentoo.conf` 中的版本號，或者使用指令碼自動化。
+每次更新核心後，需要手動更新 `gentoo.conf` 中的版本號，或者使用腳本自動化。
 
 **2. 創建 Windows 引導項 (雙系統)**
 
@@ -1912,7 +1912,7 @@ console-mode auto
 </details>
 
 <details>
-<summary><b>進階設定：加密支援（僅加密用戶）（點擊展開）</b></summary>
+<summary><b>進階設定：加密支援（僅加密使用者）（點擊展開）</b></summary>
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -2070,7 +2070,7 @@ grep initrd /boot/grub/grub.cfg
 
 1. `emerge --info` 正常執行無錯誤
 2. `/etc/fstab` 中的 UUID 正確（使用 `blkid` 再確認）
-3. 已設定 root 與一般用戶密碼
+3. 已設定 root 與一般使用者密碼
 4. 已執行 `grub-mkconfig` 或完成 `bootctl` 設定
 5. 若使用 LUKS，確認 initramfs 含有 `cryptsetup`
 
@@ -2153,7 +2153,7 @@ eclean-dist                         # 清理已下載的舊源碼包
 - **解決方法**：根據提示，手動卸載衝突軟體 (`emerge --deselect <包名>` 後 `emerge --depclean`)。
 
 **8. 安全檢查 (GLSA)**
-Gentoo 發佈安全公告 (GLSA) 來通知用戶潛在的安全漏洞。
+Gentoo 發佈安全公告 (GLSA) 來通知使用者潛在的安全漏洞。
 ```bash
 glsa-check -l      # 列出所有未修復的安全公告
 glsa-check -t all  # 測試所有受影響的軟體套件
