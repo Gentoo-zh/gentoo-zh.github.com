@@ -1,8 +1,8 @@
 ---
-title: "Gentoo Linux 安装指南 (高端优化篇)"
+title: "Gentoo Linux 安装指南 (进阶优化篇)"
 date: 2025-11-25
-summary: "Gentoo Linux 高端优化教程，涵盖 make.conf 优化、LTO、Tmpfs、系统维护等。"
-description: "2025 年最新 Gentoo Linux 安装指南 (高端优化篇)，涵盖 make.conf 优化、LTO、Tmpfs、系统维护等。"
+summary: "Gentoo Linux 进阶优化教程，涵盖 make.conf 优化、LTO、Tmpfs、系统维护等。"
+description: "2025 年最新 Gentoo Linux 安装指南 (进阶优化篇)，涵盖 make.conf 优化、LTO、Tmpfs、系统维护等。"
 keywords:
   - Gentoo Linux
   - make.conf
@@ -25,18 +25,18 @@ authors:
 
 ### 文章特别说明
 
-本文是 **Gentoo Linux 安装指南** 系列的第三部分：**高端优化**。
+本文是 **Gentoo Linux 安装指南** 系列的第三部分：**进阶优化**。
 
 **系列导航**：
 1. [基础安装](/posts/2025-11-25-gentoo-install-base/)：从零开始安装 Gentoo 基础系统
 2. [桌面配置](/posts/2025-11-25-gentoo-install-desktop/)：显卡驱动、桌面环境、输入法等
-3. **高端优化（本文）**：make.conf 优化、LTO、系统维护
+3. **进阶优化（本文）**：make.conf 优化、LTO、系统维护
 
 **上一步**：[桌面配置](/posts/2025-11-25-gentoo-install-desktop/)
 
 </div>
 
-## 13. make.conf 高端配置指南
+## 13. make.conf 进阶配置指南
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -44,7 +44,7 @@ authors:
 
 </div>
 
-`/etc/portage/make.conf` 是 Gentoo 的内核配置文档，控制着软件包的编译方式、系统功能和优化参数。本章将深入讲解各个配置项的含义与最佳实践。
+`/etc/portage/make.conf` 是 Gentoo 的内核配置文件，控制着软件包的编译方式、系统功能和优化参数。本章将深入讲解各个配置项的含义与最佳实践。
 
 ---
 
@@ -109,7 +109,7 @@ MAKEOPTS="-j<线程数> -l<负载限制>"
 |---------|----------|------|
 | 4核8线程 + 16GB 内存 | `-j8 -l8` | 标准配置 |
 | 8核16线程 + 32GB 内存 | `-j16 -l16` | 主流配置 |
-| 16核32线程 + 64GB 内存 | `-j32 -l32` | 高端配置 |
+| 16核32线程 + 64GB 内存 | `-j32 -l32` | 进阶配置 |
 | 内存不足（< 8GB） | `-j<线程数/2>` | 减半避免内存耗尽 |
 
 **参数说明**：
@@ -318,12 +318,25 @@ FEATURES="parallel-fetch candy"
 ### 13.7 镜像源配置 (GENTOO_MIRRORS)
 
 ```bash
+# 更多镜像请参考：https://www.gentoo.org.cn/mirrorlist/
+# 建议根据地理位置选择（任选其一或多个，空格分隔）
+
 # 中国大陆镜像（推荐）
-GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
+GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"
 
 # 或使用其他镜像：
-# GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
-# GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
+# 中国大陆：
+#   GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"            # 中国科学技术大学（推荐）
+#   GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo/"   # 清华大学
+#   GENTOO_MIRRORS="https://mirrors.zju.edu.cn/gentoo/"             # 浙江大学
+# 香港：
+#   GENTOO_MIRRORS="https://hk.mirrors.cicku.me/gentoo/"            # CICKU
+# 台湾：
+#   GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"            # NCHC
+#   GENTOO_MIRRORS="https://tw.mirrors.cicku.me/gentoo/"            # CICKU
+# 新加坡：
+#   GENTOO_MIRRORS="https://mirror.freedif.org/gentoo/"             # Freedif
+#   GENTOO_MIRRORS="https://sg.mirrors.cicku.me/gentoo/"            # CICKU
 ```
 
 ---
@@ -390,7 +403,15 @@ LINGUAS="en zh_CN"
 LC_MESSAGES=C
 
 # ========== 镜像源 ==========
-GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
+# 建议根据地理位置选择（择一或多个，空格分隔）：
+GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"  # 中国科学技术大学（推荐）
+# GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo/"  # 清华大学
+# GENTOO_MIRRORS="https://hk.mirrors.cicku.me/gentoo/"  # 香港 CICKU
+# GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"  # 台湾 NCHC
+# GENTOO_MIRRORS="https://tw.mirrors.cicku.me/gentoo/"  # 台湾 CICKU
+# GENTOO_MIRRORS="https://mirror.freedif.org/gentoo/"  # 新加坡 Freedif
+# GENTOO_MIRRORS="https://sg.mirrors.cicku.me/gentoo/"  # 新加坡 CICKU
+# 更多镜像请参考：https://www.gentoo.org/downloads/mirrors/
 
 # ========== Portage 配置 ==========
 FEATURES="parallel-fetch candy"
@@ -420,7 +441,7 @@ CXXFLAGS="${COMMON_FLAGS}"
 FCFLAGS="${COMMON_FLAGS}"
 FFLAGS="${COMMON_FLAGS}"
 
-# ========== 并行编译（高端硬件） ==========
+# ========== 并行编译（进阶硬件） ==========
 MAKEOPTS="-j32 -l32"
 EMERGE_DEFAULT_OPTS="--ask --verbose --jobs=4 --load-average=32"
 
@@ -439,7 +460,15 @@ LINGUAS="en en_US zh zh_CN zh_TW"
 LC_MESSAGES=C
 
 # ========== 镜像源 ==========
-GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/ http://ftp.twaren.net/Linux/Gentoo/"
+# 建议根据地理位置选择（择一或多个，空格分隔）：
+GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"  # 中国科学技术大学（推荐）
+# GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo/"  # 清华大学
+# GENTOO_MIRRORS="https://hk.mirrors.cicku.me/gentoo/"  # 香港 CICKU
+# GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"  # 台湾 NCHC
+# GENTOO_MIRRORS="https://tw.mirrors.cicku.me/gentoo/"  # 台湾 CICKU
+# GENTOO_MIRRORS="https://mirror.freedif.org/gentoo/"  # 新加坡 Freedif
+# GENTOO_MIRRORS="https://sg.mirrors.cicku.me/gentoo/"  # 新加坡 CICKU
+# 更多镜像请参考：https://www.gentoo.org/downloads/mirrors/
 
 # ========== Portage 配置 ==========
 FEATURES="parallel-fetch candy ccache"
@@ -506,12 +535,16 @@ L10N="en en-US zh zh-CN zh-TW"
 LINGUAS="en en_US zh zh_CN zh_TW"
 
 # ========== 镜像源设置 ==========
-# 台湾常用镜像（任选其一）：
-#   TWAREN (台湾学术网络): http://ftp.twaren.net/Linux/Gentoo/
-#   NCHC (国家高速网络中心):       http://ftp.twaren.net/Linux/Gentoo/
-#   : http://ftp.twaren.net/Linux/Gentoo/
-#   :   http://ftp.twaren.net/Linux/Gentoo/
-GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
+# 更多镜像请参考：https://www.gentoo.org.cn/mirrorlist/
+# 中国大陆常用镜像（任选其一）：
+#   USTC (中国科学技术大学): https://mirrors.ustc.edu.cn/gentoo/
+#   TUNA (清华大学): https://mirrors.tuna.tsinghua.edu.cn/gentoo/
+#   ZJU (浙江大学): https://mirrors.zju.edu.cn/gentoo/
+# 香港/台湾/新加坡镜像：
+#   CICKU (香港): https://hk.mirrors.cicku.me/gentoo/
+#   NCHC (台湾): http://ftp.twaren.net/Linux/Gentoo/
+#   Freedif (新加坡): https://mirror.freedif.org/gentoo/
+GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"
 
 # ========== Emerge 默认选项 ==========
 # --ask              运行前询问确认（推荐保留，防止误操作）
@@ -601,7 +634,7 @@ PORTAGE_ELOG_CLASSES="warn error log qa"
 #   custom        自定义处理脚本
 PORTAGE_ELOG_SYSTEM="save"
 
-# 注意：文档末尾必须保留空行（POSIX 标准要求）
+# 注意：文件末尾必须保留空行（POSIX 标准要求）
 ```
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
@@ -655,7 +688,7 @@ PORTAGE_ELOG_SYSTEM="save"
 | `@MISC-FREE-DOCS` | 其他自由文档许可证（未列入 `@FSF-APPROVED-OTHER`）[[4]](https://freedomdefined.org/) |
 | `@FREE-DOCUMENTS` | 合并 `@FSF-APPROVED-OTHER` + `@MISC-FREE-DOCS` |
 | `@FREE` | **所有自由软件和文档**（合并 `@FREE-SOFTWARE` + `@FREE-DOCUMENTS`）|
-| `@BINARY-REDISTRIBUTABLE` | 至少允许自由再分发二进制文档的许可证（包含 `@FREE`）|
+| `@BINARY-REDISTRIBUTABLE` | 至少允许自由再分发二进制文件的许可证（包含 `@FREE`）|
 | `@EULA` | 试图剥夺用户权利的许可协议（比"保留所有权利"更严格）|
 
 #### 查看当前系统设置
@@ -682,7 +715,7 @@ portageq envvar ACCEPT_LICENSE
 # 接受所有许可证（包括闭源软件）
 ACCEPT_LICENSE="*"
 
-# 或：仅接受自由软件 + 可自由再分发的二进制文档
+# 或：仅接受自由软件 + 可自由再分发的二进制文件
 ACCEPT_LICENSE="-* @FREE @BINARY-REDISTRIBUTABLE"
 
 # 或：仅自由软件（默认值）
@@ -803,158 +836,7 @@ CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt rdrand sse sse2 s
 
 ---
 
-## 13.15 日常维护：如何成为合格的系统管理员
-
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
-
-**可参考**：[Upgrading Gentoo](https://wiki.gentoo.org/wiki/Upgrading_Gentoo/zh-cn) · [Gentoo Cheat Sheet](https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet)
-
-</div>
-
-Gentoo 是滚动发行版，维护系统是使用体验的重要组成部分。
-
-**1. 保持系统更新**
-建议每一到两周更新一次系统，避免积压过多更新导致依赖冲突。
-```bash
-emerge --sync              # 同步软件仓库
-emerge -avuDN @world       # 更新所有软件
-```
-
-**2. 关注官方新闻 (重要)**
-在更新前或遇到问题时，务必检查是否有官方新闻推送。
-```bash
-eselect news list          # 列出新闻
-eselect news read          # 阅读新闻
-```
-
-**3. 处理配置文档更新**
-软件更新后，配置文档可能也会更新。**不要忽略** `etc-update` 或 `dispatch-conf` 的提示。
-```bash
-dispatch-conf              # 交互式合并配置文档 (推荐)
-# 或
-etc-update
-```
-
-**4. 清理无用依赖**
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
-
-**可参考**：[Remove orphaned packages](https://wiki.gentoo.org/wiki/Knowledge_Base:Remove_orphaned_packages)
-
-</div>
-
-```bash
-emerge --ask --depclean    # 移除不再需要的孤立依赖
-```
-
-**5. 定期清理源码包**
-```bash
-emerge --ask app-portage/gentoolkit # 安装工具包
-eclean-dist                         # 清理已下载的旧源码包
-```
-
-**6. 自动处理 USE 变更**
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
-
-**可参考**：[Autounmask-write](https://wiki.gentoo.org/wiki/Knowledge_Base:Autounmask-write) · [Dispatch-conf](https://wiki.gentoo.org/wiki/Dispatch-conf)
-
-</div>
-
-当安装或更新软件提示 "The following USE changes are necessary" 时：
-1.  **让 Portage 自动写入配置**：`emerge --ask --autounmask-write <包名>`
-2.  **确认并更新配置**：`dispatch-conf` (按 u 确认，q 退出)
-3.  **再次尝试操作**：`emerge --ask <包名>`
-
-**7. 处理软件冲突 (Blocked Packages)**
-如果遇到 "Error: The above package list contains packages which cannot be installed at the same time..."：
-- **解决方法**：根据提示，手动卸载冲突软件 (`emerge --deselect <包名>` 后 `emerge --depclean`)。
-
-**8. 安全检查 (GLSA)**
-Gentoo 发布安全公告 (GLSA) 来通知用户潜在的安全漏洞。
-```bash
-glsa-check -l      # 列出所有未修复的安全公告
-glsa-check -t all  # 测试所有受影响的软件包
-```
-
-**9. 系统日志与服务状态**
-定期检查系统日志和服务状态，确保系统健康运行。
-- **OpenRC**:
-    ```bash
-    rc-status      # 查看服务状态
-    tail -f /var/log/messages # 查看系统日志 (需安装 syslog-ng 等)
-    ```
-- **Systemd (Journalctl 常用指令)**:
-    | 指令 | 作用 |
-    | ---- | ---- |
-    | `systemctl --failed` | 查看启动失败的服务 |
-    | `journalctl -b` | 查看本次启动的日志 |
-    | `journalctl -b -1` | 查看上一次启动的日志 |
-    | `journalctl -f` | 即时跟随最新日志 (类似 tail -f) |
-    | `journalctl -p err` | 仅显示错误 (Error) 级别的日志 |
-    | `journalctl -u <服务名>` | 查看特定服务的日志 |
-    | `journalctl --since "1 hour ago"` | 查看最近 1 小时的日志 |
-    | `journalctl --disk-usage` | 查看日志占用的磁盘空间 |
-    | `journalctl --vacuum-time=2weeks` | 清理 2 周前的日志 |
-
-### 13.2 Portage 技巧与目录结构
-
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
-
-**可参考**：[Portage](https://wiki.gentoo.org/wiki/Portage/zh-cn) · [/etc/portage](https://wiki.gentoo.org/wiki//etc/portage)
-
-</div>
-
-**1. 内核目录结构 (`/etc/portage/`)**
-Gentoo 的配置非常灵活，建议使用**目录**而不是单个文档来管理配置：
-
-| 文档/目录 | 用途 |
-| --------- | ---- |
-| `make.conf` | 全局编译参数 (CFLAGS, MAKEOPTS, USE, GENTOO_MIRRORS) |
-| `package.use/` | 针对特定软件的 USE 标志配置 |
-| `package.accept_keywords/` | 允许安装测试版 (keyword) 软件 |
-| `package.mask/` | 屏蔽特定版本的软件 |
-| `package.unmask/` | 解除屏蔽特定版本的软件 |
-| `package.license/` | 接受特定软件的许可证 |
-| `package.env/` | 针对特定软件的环境变量 (如使用不同的编译器参数) |
-
-**2. 常用 Emerge 指令速查**
-> 完整手册请运行 `man emerge`
-
-| 参数 (缩写) | 作用 | 示例 |
-| ----------- | ---- | ---- |
-| `--ask` (`-a`) | 运行前询问确认 | `emerge -a vim` |
-| `--verbose` (`-v`) | 显示详细信息 (USE 标志等) | `emerge -av vim` |
-| `--oneshot` (`-1`) | 安装但不加入 World 文档 (不作为系统依赖) | `emerge -1 rust` |
-| `--update` (`-u`) | 更新软件包 | `emerge -u vim` |
-| `--deep` (`-D`) | 深度计算依赖 (更新依赖的依赖) | `emerge -uD @world` |
-| `--newuse` (`-N`) | USE 标志改变时重新编译 | `emerge -uDN @world` |
-| `--depclean` (`-c`) | 清理不再需要的孤立依赖 | `emerge -c` |
-| `--deselect` | 从 World 文档中移除 (不卸载) | `emerge --deselect vim` |
-| `--search` (`-s`) | 搜索软件包 (推荐用 eix) | `emerge -s vim` |
-| `--info` | 显示 Portage 环境信息 (调试用) | `emerge --info` |
-
-**3. 快速搜索软件包 (Eix)**
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
-
-**可参考**：[Eix](https://wiki.gentoo.org/wiki/Eix)
-
-</div>
-> `emerge --search` 速度较慢，推荐使用 `eix` 进行毫秒级搜索。
-
-1.  **安装与更新索引**：
-    ```bash
-    emerge --ask app-portage/eix
-    eix-update # 安装后或同步后运行
-    ```
-2.  **搜索软件**：
-    ```bash
-    eix <关键词>        # 搜索所有软件
-    eix -I <关键词>     # 仅搜索已安装软件
-    eix -R <关键词>     # 搜索远程 Overlay (需配置 eix-remote)
-    ```
-
----
-
-## 14. 高端编译优化 [可选]
+## 14. 进阶编译优化 [可选]
 
 为了提升后续的编译速度，建议配置 tmpfs 和 ccache。
 
@@ -1022,7 +904,7 @@ Firefox、LibreOffice 等大型软件编译时可能会耗尽 tmpfs 空间。我
    ```
 
 3. 针对特定软件应用配置：
-   编辑 `/etc/portage/package.env` (如果是目录则创建文档)：
+   编辑 `/etc/portage/package.env` (如果是目录则创建文件)：
    ```bash
    vim /etc/portage/package.env
    ```
@@ -1037,7 +919,7 @@ Firefox、LibreOffice 等大型软件编译时可能会耗尽 tmpfs 空间。我
 
 ### 14.4 LTO 与 Clang 优化
 
-详细配置请参考 **Section 15 高端编译优化**。
+详细配置请参考 **Section 15 进阶编译优化**。
 
 ---
 
@@ -1242,7 +1124,7 @@ USE="lto"
 dev-lang/rust llvm-lto.conf
 ```
 
-### 15.3 高端软件包环境配置 (package.env)
+### 15.3 进阶软件包环境配置 (package.env)
 
 针对特定软件包的特殊配置（如禁用 LTO 或低内存模式），可以使用 `package.env` 进行精细控制。
 
@@ -1261,7 +1143,7 @@ FFLAGS="${FFLAGS} ${DISABLE_LTO}"
 LDFLAGS="${LDFLAGS} ${DISABLE_LTO}"
 ```
 
-创建 `/etc/portage/package.env/no-lto` 文档（包含已知问题包）：
+创建 `/etc/portage/package.env/no-lto` 文件（包含已知问题包）：
 
 ```bash
 # 已知与 LTO 有兼容性问题的套件
@@ -1369,7 +1251,7 @@ emerge --ask llvm-core/clang llvm-core/lld
 
 **1. 针对特定软件打开 (推荐)**
 
-创建环境配置文档 `/etc/portage/env/clang.conf`：
+创建环境配置文件 `/etc/portage/env/clang.conf`：
 ```bash
 CC="clang"
 CXX="clang++"
@@ -1383,7 +1265,6 @@ RANLIB="llvm-ranlib"
 ```text
 app-editors/neovim clang.conf
 ```
-
 
 
 **3. PGO 支持（配置文档引导优化）**
@@ -1449,10 +1330,9 @@ app-emulation/wine gcc.conf
 ```
 
 
-
 ---
 
-## 16. 内核编译高端指南 (可选) {#section-16-kernel-advanced}
+## 16. 内核编译进阶指南 (可选) {#section-16-kernel-advanced}
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1rem; border-radius: 0.5rem; border-left: 4px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -1539,39 +1419,7 @@ make menuconfig  # 文本界面（推荐）
 
 ```text
   ┌────────────── Linux/x86 6.17.9-gentoo Kernel Configuration ──────────────┐
-  │  Arrow keys navigate the menu.  <Enter> selects submenus ---> (or empty  │  
-  │  submenus ----).  Highlighted letters are hotkeys.  Pressing <Y>         │  
-  │  includes, <N> excludes, <M> modularizes features.  Press <Esc><Esc> to  │  
-  │  exit, <?> for Help, </> for Search.  Legend: [*] built-in  [ ] excluded │  
-  │ ┌──────────────────────────────────────────────────────────────────────┐ │  
-  │ │        General setup  --->                                           │ │  
-  │ │    [*] 64-bit kernel                                                 │ │  
-  │ │        Processor type and features  --->                             │ │  
-  │ │    [ ] Mitigations for CPU vulnerabilities  ----                     │ │  
-  │ │        Power management and ACPI options  --->                       │ │  
-  │ │        Bus options (PCI etc.)  --->                                  │ │  
-  │ │        Binary Emulations  --->                                       │ │  
-  │ │    [*] Virtualization  --->                                          │ │  
-  │ │        General architecture-dependent options  --->                  │ │  
-  │ │    [*] Enable loadable module support  --->                          │ │  
-  │ │    -*- Enable the block layer  --->                                  │ │  
-  │ │        Executable file formats  --->                                 │ │  
-  │ │        Memory Management options  --->                               │ │  
-  │ │    -*- Networking support  --->                                      │ │  
-  │ │        Device Drivers  --->                                          │ │  
-  │ │        File systems  --->                                            │ │  
-  │ │        Security options  --->                                        │ │  
-  │ │    -*- Cryptographic API  --->                                       │ │  
-  │ │        Library routines  --->                                        │ │  
-  │ │        Kernel hacking  --->                                          │ │  
-  │ │        Gentoo Linux  --->                                            │ │  
-  │ │                                                                      │ │  
-  │ │                                                                      │ │  
-  │ └──────────────────────────────────────────────────────────────────────┘ │  
-  ├──────────────────────────────────────────────────────────────────────────┤  
-  │         <Select>    < Exit >    < Help >    < Save >    < Load >         │  
-  └──────────────────────────────────────────────────────────────────────────┘  
-```
+  │  Arrow keys navigate the menu.  <Enter> selects submenus ---> (or empty  │   │  submenus ----).  Highlighted letters are hotkeys.  Pressing <Y>         │   │  includes, <N> excludes, <M> modularizes features.  Press <Esc><Esc> to  │   │  exit, <?> for Help, </> for Search.  Legend: [*] built-in  [ ] excluded │   │ ┌──────────────────────────────────────────────────────────────────────┐ │   │ │        General setup  --->                                           │ │   │ │    [*] 64-bit kernel                                                 │ │   │ │        Processor type and features  --->                             │ │   │ │    [ ] Mitigations for CPU vulnerabilities  ----                     │ │   │ │        Power management and ACPI options  --->                       │ │   │ │        Bus options (PCI etc.)  --->                                  │ │   │ │        Binary Emulations  --->                                       │ │   │ │    [*] Virtualization  --->                                          │ │   │ │        General architecture-dependent options  --->                  │ │   │ │    [*] Enable loadable module support  --->                          │ │   │ │    -*- Enable the block layer  --->                                  │ │   │ │        Executable file formats  --->                                 │ │   │ │        Memory Management options  --->                               │ │   │ │    -*- Networking support  --->                                      │ │   │ │        Device Drivers  --->                                          │ │   │ │        File systems  --->                                            │ │   │ │        Security options  --->                                        │ │   │ │    -*- Cryptographic API  --->                                       │ │   │ │        Library routines  --->                                        │ │   │ │        Kernel hacking  --->                                          │ │   │ │        Gentoo Linux  --->                                            │ │   │ │                                                                      │ │   │ │                                                                      │ │   │ └──────────────────────────────────────────────────────────────────────┘ │   ├──────────────────────────────────────────────────────────────────────────┤   │         <Select>    < Exit >    < Help >    < Save >    < Load >         │   └──────────────────────────────────────────────────────────────────────────┘ ```
 
 **常用选项对照表**：
 
@@ -1585,7 +1433,7 @@ make menuconfig  # 文本界面（推荐）
 | **Enable loadable module support** | 可加载模块支持 | 允许使用内核模块 (*.ko) |
 | **Networking support** | 网络支持 | TCP/IP 协议栈、防火墙 (Netfilter) |
 | **Device Drivers** | 设备驱动 | 显卡、网卡、声卡、USB、NVMe 驱动 |
-| **File systems** | 文档系统 | ext4, btrfs, vfat, ntfs 支持 |
+| **File systems** | 文件系统 | ext4, btrfs, vfat, ntfs 支持 |
 | **Security options** | 安全选项 | SELinux, AppArmor |
 | **Gentoo Linux** | Gentoo 特有选项 | Portage 依赖项自动选择 (推荐) |
 
@@ -1593,7 +1441,7 @@ make menuconfig  # 文本界面（推荐）
 
 **重要建议**
 
-对于手动编译，建议将**关键驱动**（如文档系统、磁盘控制器、网卡）直接编译进内核（选择 `[*]` 或 `<*>` 即 `=y`），而不是作为模块（`<M>` 即 `=m`）。这样可以避免 initramfs 缺失模块导致无法启动的问题。
+对于手动编译，建议将**关键驱动**（如文件系统、磁盘控制器、网卡）直接编译进内核（选择 `[*]` 或 `<*>` 即 `=y`），而不是作为模块（`<M>` 即 `=m`）。这样可以避免 initramfs 缺失模块导致无法启动的问题。
 
 </div>
 
@@ -1603,7 +1451,7 @@ make menuconfig  # 文本界面（推荐）
    - `General setup → Gentoo Linux support`
    - `Processor type and features → Processor family` (选择你的 CPU)
 
-2. **文档系统**：
+2. **文件系统**：
    - `File systems → The Extended 4 (ext4) filesystem` (如果使用 ext4)
    - `File systems → Btrfs filesystem` (如果使用 Btrfs)
 
@@ -1616,28 +1464,21 @@ make menuconfig  # 文本界面（推荐）
    - `General setup → Namespaces support`
 
 5. **Gentoo Linux 专有选项**（推荐全部激活）：
-   
-   进入 `Gentoo Linux --->` 菜单：
-   
-   ```
+     进入 `Gentoo Linux --->` 菜单：
+     ```
    [*] Gentoo Linux support
        激活 Gentoo 特定的内核功能支持
-   
-   [*] Linux dynamic and persistent device naming (userspace devfs) support
+     [*] Linux dynamic and persistent device naming (userspace devfs) support
        激活 udev 动态设备管理支持（必需）
-   
-   [*] Select options required by Portage features
+     [*] Select options required by Portage features
        自动激活 Portage 需要的内核选项（强烈推荐）
-       这会自动配置必需的文档系统和内核功能
-   
-   Support for init systems, system and service managers --->
+       这会自动配置必需的文件系统和内核功能
+     Support for init systems, system and service managers --->
        ├─ [*] OpenRC support  # 如果使用 OpenRC
        └─ [*] systemd support # 如果使用 systemd
-   
-   [*] Kernel Self Protection Project
+     [*] Kernel Self Protection Project
        激活内核自我保护机制（提高安全性）
-   
-   [*] Print firmware information that the kernel attempts to load
+     [*] Print firmware information that the kernel attempts to load
        在启动时显示固件加载信息（便于调试）
    ```
 
@@ -1803,7 +1644,7 @@ Built-in: 1723
 **解读**：
 - **Built-in (1723)**：编译进内核本体的功能数量
 - **模块 (201)**：作为可加载模块的驱动数量
-- **内核大小 (11M)**：最终内核文档大小（使用 ZSTD 压缩后）
+- **内核大小 (11M)**：最终内核文件大小（使用 ZSTD 压缩后）
 
 <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
 
@@ -1849,17 +1690,16 @@ error: unknown argument: '-mretpoline-external-thunk'
 
 1. **保存配置**：
    ```bash
-   # 保存当前配置到外部文档
+   # 保存当前配置到外部文件
    cp .config ~/kernel-config-backup
-   
-   # 恢复配置
+     # 恢复配置
    cp ~/kernel-config-backup /usr/src/linux/.config
    make olddefconfig
    ```
 
 2. **查看配置差异**：
    ```bash
-   # 对比两个配置文档
+   # 对比两个配置文件
    scripts/diffconfig .config ../old-kernel/.config
    ```
 
@@ -1963,7 +1803,7 @@ dracut --force
 
 **什么是 Secure Boot？**
 
-Secure Boot（安全启动）是 UEFI 固件的一项安全功能，通过验证启动加载器和内核的数字签名，防止未经授权的代码在启动阶段运行。激活 Secure Boot 后，系统仅会加载经过信任的签名文档。
+Secure Boot（安全启动）是 UEFI 固件的一项安全功能，通过验证启动加载器和内核的数字签名，防止未经授权的代码在启动阶段运行。激活 Secure Boot 后，系统仅会加载经过信任的签名文件。
 
 **为何需要配置？**
 
@@ -2171,7 +2011,7 @@ Vendor Keys:	microsoft
 
 1. **自动化**：一条命令生成所有密钥
 2. **简单**：无需手动管理 PEM/DER 格式转换
-3. **智能**：自动跟踪需要签名的文档（`/var/lib/sbctl/files.json`）
+3. **智能**：自动跟踪需要签名的文件（`/var/lib/sbctl/files.json`）
 4. **安全**：密钥默认权限为 600，自动保护
 5. **可验证**：随时用 `sbctl verify` 检查签名状态
 
@@ -2181,10 +2021,10 @@ Vendor Keys:	microsoft
 
 ---
 
-### 18.2 高端：手动 OpenSSL 方式（可选）
+### 18.2 进阶：手动 OpenSSL 方式（可选）
 
 <details>
-<summary><b>展开查看手动配置方法（适合高端用户/企业环境）</b></summary>
+<summary><b>展开查看手动配置方法（适合进阶用户/企业环境）</b></summary>
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
@@ -2240,7 +2080,6 @@ chmod 600 MOK.key
 
 #### 18.2.2 配置内核模块签名
 
-#### 18.2.2 配置内核模块签名
 
 **步骤 1：激活内核模块签名支持**
 
@@ -2288,7 +2127,7 @@ sig_hashalgo:   sha512
 
 **Unified Kernel Image (UKI)**
 
-将内核、initramfs、命令行参数打包为单一 EFI 可运行文档，并进行整体签名。这是 Secure Boot 的推荐方式。
+将内核、initramfs、命令行参数打包为单一 EFI 可执行文件，并进行整体签名。这是 Secure Boot 的推荐方式。
 
 </div>
 
@@ -2326,7 +2165,7 @@ initrd_generator=dracut
 emerge --ask sys-kernel/gentoo-kernel-bin  # 或你使用的内核包
 ```
 
-生成的 UKI 文档位于：
+生成的 UKI 文件位于：
 ```
 /efi/EFI/Linux/gentoo-6.x.x.efi
 ```
@@ -2452,7 +2291,7 @@ mokutil --reset
 
 推荐方式：
 - **新手用户**：使用 **sbctl**（18.1 节）—— 简单快速，几条命令完成
-- **高端用户**：使用**手动 OpenSSL 方式**（18.2 节）—— 完全自定义控制
+- **进阶用户**：使用**手动 OpenSSL 方式**（18.2 节）—— 完全自定义控制
 
 完成后，系统将拥有与商业发行版同等的安全启动保护。
 

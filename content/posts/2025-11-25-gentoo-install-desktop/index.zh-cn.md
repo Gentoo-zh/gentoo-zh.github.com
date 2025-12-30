@@ -37,7 +37,6 @@ authors:
 
 </div>
 
-
 ## 12. 重启后的配置 {#step-12-post-reboot}
 
 <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(34, 197, 94); margin: 1.5rem 0;">
@@ -170,10 +169,6 @@ vim /etc/portage/package.use/video-cards
 emerge --ask --newuse --deep @world
 ```
 
-
-
-
-
 ### 12.3 显示卡驱动 [必选]
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
@@ -270,7 +265,7 @@ GBM_BACKEND=nvidia-drm
 创建对应的 flags 文件：
 
 - Chrome Stable: `~/.config/chrome-flags.conf`
-- Chrome Unstable: `~/.config/chrome-dev-flags.conf`  
+- Chrome Unstable: `~/.config/chrome-dev-flags.conf`
 - Chromium: `~/.config/chromium-flags.conf`
 - Edge Beta: `~/.config/microsoft-edge-beta-flags.conf`
 - Edge Dev: `~/.config/microsoft-edge-dev-flags.conf`
@@ -310,14 +305,13 @@ GBM_BACKEND=nvidia-drm
 # 安装 PipeWire 音频系统与 WirePlumber 会话管理器
 emerge --ask media-video/pipewire media-video/wireplumber
 
-
 # 安装蓝牙协议栈、工具与管理器 (Blueman 为 GUI 管理器)
 emerge --ask net-wireless/bluez net-wireless/bluez-tools net-wireless/blueman
 ```
 
 **启动服务 (OpenRC)**
 ```bash
-rc-update add bluetooth default 
+rc-update add bluetooth default
 /etc/init.d/bluetooth start
 ```
 
@@ -477,8 +471,7 @@ Rime 是一款强大的输入法引擎，支持朙月拼音 (简体/繁体)、�
    ```conf
    # 强制 XWayland 程序使用 Fcitx5
    XMODIFIERS=@im=fcitx
-   
-   # (可选) 针对非 KDE 环境或特定程序
+     # (可选) 针对非 KDE 环境或特定程序
    GTK_IM_MODULE=fcitx
    QT_IM_MODULE=fcitx
    ```
@@ -548,8 +541,7 @@ GNOME 对 IBus 集成最好，建议优先使用。
     ```bash
     # 自动查找并签名所有已知文件 (包括内核、systemd-boot 等)
     sbctl sign-all
-    
-    # 或者手动签名 (例如 GRUB)
+       # 或者手动签名 (例如 GRUB)
     # sbctl sign -s /efi/EFI/Gentoo/grubx64.efi
     ```
 5. **验证**：
@@ -580,7 +572,7 @@ mkdir -p /etc/portage/repos.conf
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
 ```
 
-编辑 `/etc/portage/repos.conf/gentoo.conf`：
+編輯 `/etc/portage/repos.conf/gentoo.conf`：
 ```ini
 [DEFAULT]
 main-repo = gentoo
@@ -588,37 +580,48 @@ main-repo = gentoo
 [gentoo]
 location = /var/db/repos/gentoo
 sync-type = git
-sync-uri = https://mirrors.bfsu.edu.cn/git/gentoo-portage.git
+sync-uri = https://mirrors.ustc.edu.cn/git/gentoo-portage.git
 auto-sync = yes
 ```
 
-可用的 Git 镜像源：
-- **北京外国语大学**：`https://mirrors.bfsu.edu.cn/git/gentoo-portage.git`
-- **清华大学**：`https://mirrors.tuna.tsinghua.edu.cn/git/gentoo-portage.git`
-- **GitHub（国外）**：`https://github.com/gentoo-mirror/gentoo.git`
+**可用的 Gentoo Portage Git 镜像源（择一）：**
+
+更多镜像请参考：[镜像列表页面](/mirrorlist/)
+
+- **中国大陆**：
+  - `https://mirrors.ustc.edu.cn/git/gentoo-portage.git` - 中国科学技术大学（推荐）
+  - `https://mirrors.tuna.tsinghua.edu.cn/git/gentoo-portage.git` - 清华大学
+  - `https://mirrors.bfsu.edu.cn/git/gentoo-portage.git` - 北京外国语大学
+- **官方源（可能需要国际网络）**：
+  - `https://github.com/gentoo-mirror/gentoo.git` - GitHub
 
 **3. 添加 Gentoo-zh Overlay**
-   在 `/etc/portage/repos.conf/` 目录下创建 `gentoo-zh.conf` 文件，内容如下：
-   ```ini
-   [gentoo-zh]
-   location = /var/db/repos/gentoo-zh
-   sync-type = git
-   sync-uri = https://github.com/microcai/gentoo-zh.git
-   auto-sync = yes
-   ```
 
-   **可用的 gentoo-zh Git 镜像源（可选）：**
-   - **原始源（GitHub）**：`https://github.com/microcai/gentoo-zh.git`
-   - **重庆大学**：`https://mirrors.cqu.edu.cn/git/gentoo-zh.git`
-   - **南京大学**：`https://mirror.nju.edu.cn/git/gentoo-zh.git`
+详细说明请参考：[Overlay 页面](/overlay/)
 
-   **gentoo-zh distfiles 镜像（可选）：**
-   为加速 gentoo-zh overlay 中软件包的下载，可使用以下 distfiles 镜像：
-   - **原始源**：`https://distfiles.gentoocn.org/`
-   - **重庆大学**：`https://mirror.cqu.edu.cn/gentoo-zh`
-   - **南京大学**：`https://mirror.nju.edu.cn/gentoo-zh`
-   
-   使用帮助：https://t.me/gentoocn/56
+在 `/etc/portage/repos.conf/` 目录下创建 `gentoo-zh.conf` 文件，内容如下：
+
+```ini
+[gentoo-zh]
+location = /var/db/repos/gentoo-zh
+sync-type = git
+sync-uri = https://github.com/microcai/gentoo-zh.git
+auto-sync = yes
+```
+
+**可用的 gentoo-zh Git 镜像源（择一）：**
+- **原始源（GitHub，可能需要国际网络）**：`https://github.com/microcai/gentoo-zh.git`
+- **重庆大学**：`https://mirrors.cqu.edu.cn/git/gentoo-zh.git`
+- **南京大学**：`https://mirror.nju.edu.cn/git/gentoo-zh.git`
+
+**gentoo-zh distfiles 镜像（可选）：**
+
+为加速 gentoo-zh overlay 中软件包的下载，可使用以下 distfiles 镜像：
+- **原始源**：`https://distfiles.gentoocn.org/`
+- **重庆大学**：`https://mirrors.cqu.edu.cn/gentoo-zh`
+- **南京大学**：`https://mirror.nju.edu.cn/gentoo-zh`
+
+使用帮助：https://t.me/gentoocn/56
 
 <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(239, 68, 68); margin: 1.5rem 0;">
 
@@ -663,8 +666,7 @@ emerge -pv flclash-bin
 ```text
 These are the packages that would be merged, in order:
 
-Calculating dependencies  
-    ... done!
+Calculating dependencies     ... done!
 Dependency resolution took 0.45 s (backtrack: 0/20).
 
 [ebuild  N     ] dev-libs/keybinder-0.3.2-r300:3::gentoo  USE="introspection" 371 KiB
