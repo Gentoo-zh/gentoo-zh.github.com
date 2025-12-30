@@ -200,7 +200,8 @@ sed -i '' 's|（以中國科學技術大學鏡像為例）|（以 NCHC 鏡像為
 
 # Fix recommendation comments (only for the active/default lines, not all region labels)
 # Pattern: "# 中国大陆镜像（推荐）：" at start of line -> "# 台湾镜像（推荐）："
-sed -i '' 's|^# 中國大陸鏡像（推薦）：|# 台灣鏡像（推薦）：|g' "$TARGET_FILE"
+sed -i '' 's|^# 中國大陸鏡像（推薦）：|# 臺灣鏡像（推薦）：|g' "$TARGET_FILE"
+sed -i '' 's|^# 中國大陸鏡像（推薦）$|# 臺灣鏡像（推薦）|g' "$TARGET_FILE"
 sed -i '' 's|中國大陸映像檔（推薦）|台灣映像檔（推薦）|g' "$TARGET_FILE"
 sed -i '' 's|中國大陸常用映像檔（任選其一）：|台灣常用映像檔（任選其一）：|g' "$TARGET_FILE"
 sed -i '' 's|中國大陸常用鏡像（任選其一）：|台灣常用鏡像（任選其一）：|g' "$TARGET_FILE"

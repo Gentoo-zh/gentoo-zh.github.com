@@ -321,7 +321,7 @@ FEATURES="parallel-fetch candy"
 # 更多鏡像請參考：https://www.gentoo.org.cn/mirrorlist/
 # 建議根據地理位置選擇（任選其一或多個，空格分隔）
 
-# 中國大陸鏡像（推薦）
+# 臺灣鏡像（推薦）
 GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"
 
 # 或使用其他鏡像：
