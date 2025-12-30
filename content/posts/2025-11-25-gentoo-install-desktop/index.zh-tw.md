@@ -341,9 +341,9 @@ emerge --ask kde-plasma/plasma-meta # 安裝 Plasma 桌面
 emerge --ask kde-apps/kde-apps-meta # (可選) 安裝全套 KDE 應用
 emerge --ask x11-misc/sddm # 安裝 SDDM 顯示管理器
 
-# OpenRC 設定 (SDDM 沒有獨立的 init 腳本)
+# OpenRC 設定 (SDDM 沒有獨立的 init 指令碼)
 # 參考：https://wiki.gentoo.org/wiki/Display_manager#OpenRC
-emerge --ask gui-libs/display-manager-init # 安裝通用顯示管理器 init 腳本
+emerge --ask gui-libs/display-manager-init # 安裝通用顯示管理器 init 指令碼
 
 # 編輯 /etc/conf.d/display-manager
 # 設定 DISPLAYMANAGER="sddm" 和 CHECKVT=7

@@ -55,6 +55,7 @@ sed -i '' 's/核顯/內顯/g' "$TARGET_FILE"
 # Program/Script/Process/Kernel
 sed -i '' 's/程序/程式/g' "$TARGET_FILE"
 sed -i '' 's/脚本/腳本/g' "$TARGET_FILE"
+sed -i '' 's/腳本/指令碼/g' "$TARGET_FILE"  # Taiwan commonly uses 指令碼 instead of 腳本
 sed -i '' 's/引導程序/引導程式/g' "$TARGET_FILE"
 sed -i '' 's/線程/執行緒/g' "$TARGET_FILE"
 sed -i '' 's/進程/行程/g' "$TARGET_FILE"

@@ -631,7 +631,7 @@ PORTAGE_ELOG_CLASSES="warn error log qa"
 #   echo          編譯後直接顯示在終端機
 #   mail          通過郵件發送（需設定郵件系統）
 #   syslog        發送到系統日誌
-#   custom        自定義處理腳本
+#   custom        自定義處理指令碼
 PORTAGE_ELOG_SYSTEM="save"
 
 # 注意：文件末尾必須保留空行（POSIX 標準要求）
@@ -1500,7 +1500,7 @@ make menuconfig  # 文本介面（推薦）
 
 ### 16.5 自動激活推薦選項
 
-Gentoo 提供了自動化腳本來激活常見硬體和功能：
+Gentoo 提供了自動化指令碼來激活常見硬體和功能：
 
 ```bash
 cd /usr/src/linux
@@ -1618,7 +1618,7 @@ genkernel --kernel-make-opts="LLVM=1" --install all
 
 ### 16.9 核心統計與分析
 
-編譯完成後，使用以下腳本查看核心統計資訊：
+編譯完成後，使用以下指令碼查看核心統計資訊：
 
 ```bash
 cd /usr/src/linux

@@ -217,7 +217,7 @@ Portage 的指令行工具。常用指令：
 首先，訪問鏡像站找到最新版本的 ISO（選擇日期最新的目錄）：
 
 ```bash
-# 台灣鏡像（推薦）：
+# 臺灣鏡像（推薦）：
 # 訪問 http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/ 查看最新版本
 
 # 或使用其他鏡像：
@@ -762,7 +762,7 @@ cd /mnt/gentoo
 
 # 使用 links 瀏覽器訪問鏡像站下載 Stage3（建議根據地理位置選擇，擇一）：
 
-# 台灣鏡像（推薦）：
+# 臺灣鏡像（推薦）：
 links http://ftp.twaren.net/Linux/Gentoo/releases/amd64/autobuilds/
 
 # 或使用其他鏡像：
@@ -912,7 +912,7 @@ LINGUAS="en en_US zh zh_CN zh_TW"
 # 建議根據地理位置選擇（擇一）：
 
 # 中國大陸鏡像：
-GENTOO_MIRRORS="http://ftp.twaren.net/Linux/Gentoo/"                    # NCHC（推薦）
+GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"                    # 中國科學技術大學
 # GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo/"         # 清華大學
 # GENTOO_MIRRORS="https://mirrors.zju.edu.cn/gentoo/"                   # 浙江大學
 
@@ -1873,7 +1873,7 @@ options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw quiet
 </div>
 
 **2. 更新引導項**：
-每次更新核心後，需要手動更新 `gentoo.conf` 中的版本號，或者使用腳本自動化。
+每次更新核心後，需要手動更新 `gentoo.conf` 中的版本號，或者使用指令碼自動化。
 
 **2. 創建 Windows 引導項 (雙系統)**
 
