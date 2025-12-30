@@ -172,9 +172,10 @@ Portage 的命令行工具。常用命令：
 **本文将教你**：
 - 从零开始安装 Gentoo 基础系统（分区、Stage3、内核、引导程序）
 - 配置 Portage 并优化编译参数（make.conf、USE flags、CPU flags）
+- 启用 Binary Package Host（二进制包主机，大幅缩短安装时间）
 - 安装桌面环境（KDE Plasma、GNOME、Hyprland）
 - 配置中文环境（locale、字体、Fcitx5 输入法）
-- 可选进阶配置（LUKS 全盘加密、LTO 优化、内核调优、RAID）
+- 可选进阶配置（LUKS 全盘加密、Secure Boot 安全启动、LTO 优化、内核调优、RAID）
 - 系统维护（SSD TRIM、电源管理、Flatpak、系统更新）
 
 </div>
@@ -814,7 +815,7 @@ mirrorselect -i -o >> /etc/portage/make.conf
 echo 'GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"' >> /etc/portage/make.conf
 ```
 
-### 5.2 make.conf 范例
+### 5.2 make.conf 范例 {#52-makeconf-范例}
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
@@ -866,152 +867,30 @@ GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
 # ========== USE 标志 ==========
 # systemd: 使用 systemd 作为 init（若用 OpenRC 改为 -systemd）
 # dist-kernel: 使用发行版内核，新手推荐
-# 其他: dbus/policykit 桌面必需，networkmanager 网络管理
+# networkmanager: 网络管理工具
+# bluetooth: 蓝牙支持（若不使用蓝牙可移除）
 USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
 
 # ========== 许可证设置 ==========
-# "*" 接受所有许可证；"@FREE" 仅接受自由软件
+# "*" 接受所有许可证（包括非自由软件/专有软件）
+# 警告：接受所有许可证意味着您同意安装闭源软件，如需仅使用自由软件请改为 "@FREE"
+# 详细说明见进阶篇 13.12 节
 ACCEPT_LICENSE="*"
 ```
 
-<details>
-<summary><b>详细配置范例（建议阅读并调整）（点击展开）</b></summary>
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
-```conf
-# vim: set filetype=bash  # 告诉 Vim 使用 bash 语法高亮
+**详细配置说明**
 
-# ========== 系统架构（勿手动修改） ==========
-# 由 Stage3 预设，表示目标系统架构
-CHOST="x86_64-pc-linux-gnu"
+如需查看包含完整注释的 `make.conf` 配置范例，请参阅 [进阶篇 13.11 节：详细配置范例](/posts/2025-11-25-gentoo-install-advanced/#1311-详细配置范例完整注释版)。
 
-# ========== 编译优化参数 ==========
-# -march=native    针对当前 CPU 架构优化，获得最佳性能
-#                  注意：编译出的程序可能无法在其他 CPU 上运行
-# -O2              推荐的优化级别，平衡性能与稳定性
-#                  避免使用 -O3，可能导致部分软件编译失败
-# -pipe            使用管道代替临时文件传递数据，加速编译
-COMMON_FLAGS="-march=native -O2 -pipe"
-CFLAGS="${COMMON_FLAGS}"      # C 编译器选项
-CXXFLAGS="${COMMON_FLAGS}"    # C++ 编译器选项
-FCFLAGS="${COMMON_FLAGS}"     # Fortran 编译器选项
-FFLAGS="${COMMON_FLAGS}"      # Fortran 77 编译器选项
+该范例包含：
+- 每个配置项的详细说明和推荐值
+- 针对不同硬件的调整建议
+- USE 标志的功能说明
+- FEATURES 和日志配置示例
 
-# CPU 指令集优化（运行 cpuid2cpuflags 自动生成，见下文 5.3）
-# CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt sse sse2 ..."
-
-# ========== 并行编译设置 ==========
-# MAKEOPTS: 控制 make 的并行任务数
-#   -j<N>   同时运行的编译任务数，建议 = CPU 线程数（nproc）
-#   -l<N>   系统负载限制，防止系统过载（可选）
-MAKEOPTS="-j8"  # 请根据实际 CPU 线程数调整
-
-# 内存不足时的替代配置（例如 16GB 内存 + 8 核 CPU）：
-# MAKEOPTS="-j4 -l8"  # 减少并行数，限制负载
-
-# ========== 语言与本地化设置 ==========
-# 保持构建输出为英文，便于搜索错误信息和寻求帮助
-LC_MESSAGES=C
-
-# L10N: 本地化语言支持（影响软件翻译、文档等）
-L10N="en en-US zh zh-CN zh-TW"
-
-# LINGUAS: 旧式本地化变量（部分软件仍需要）
-LINGUAS="en en_US zh zh_CN zh_TW"
-
-# ========== 镜像源设置 ==========
-# 国内常用镜像（任选其一）：
-#   BFSU:  https://mirrors.bfsu.edu.cn/gentoo/
-#   TUNA:  https://mirrors.tuna.tsinghua.edu.cn/gentoo/
-#   USTC:  https://mirrors.ustc.edu.cn/gentoo/
-#   SJTU:  https://mirrors.sjtug.sjtu.edu.cn/gentoo/
-GENTOO_MIRRORS="https://mirrors.bfsu.edu.cn/gentoo/"
-
-# ========== Emerge 默认选项 ==========
-# --ask              执行前询问确认
-# --verbose          显示详细信息（USE 标志变化等）
-# --with-bdeps=y     包含构建时依赖（更新时也检查）
-# --complete-graph=y 完整依赖图分析（避免依赖问题）
-EMERGE_DEFAULT_OPTS="--ask --verbose --with-bdeps=y --complete-graph=y"
-
-# 可选的额外选项：
-# --jobs=N           并行编译多个包（内存充足时可用）
-# --load-average=N   系统负载限制
-# EMERGE_DEFAULT_OPTS="--ask --verbose --jobs=2 --load-average=8"
-
-# ========== USE 标志（全局功能开关） ==========
-# 这些标志影响所有软件包的编译选项
-#
-# 系统基础：
-#   systemd        使用 systemd init（若用 OpenRC 改为 -systemd）
-#   udev           设备管理支持
-#   dbus           进程间通信（桌面环境必需）
-#   policykit      权限管理（桌面环境必需）
-#
-# 网络与硬件：
-#   networkmanager 网络管理器（桌面用户推荐）
-#   bluetooth      蓝牙支持
-#
-# 开发工具：
-#   git            Git 版本控制
-#
-# 内核：
-#   dist-kernel    使用发行版内核（新手推荐）
-#
-USE="systemd udev dbus policykit networkmanager bluetooth git dist-kernel"
-
-# 常用的可选 USE 标志：
-#   pulseaudio / pipewire  音频服务器
-#   wayland / X            显示服务器
-#   vulkan                 Vulkan 图形 API
-#   vaapi / vdpau          硬件视频解码
-#   cups                   打印支持
-#   flatpak                Flatpak 应用支持
-
-# ========== 许可证设置 ==========
-# "*"     接受所有许可证（包括闭源软件）
-# "@FREE" 仅接受自由软件许可证
-ACCEPT_LICENSE="*"
-
-# ========== 视频卡配置（可选） ==========
-# 根据你的显卡选择：
-#   intel      Intel 集成显卡
-#   amdgpu     AMD 显卡（GCN 1.2+）
-#   radeonsi   AMD 显卡（OpenGL）
-#   nvidia     NVIDIA 显卡（闭源驱动）
-#   nouveau    NVIDIA 显卡（开源驱动）
-# VIDEO_CARDS="intel"
-# VIDEO_CARDS="amdgpu radeonsi"
-# VIDEO_CARDS="nvidia"
-
-# ========== 输入设备配置（可选） ==========
-# libinput 是现代桌面的推荐选择
-# INPUT_DEVICES="libinput"
-
-# ========== Portage 功能配置（可选） ==========
-# 启用并行解压、拆分调试信息、测试等
-# FEATURES="parallel-fetch parallel-unpack splitdebug"
-
-# ========== 编译日志配置（推荐） ==========
-# PORTAGE_ELOG_CLASSES: 要记录的日志级别
-#   info     一般信息
-#   warn     警告信息（重要）
-#   error    错误信息（重要）
-#   log      普通日志
-#   qa       质量保证警告
-PORTAGE_ELOG_CLASSES="warn error log"
-
-# PORTAGE_ELOG_SYSTEM: 日志输出方式
-#   save          保存到 /var/log/portage/elog/（推荐）
-#   echo          编译后直接显示
-#   mail          通过邮件发送
-#   syslog        发送到系统日志
-#   custom        自定义处理
-PORTAGE_ELOG_SYSTEM="save"
-
-# 文件末尾保留换行符！
-```
-
-</details>
+</div>
 
 <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
@@ -1023,25 +902,27 @@ PORTAGE_ELOG_SYSTEM="save"
 
 </div>
 
-<details>
-<summary><b>进阶设置：CPU 指令集优化 (CPU_FLAGS_X86)（点击展开）</b></summary>
+<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
 
-<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+**进阶配置**
 
-**可参考**：[CPU_FLAGS_*](https://wiki.gentoo.org/wiki/CPU_FLAGS_*/zh-cn)
+- **ACCEPT_LICENSE 许可证管理**：详见 [进阶篇 13.12 节](/posts/2025-11-25-gentoo-install-advanced/#1312-accept_license-软件许可证详解)
+- **CPU 指令集优化 (CPU_FLAGS_X86)**：详见 [进阶篇 13.13 节](/posts/2025-11-25-gentoo-install-advanced/#1313-cpu-指令集优化-cpu_flags_x86)
 
 </div>
+
+### 5.3 配置 CPU 指令集优化 {#53-配置-cpu-指令集优化}
 
 为了让 Portage 知道你的 CPU 支持哪些特定指令集（如 AES, AVX, SSE4.2 等），我们需要配置 `CPU_FLAGS_X86`。
 
 安装检测工具：
 ```bash
-emerge --ask app-portage/cpuid2cpuflags # 安装检测工具
+emerge --ask app-portage/cpuid2cpuflags
 ```
 
 运行检测并写入配置：
 ```bash
-cpuid2cpuflags >> /etc/portage/make.conf # 将检测结果追加到配置文件
+cpuid2cpuflags >> /etc/portage/make.conf
 ```
 
 检查 `/etc/portage/make.conf` 末尾，你应该会看到类似这样的一行：
@@ -1049,7 +930,143 @@ cpuid2cpuflags >> /etc/portage/make.conf # 将检测结果追加到配置文件
 CPU_FLAGS_X86="aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt rdrand sse sse2 sse3 sse4_1 sse4_2 ssse3"
 ```
 
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**说明**
+
+更多关于 CPU 指令集优化的详细信息，请参阅 [进阶篇 13.13 节](/posts/2025-11-25-gentoo-install-advanced/#1313-cpu-指令集优化-cpu_flags_x86)。
+
+</div>
+
+---
+
+### 5.4 可选：启用 Binary Package Host（二进制包主机）
+
+<div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
+
+**可参考**：[Gentoo Handbook: Binary Package Host](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation#Optional:_Adding_a_binary_package_host) · [Binary package guide](https://wiki.gentoo.org/wiki/Binary_package_guide)
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05)); padding: 2rem; border-radius: 1rem; margin: 1.5rem 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+
+**为什么使用 Binary Package Host？**
+
+自 2023 年 12 月起，Gentoo [官方提供二进制包主机](https://www.gentoo.org/news/2023/12/29/Gentoo-binary.html)（binhost），可大幅缩短安装时间：
+- **LLVM / Clang**：从 2-3 小时缩短到 5 分钟
+- **Rust**：从 1-2 小时缩短到 3 分钟
+- **Firefox / Chromium**：从数小时缩短到 10 分钟
+
+所有二进制包均经过 **加密签章验证**，确保安全性。
+
+</div>
+
+#### 配置 Binary Package Host
+
+**步骤 1：配置仓库**
+
+创建 binhost 配置文件：
+```bash
+mkdir -p /etc/portage/binrepos.conf
+vim /etc/portage/binrepos.conf/gentoobinhost.conf
+```
+
+加入以下内容（根据你的 **Profile** 选择对应路径）：
+
+<details>
+<summary><b>OpenRC 桌面配置（点击展开）</b></summary>
+
+```conf
+# /etc/portage/binrepos.conf/gentoobinhost.conf
+[binhost]
+priority = 9999
+sync-uri = https://distfiles.gentoo.org/releases/amd64/binpackages/23.0/x86-64/
+```
+
 </details>
+
+<details>
+<summary><b>systemd 桌面配置（点击展开）</b></summary>
+
+```conf
+# /etc/portage/binrepos.conf/gentoobinhost.conf
+[binhost]
+priority = 9999
+sync-uri = https://distfiles.gentoo.org/releases/amd64/binpackages/23.0/x86-64-systemd/
+```
+
+</details>
+
+<details>
+<summary><b>如何选择正确的路径？（点击展开）</b></summary>
+
+查看你当前的 profile：
+```bash
+eselect profile show
+```
+
+根据输出选择对应路径：
+| Profile 类型 | sync-uri 路径 |
+|------------|--------------|
+| `default/linux/amd64/23.0` | `.../23.0/x86-64/` |
+| `default/linux/amd64/23.0/systemd` | `.../23.0/x86-64-systemd/` |
+| `default/linux/amd64/23.0/desktop` | `.../23.0/x86-64-v3/` |
+| `default/linux/amd64/23.0/desktop/systemd` | `.../23.0/x86-64-v3-systemd/` |
+
+**注意**：桌面 profile 通常使用 `x86-64-v3`（需要 AVX、AVX2 等指令集），伺服器 profile 使用 `x86-64`。
+
+</details>
+
+**步骤 2：启用二进制包功能**
+
+编辑 `/etc/portage/make.conf`，加入：
+```bash
+# 启用二进制包下载与签章验证
+FEATURES="${FEATURES} getbinpkg binpkg-request-signature"
+
+# emerge 默认使用二进制包（可选，推荐新手启用）
+EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --getbinpkg"
+```
+
+**步骤 3：获取签章密钥**
+
+运行以下命令，让 Portage 设置验证所需的密钥环：
+```bash
+getuto
+```
+
+#### 验证配置
+
+测试是否正确配置：
+```bash
+emerge --pretend --getbinpkg sys-apps/portage
+```
+
+若输出包含 `[binary]` 字样，说明配置成功：
+```
+[ebuild   R    ] sys-apps/portage-3.0.61::gentoo [binary]
+```
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**使用提示**
+
+- **优先使用二进制包**：如上配置后，emerge 会自动优先使用二进制包
+- **强制从源码编译**：`emerge --usepkg=n <套件名>`
+- **仅使用二进制包**：`emerge --usepkgonly <套件名>`
+- **查看可用二进制包**：访问 [Gentoo Binhost Browser](https://distfiles.gentoo.org/releases/amd64/binpackages/)
+
+</div>
+
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1rem 0;">
+
+**注意事项**
+
+- 若你的 **USE 标志**或**编译参数**与官方预设不同，Portage 会自动回退到源码编译
+- 二进制包使用官方的**通用配置**，可能无法完全发挥你的 CPU 性能优势（`-march=native` 的特定优化）
+- 建议**初次安装时使用 binhost**，系统稳定后根据需要调整 USE 标志并重新编译关键套件
+
+</div>
 
 ---
 

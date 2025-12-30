@@ -72,11 +72,23 @@ emerge -avuDN @world          # 更新系統
 
 <div style="background: rgba(59, 130, 246, 0.08); padding: 0.75rem 1rem; border-radius: 0.5rem; border-left: 3px solid rgb(59, 130, 246); margin: 1rem 0;">
 
-**可參考**：[make.conf](https://wiki.gentoo.org/wiki//etc/portage/make.conf)
+**可參考**：[make.conf](https://wiki.gentoo.org/wiki//etc/portage/make.conf) · [Handbook: VIDEO_CARDS](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation#VIDEO_CARDS) · [進階篇 13 章：make.conf 完整配置指南](/posts/2025-11-25-gentoo-install-advanced/#13-makeconf-高階配置指南)
 
 </div>
 
-`/etc/portage/make.conf` 是 Gentoo 的全域性配置檔案。在此階段，我們只需配置顯示卡、輸入裝置和本機化選項。詳細的編譯最佳化配置將在 **Section 13.0** 中介紹。
+`/etc/portage/make.conf` 是 Gentoo 的全域性配置檔案。在此階段，我們只需配置輸入裝置和本機化選項。
+
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+
+**重要說明**
+
+基礎的 make.conf 配置已在 [基礎安裝篇 5.2 節](/posts/2025-11-25-gentoo-install-base/#52-makeconf-範例) 完成。本節只需補充桌面相關配置。
+
+如需詳細的編譯最佳化、USE 標誌、許可證管理等進階配置，請查閱 [進階篇 13 章](/posts/2025-11-25-gentoo-install-advanced/#13-makeconf-高階配置指南)。
+
+</div>
+
+#### 配置 make.conf
 
 ```bash
 vim /etc/portage/make.conf
@@ -84,11 +96,6 @@ vim /etc/portage/make.conf
 
 新增或修改以下配置：
 ```bash
-# 顯示卡驅動 (根據硬體選擇)
-VIDEO_CARDS="nvidia"        # NVIDIA
-# VIDEO_CARDS="amdgpu radeonsi" # AMD
-# VIDEO_CARDS="intel i965 iris" # Intel
-
 # 輸入裝置
 INPUT_DEVICES="libinput"
 
@@ -99,6 +106,62 @@ LINGUAS="en zh_CN zh_TW"
 # 桌面環境支援
 USE="${USE} wayland X pipewire pulseaudio alsa"
 ```
+
+#### 配置顯示卡驅動 (VIDEO_CARDS)
+
+<div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid rgb(245, 158, 11); margin: 1.5rem 0;">
+
+**推薦做法**
+
+根據 [Gentoo Handbook](https://wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation#VIDEO_CARDS)，推薦使用 `package.use` 而非在 `make.conf` 中設定 `VIDEO_CARDS`，這樣可以更靈活地管理顯示卡驅動依賴。
+
+</div>
+
+建立 package.use 檔案並設定顯示卡驅動：
+
+```bash
+mkdir -p /etc/portage/package.use
+vim /etc/portage/package.use/video-cards
+```
+
+**根據你的硬體選擇對應配置**（參考下表）：
+
+```bash
+# NVIDIA 顯示卡
+*/* VIDEO_CARDS: nvidia
+
+# AMD 顯示卡 (Sea Islands 及更新)
+# */* VIDEO_CARDS: amdgpu radeonsi
+
+# Intel 顯示卡
+# */* VIDEO_CARDS: intel
+
+# 虛擬機器 (QEMU/KVM)
+# */* VIDEO_CARDS: virgl
+```
+
+<details>
+<summary><b>顯示卡硬體對照表（點選展開）</b></summary>
+
+| 硬體平臺 | 獨立顯示卡 | VIDEO_CARDS 值 | 說明 |
+|---------|---------|---------------|------|
+| Intel x86 | 無獨顯 | `intel` | 詳見 [Intel 特性支援](https://wiki.gentoo.org/wiki/Intel#Feature_support) |
+| x86/ARM | NVIDIA | `nvidia` | 閉源驅動（推薦） |
+| 任意平臺 | NVIDIA（除 Maxwell/Pascal/Volta） | `nouveau` | 開源驅動（效能較差） |
+| 任意平臺 | AMD Sea Islands 及更新 | `amdgpu radeonsi` | 推薦（GCN 1.2+） |
+| 任意平臺 | ATI 和較舊的 AMD | 見 [Radeon 特性支援](https://wiki.gentoo.org/wiki/Radeon#Feature_support) | 舊款顯示卡 |
+| 任意平臺 | Intel | `intel` | 整合顯示卡 |
+| Raspberry Pi | N/A | `vc4` | VideoCore IV |
+| QEMU/KVM | 任意 | `virgl` | 虛擬 GPU |
+| WSL | 任意 | `d3d12` | DirectX 12 |
+
+**詳細資訊**：
+- [AMDGPU](https://wiki.gentoo.org/wiki/AMDGPU)
+- [Intel](https://wiki.gentoo.org/wiki/Intel)
+- [Nouveau (開源)](https://wiki.gentoo.org/wiki/Nouveau)
+- [NVIDIA (專有)](https://wiki.gentoo.org/wiki/NVIDIA)
+
+</details>
 
 ### 12.2 應用配置與更新系統 [必選]
 
@@ -120,8 +183,8 @@ emerge --ask --newuse --deep @world
 </div>
 
 - **NVIDIA 專有驅動**：`emerge --ask x11-drivers/nvidia-drivers`
-- **AMD**：設定 `VIDEO_CARDS="amdgpu radeonsi"`
-- **Intel**：設定 `VIDEO_CARDS="intel i965 iris"`
+- **AMD**：在 `/etc/portage/package.use/video-cards` 中啟用 `VIDEO_CARDS: amdgpu radeonsi`
+- **Intel**：在 `/etc/portage/package.use/video-cards` 中啟用 `VIDEO_CARDS: intel`
 
 **配置 VAAPI 影片加速**
 
